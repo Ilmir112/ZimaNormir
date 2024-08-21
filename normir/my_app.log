@@ -1,0 +1,21 @@
+2024-08-12 13:35:40,956 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_normir' object has no attribute 'self', <traceback object at 0x000001BB4C2B1A00>
+2024-08-12 13:44:30,986 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'list' object has no attribute 'split', <traceback object at 0x000002647E559D40>
+2024-08-12 13:49:28,964 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'list' object has no attribute 'split', <traceback object at 0x000002B738E51380>
+2024-08-12 13:50:41,917 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'list' object has no attribute 'split', <traceback object at 0x000002B737064B00>
+2024-08-12 13:51:51,748 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001D9E8577340>
+2024-08-12 13:53:35,426 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000177E00D4040>
+2024-08-12 13:55:04,573 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'list' object has no attribute 'split', <traceback object at 0x000001B9FC73CB40>
+2024-08-12 13:57:43,024 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000020B546349C0>
+2024-08-12 13:58:42,529 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'list' object has no attribute 'split', <traceback object at 0x000001B73C8D2DC0>
+2024-08-12 14:02:01,258 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001558FA72600>
+2024-08-15 12:44:33,232 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'rowCount', <traceback object at 0x000002882CC690C0>
+2024-08-15 12:46:21,740 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000025FD81E0BC0>
+2024-08-15 12:46:53,556 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'relocation_list' is not defined, <traceback object at 0x000001D0B2E38C80>
+2024-08-15 12:48:13,409 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000018078CA7B40>
+2024-08-15 13:37:00,995 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001AAC43AE000>
+2024-08-15 13:38:56,654 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002353A3FC540>
+2024-08-15 13:41:23,825 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000018C4906D240>
+2024-08-15 13:43:51,867 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000257CE7E02C0>
+2024-08-15 13:46:26,556 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000021231E0D240>
+2024-08-15 13:48:33,131 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002C2DB3DB2C0>
+2024-08-15 16:32:28,431 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001F3E8A042C0>
