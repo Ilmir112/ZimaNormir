@@ -755,7 +755,8 @@ class MyWindow(QMainWindow):
 
             if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 5)
-            elif any(['Осложнение при подъеме НКТ' in row_str for row_index, row_str in enumerate(row_data) if
+            elif any(['Осложнение при подъеме' in row_str for row_index, row_str in enumerate(row_data) if
+                      type(row_str) == str]) or any(['Объем' == row_str for row_index, row_str in enumerate(row_data) if
                       type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 7)
             elif any(['ПЗР к глушению ' in row_str for row_index, row_str in enumerate(row_data) if
@@ -770,6 +771,9 @@ class MyWindow(QMainWindow):
                       type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 4)
                 table_widget.setSpan(i + ins_ind, 12, 1, 2)
+
+            elif any(['Подъем штанг' in row_str for row_str in row_data if type(row_str) == str]):
+                table_widget.setSpan(i + ins_ind, 5, 1, 8)
 
             elif all([row_str == None for row_index, row_str in enumerate(row_data) if 6 < row_index < 14]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 9)
