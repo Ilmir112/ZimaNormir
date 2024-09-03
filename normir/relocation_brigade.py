@@ -98,8 +98,6 @@ class TabPage_SO_Relocation(QWidget):
         self.presence_of_downtime_combo = QComboBox(self)
         self.presence_of_downtime_combo.addItems(['Нет', 'Да'])
 
-
-
         self.grid = QGridLayout(self)
 
         self.date_work_label = QLabel('Дата работы')
@@ -164,7 +162,6 @@ class TabPage_SO_Relocation(QWidget):
 
         self.presence_of_downtime_combo.currentTextChanged.connect(self.update_presence_of_downtime_combo)
 
-
     def update_presence_of_downtime_combo(self, index):
         if index == 'Да':
             self.cause_presence_of_downtime_label = QLabel('Предварительная причина простоя')
@@ -218,6 +215,8 @@ class TabPage_SO_Relocation(QWidget):
             self.tehnological_operation_combo.setParent(None)
             self.time_presence_of_downtime_label.setParent(None)
             self.time_presence_of_downtime_line.setParent(None)
+
+        self.lift_installation_combo.currentTextChanged.connect(self.update_lifting)
 
     def update_lifting(self, index):
         if 'АПР60' in index or 'УПА-60' in index or 'БАРС 60/80' in index or 'А-50':
@@ -303,7 +302,6 @@ class Relocation_Window(QMainWindow):
         self.cause_presence_of_downtime_text_line = None
         self.cause_presence_of_downtime_classification_combo = None
 
-
         self.tehnological_operation_combo = None
 
     def adjustRowHeight(self, row, text):
@@ -383,14 +381,14 @@ class Relocation_Window(QMainWindow):
         self.cause_presence_of_downtime_text_line = current_widget.cause_presence_of_downtime_text_line.text()
         self.cause_presence_of_downtime_classification_combo = current_widget.cause_presence_of_downtime_classification_combo.currentText()
         self.tehnological_operation_combo = current_widget.tehnological_operation_combo.currentText()
-        self.time_presence_of_downtime_line =  current_widget.time_presence_of_downtime_line.text()
+        self.time_presence_of_downtime_line = current_widget.time_presence_of_downtime_line.text()
 
         technological_downtime_list = [[
             '=ROW()-ROW($A$46)', self.date_work_line, None, 'простои', self.cause_presence_of_downtime_text_line,
             'По отсутствию подъездных путей',
             None, None,
             None, None, 'классификация простоя', None, self.cause_presence_of_downtime_classification_combo,
-            None, None, None, None, None, 'Простои',  self.tehnological_operation_combo, 'час',
+            None, None, None, None, None, 'Простои', self.tehnological_operation_combo, 'час',
             self.time_presence_of_downtime_line, 1, 1, '=V66*W66*X66',
             '=Y66-AA66-AB66-AC66-AD66', None, None, None, None, None]]
         return technological_downtime_list
@@ -447,9 +445,6 @@ class Relocation_Window(QMainWindow):
             '=V64*W64*X64',
             '=Y64-AA64-AB64-AC64-AD64', None, None, None, None, None]]
 
-
-
-
         if well_data.type_working == 'КРС':
             well_data.type_working_list = [
                 ['=ROW()-ROW($A$46)', 'КРС', None, 'ПР.перед.ремонтом', None, 'Работа приёмной комиссии', None, None,
@@ -479,7 +474,8 @@ class Relocation_Window(QMainWindow):
     def select_lifting(self):
         if 'А5-40' in self.lift_installation_combo:
             lift_installation_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж А5-40', None, None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж А5-40', None, None,
+                 None, None,
                  None,
                  None, None, None, None, None, None, None, '§68разд.1', None, 'шт', 1, 1.13, 1, '=V96*W96*X96',
                  '=Y96-AA96-AB96-AC96-AD96', None, None, None, None, None]]
@@ -500,21 +496,24 @@ class Relocation_Window(QMainWindow):
                  '=V98*W98*X98', '=Y98-AA98-AB98-AC98-AD98', None, None, None, None, None]]
         elif 'АПРС-40' in self.lift_installation_combo:
             lift_installation_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника АПРС-40', None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника АПРС-40',
+                 None, None,
                  None,
                  None, None, None, None, None, None, None, None, None, '§62разд.1', None, 'раз', 1, 1.467, 1,
                  '=V99*W99*X99',
                  '=Y99-AA99-AB99-AC99-AD99', None, None, None, None, None]]
         elif 'АПРС-50' in self.lift_installation_combo:
             lift_installation_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника АПРС-50', None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника АПРС-50',
+                 None, None,
                  None,
                  None, None, None, None, None, None, None, None, None, '§70разд.1', None, 'раз', 1, 1.67, 1,
                  '=V100*W100*X100',
                  '=Y100-AA100-AB100-AC100-AD100', None, None, None, None, None]]
         elif 'АПР-60/80' in self.lift_installation_combo:
             lift_installation_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника АПР-60/80', None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
+                 'Монтаж подъемника АПР-60/80', None, None,
                  None,
                  None, None, None, None, None, None, None, None, None, '§86разд.1', None, 'шт', 1, 3.21, 1,
                  '=V101*W101*X101',
@@ -536,7 +535,8 @@ class Relocation_Window(QMainWindow):
                  None, None, None]]
         elif 'А-50М' in self.lift_installation_combo:
             lift_installation_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника А-50М', None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника А-50М',
+                 None, None,
                  None,
                  None,
                  None, None, None, None, None, None, None, None, '§72 р.1', None, 'шт', 1, 3.25, 1, '=V104*W104*X104',
@@ -552,21 +552,40 @@ class Relocation_Window(QMainWindow):
 
         if self.anchor_lifts_combo == 'Да':
             anchor_lifts = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Забурка 4-х якорей с перепусканием оттяжек (',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
+                 'Забурка 4-х якорей с перепусканием оттяжек (',
                  None,
                  None, None, None, None, None, None, None, 'АКТ№', 'ЦЕМЕНТ', 'Цемент', 0.5, 'факт', None, 'час', 2, 1,
                  1,
                  '=V106*W106*X106', '=Y106-AA106-AB106-AC106-AD106', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Оттяжки', None, 'Установка и испытание якорей', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Оттяжки', None, 'Установка и испытание якорей', None,
+                 None, None,
                  None,
                  None, None, None, None, 'АКТ№', 'ЦЕМЕНТ', 'Цемент', 0.5, '§29,30раз.1', None, 'шт', 4, 0.48, 1,
                  '=V107*W107*X107', '=Y107-AA107-AB107-AC107-AD107', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Оттяжки', None, 'Установка и испытание якорей', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Оттяжки', None, 'Установка и испытание якорей', None,
+                 None, None,
                  None,
                  None, None, None, None, "'АКТ №1'!A1", None, None, None, '§29,30раз.1', None, 'шт', 4, 0.48, 1,
-                 '=V111*W111*X111', '=Y111-AA111-AB111-AC111-AD111', None, None, None, None, None]]
+                 '=V111*W111*X111', '=Y111-AA111-AB111-AC111-AD111', None, None, None, None, None],
+                ['=ROW()-ROW($A$46)', None, None, 'Оттяжки', None, 'Установка и испытание якорей', None, None, None,
+                 None,
+                 None, None, None, None, "'АКТ №1'!A1", None, None, None, '§29,30раз.1', None, 'шт', 4, 0.48, 1,
+                 '=V111*W111*X111', '=Y111-AA111-AB111-AC111-AD111', None, None, None, None, None]
+            ]
             lift_installation_list.extend(anchor_lifts)
 
+        work_list_krs = ['=ROW()-ROW($A$46)', 'КРС', None, 'ПР.перед.ремонтом', None, 'Работа приёмной комиссии', None,
+                         None, None,
+                         None, None, None, None, None, None, None, None, None, '§302разд.1', None, 'раз', 1, 1.75, 1,
+                         '=V108*W108*X108', '=Y108-AA108-AB108-AC108-AD108', None, None, None, None, None]
+
+        lift_installation_list.append(work_list_krs)
+
+        work_list_prs = ['=ROW()-ROW($A$46)', 'ПРС', None, 'ПР.перед.ремонтом', None, 'Работа приёмной комиссии', None,
+                         None, None,
+                         None, None, None, None, None, None, None, None, None, '§302разд.1', None, 'раз', 1, 1.05, 1,
+                         '=V109*W109*X109', '=Y109-AA109-AB109-AC109-AD109', None, None, None, None, None]
 
         return lift_installation_list
 
@@ -668,6 +687,9 @@ class Relocation_Window(QMainWindow):
 
         if well_data.dict_pump_SHGN['do'] != '0' or well_data.dict_pump_SHGN['posle'] != '0':
             preparatory_work_list.pop(-2)
+
+        work_list = self.select_lifting()
+        preparatory_work_list.extend(work_list)
         return preparatory_work_list
 
 

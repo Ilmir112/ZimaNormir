@@ -2,27 +2,48 @@ from PyQt5 import QtWidgets
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
-# fname = 'property_excel/template_normir_new.xlsm'
-# wb2 = load_workbook(fname, keep_vba=True)
-# name_list = wb2.sheetnames
-# # print(name_list)
-# ws2 = wb2['АВР']
-# if fname:
-#     normir_list = []
-#     for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=133, max_row=210)):
-#         list = []
-#         for col, value in enumerate(row):
-#             list.append(value.value)
-#         normir_list.append(list)
-#
-#     print(normir_list)
-#
-# fname = '1234.xlsx'
+fname = 'property_excel/template_normir_new.xlsm'
+wb2 = load_workbook(fname, keep_vba=True)
+name_list = wb2.sheetnames
+# print(name_list)
+ws2 = wb2['АВР']
+if fname:
+    normir_list = []
+    for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=728, max_row=756)):
+        list = []
+        for col, value in enumerate(row):
+            list.append(value.value)
+        normir_list.append(list)
+
+    print(normir_list)
+
+fname = '1234.xlsx'
 # wb2 = load_workbook(fname, keep_vba=True)
 # name_list = wb2.sheetnames
 # # print(name_list)
 # ws2 = wb2.active
 # lifting_norm_nkt = {}
+# if fname:
+#     normir_list = []
+#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=210, max_row=229)):
+#         lst = []
+#
+#         if row_ind == 14:
+#             lifting = row[0]
+#             lifting_1 = row[8]
+#         if row_ind == 17:
+#             lifting_norm_nkt.setdefault(lifting.value, {}).setdefault('19', row[3].value)
+#             lifting_norm_nkt.setdefault(lifting.value, {}).setdefault('раздел', row[5].value)
+#             lifting_norm_nkt.setdefault(lifting_1.value, {}).setdefault('19', row[11].value)
+#             lifting_norm_nkt.setdefault(lifting_1.value, {}).setdefault('раздел', row[13].value)
+#
+#         elif row_ind == 18:
+#             lifting_norm_nkt.setdefault(lifting.value, {}).setdefault('22', row[3].value)
+#             lifting_norm_nkt.setdefault(lifting.value, {}).setdefault('раздел', row[5].value)
+#             lifting_norm_nkt.setdefault(lifting_1.value, {}).setdefault('25', row[11].value)
+#             lifting_norm_nkt.setdefault(lifting_1.value, {}).setdefault('раздел', row[13].value)
+# print(lifting_norm_nkt)
+
 # if fname:
 #     normir_list = []
 #     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=3, max_row=148)):
@@ -45,33 +66,185 @@ from openpyxl.workbook import Workbook
 #                 lifting_norm_nkt.setdefault(row[0].value, {}). \
 #                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('11.6-12.5', (row[8].value, row[14].value))
 #                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('раздел', row[15].value)fname = '1234.xlsx'
-fname = '1234.xlsx'
-wb2 = load_workbook(fname, keep_vba=True)
-name_list = wb2.sheetnames
-# print(name_list)
-ws2 = wb2.active
-lifting_norm_nkt = {}
-if fname:
-    normir_list = []
-    for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=209, max_row=228)):
-        lst = []
-        if row[0].value:
-            if 'спуск' not in row[0].value and 'ПА' not in row[0].value \
-                    and 'ЭЦН' not in row[0].value and 'Штанги' not in row[0].value and 'СБТ' not in row[0].value:
+#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('раздел', row[15].value)
+# if fname:
+#     normir_list = []
+#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=3, max_row=148)):
+#         lst = []
+#
+#         if row[0].value:
+#             if 'спуск' in str(row[0].value) and 10 < row_ind < 51:
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АЗИНМАШ-37А (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-32 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 2×3)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#             elif 'спуск' in str(row[0].value) and 51 < row_ind < 69:
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-40 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#             elif 'спуск' in str(row[0].value) and 69 < row_ind < 87:
+#
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПРС-50 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#             elif 'спуск' in str(row[0].value) and 87 < row_ind < 105:
+#
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('АПР60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('БАРС60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#
+#             elif 'спуск' in str(row[0].value) and 105 < row_ind < 126:
+#
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПА-60/80 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#             elif 'спуск' in str(row[0].value) and 126 < row_ind < 147:
+#
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('7.6-8.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('8.6-9.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('9.6-10.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('10.6-11.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('11.6-12.5', row[3].value)
+#                 lifting_norm_nkt.setdefault('УПТ-32 (Оснастка 3×4)', {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+#
+# print(lifting_norm_nkt)
 
-                lifting_norm_nkt.setdefault(row[0].value, {}).\
-                    setdefault(row[1].value, {}).setdefault(row[2].value, (row[3].value, row[4].value))
 
-                lifting_norm_nkt.setdefault(row[0].value, {}). \
-                    setdefault(row[1].value, {}).setdefault('раздел', row[5].value)
 
-                lifting_norm_nkt.setdefault(row[8].value, {}).\
-                    setdefault(row[9].value, {}).setdefault(row[10].value, (row[11].value, row[12].value))
 
-                lifting_norm_nkt.setdefault(row[8].value, {}). \
-                    setdefault(row[9].value, {}).setdefault('раздел', row[13].value)
 
+# fname = '1234.xlsx'
+# wb2 = load_workbook(fname, keep_vba=True)
+# name_list = wb2.sheetnames
+# # print(name_list)
+# ws2 = wb2.active
+# lifting_norm_nkt = {}
+# if fname:
+#     normir_list = []
+#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=209, max_row=228)):
+#         lst = []
+#         if row[0].value:
+#             if 'спуск' not in row[0].value and 'ПА' not in row[0].value \
+#                     and 'ЭЦН' not in row[0].value and 'Штанги' not in row[0].value and 'СБТ' not in row[0].value:
+#
+#                 lifting_norm_nkt.setdefault(row[0].value, {}).\
+#                     setdefault(row[1].value, {}).setdefault(row[2].value, (row[3].value, row[4].value))
+#
+#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
+#                     setdefault(row[1].value, {}).setdefault('раздел', row[5].value)
+#
+#                 lifting_norm_nkt.setdefault(row[8].value, {}).\
+#                     setdefault(row[9].value, {}).setdefault(row[10].value, (row[11].value, row[12].value))
+#
+#                 lifting_norm_nkt.setdefault(row[8].value, {}). \
+#                     setdefault(row[9].value, {}).setdefault('раздел', row[13].value)
+#
 
 
     #
@@ -87,7 +260,7 @@ if fname:
 
     #
 #
-    print(lifting_norm_nkt)
+    # print(lifting_norm_nkt)
 
 
 

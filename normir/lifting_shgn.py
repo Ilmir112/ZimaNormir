@@ -1,21 +1,15 @@
-
 import sys
 from datetime import datetime, timedelta
 
 import well_data
 
-from collections import namedtuple
-from normir.files_with_list import cause_presence_of_jamming
-from normir.norms import LIFTING_NORM_NKT, LIFTING_NORM_SUCKER_POD
+from normir.norms import LIFTING_NORM_SUCKER_POD
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, QTabWidget, QMainWindow, QPushButton, \
-    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateEdit, QDateTimeEdit
-from PyQt5.QtCore import Qt
-
-from normir.relocation_brigade import TextEditTableWidgetItem
+    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateTimeEdit
 
 
-class TabPage_SO_Lifting_gno(QWidget):
+class TabPage_SO_Lifting_Shgn(QWidget):
     def __init__(self, parent=None):
         super().__init__()
 
@@ -27,12 +21,6 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.date_work_line.setText(f'{well_data.date_work}')
         self.date_work_str = datetime.strptime(self.date_work_line.text(), '%d.%m.%Y')
 
-        self.gno_label = QLabel("вид поднимаемого ГНО", self)
-        self.gno_combo = QComboBox(self)
-        gno_list = ['', 'пакер', 'ОРЗ', 'ОРД', 'воронка', 'НН с пакером', 'НВ с пакером',
-                    'ЭЦН с пакером', 'ЭЦН', 'НВ', 'НН']  # 'ЭЦН с автономными пакерами'
-        self.gno_combo.addItems(gno_list)
-
         self.grid = QGridLayout(self)
 
         if well_data.date_work != '':
@@ -41,12 +29,7 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.grid.addWidget(self.date_work_label, 4, 2)
         self.grid.addWidget(self.date_work_line, 5, 2)
 
-        self.grid.addWidget(self.gno_label, 4, 3)
-        self.grid.addWidget(self.gno_combo, 5, 3)
 
-        self.gno_combo.currentTextChanged.connect(self.update_select_gno)
-
-    def update_select_gno(self, index):
 
         self.complications_of_failure_label = QLabel('осложнения при срыве ПШ')
         self.complications_of_failure_combo = QComboBox(self)
@@ -72,132 +55,73 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.grid.addWidget(self.complications_when_lifting_label, 36, 1)
         self.grid.addWidget(self.complications_when_lifting_combo, 37, 1)
 
-        if index == 'пакер':
-            self.complications_when_lifting_label.setText('Осложнения при подьеме НКТ')
+        self.complications_of_failure_label.setText('Рассхаживание')
+        self.complications_during_disassembly_label.setText('Осложнения при демонтаже')
 
-            self.nkt_48_lenght_label = QLabel('Длина НКТ48')
-            self.nkt_48_lenght_edit = QLineEdit(self)
+        self.pressuar_gno_label = QLabel('Опрессовка ГНО')
+        self.pressuar_gno_combo = QComboBox(self)
+        self.pressuar_gno_combo.addItems(['Нет', 'Да'])
 
-            self.nkt_48_count_label = QLabel('Кол-во НКТ48')
-            self.nkt_48_count_edit = QLineEdit(self)
+        self.determination_of_the_weight_text_label = QLabel('Определение веса штанг')
+        self.determination_of_the_weight_text_line = QLineEdit(self)
 
-            self.nkt_60_lenght_label = QLabel('Длина НКТ60')
-            self.nkt_60_lenght_edit = QLineEdit(self)
+        self.sucker_pod_19_lenght_label = QLabel('Длина штанги 19мм')
+        self.sucker_pod_22_lenght_label = QLabel('Длина штанги 22мм')
+        self.sucker_pod_25_lenght_label = QLabel('Длина штанги 25мм')
 
-            self.nkt_60_count_label = QLabel('Кол-во НКТ60')
-            self.nkt_60_count_edit = QLineEdit(self)
+        self.sucker_pod_19_lenght_edit = QLineEdit(self)
+        self.sucker_pod_19_lenght_edit.setValidator(self.validator_float)
+        self.sucker_pod_19_lenght_edit.setText('8')
 
-            self.nkt_73_lenght_label = QLabel('Длина НКТ73')
-            self.nkt_73_lenght_edit = QLineEdit(self)
+        self.sucker_pod_19_count_label = QLabel('Кол-во штанги 19мм')
+        self.sucker_pod_19_count_edit = QLineEdit(self)
+        self.sucker_pod_19_count_edit.setValidator(self.validator_float)
 
-            self.nkt_73_count_label = QLabel('Кол-во НКТ73')
-            self.nkt_73_count_edit = QLineEdit(self)
+        self.sucker_pod_22_lenght_edit = QLineEdit(self)
+        self.sucker_pod_22_lenght_edit.setText('8')
+        self.sucker_pod_22_lenght_edit.setValidator(self.validator_float)
 
-            self.nkt_89_lenght_label = QLabel('Длина НКТ89-102')
-            self.nkt_89_lenght_edit = QLineEdit(self)
+        self.sucker_pod_22_count_label = QLabel('Кол-во штанги 22мм')
+        self.sucker_pod_22_count_edit = QLineEdit(self)
+        self.sucker_pod_22_count_edit.setValidator(self.validator_float)
 
-            self.nkt_89_count_label = QLabel('Кол-во НКТ89-102')
-            self.nkt_89_count_edit = QLineEdit(self)
+        self.sucker_pod_25_lenght_edit = QLineEdit(self)
+        self.sucker_pod_25_lenght_edit.setText('8')
+        self.sucker_pod_25_lenght_edit.setValidator(self.validator_float)
 
-            self.grid.addWidget(self.nkt_48_lenght_label, 22, 1)
-            self.grid.addWidget(self.nkt_48_lenght_edit, 23, 1)
+        self.sucker_pod_25_count_label = QLabel('Кол-во штанги 25мм')
+        self.sucker_pod_25_count_edit = QLineEdit(self)
+        self.sucker_pod_25_count_edit.setValidator(self.validator_float)
 
-            self.grid.addWidget(self.nkt_48_count_label, 24, 1)
-            self.grid.addWidget(self.nkt_48_count_edit, 25, 1)
+        self.grid.addWidget(self.sucker_pod_19_lenght_label, 26, 1)
+        self.grid.addWidget(self.sucker_pod_19_lenght_edit, 27, 1)
 
-            self.grid.addWidget(self.nkt_60_lenght_label, 22, 2)
-            self.grid.addWidget(self.nkt_60_lenght_edit, 23, 2)
+        self.grid.addWidget(self.sucker_pod_22_lenght_label, 26, 2)
+        self.grid.addWidget(self.sucker_pod_22_lenght_edit, 27, 2)
 
-            self.grid.addWidget(self.nkt_60_count_label, 24, 2)
-            self.grid.addWidget(self.nkt_60_count_edit, 25, 2)
+        self.grid.addWidget(self.sucker_pod_25_lenght_label, 26, 3)
+        self.grid.addWidget(self.sucker_pod_25_lenght_edit, 27, 3)
 
-            self.grid.addWidget(self.nkt_73_lenght_label, 22, 3)
-            self.grid.addWidget(self.nkt_73_lenght_edit, 23, 3)
+        self.grid.addWidget(self.sucker_pod_19_count_label, 28, 1)
+        self.grid.addWidget(self.sucker_pod_19_count_edit, 29, 1)
 
-            self.grid.addWidget(self.nkt_73_count_label, 24, 3)
-            self.grid.addWidget(self.nkt_73_count_edit, 25, 3)
+        self.grid.addWidget(self.sucker_pod_22_count_label, 28, 2)
+        self.grid.addWidget(self.sucker_pod_22_count_edit, 29, 2)
 
-            self.grid.addWidget(self.nkt_89_lenght_label, 22, 4)
-            self.grid.addWidget(self.nkt_89_lenght_edit, 23, 4)
+        self.grid.addWidget(self.sucker_pod_25_count_label, 28, 3)
+        self.grid.addWidget(self.sucker_pod_25_count_edit, 29, 3)
 
-            self.grid.addWidget(self.nkt_89_count_label, 24, 4)
-            self.grid.addWidget(self.nkt_89_count_edit, 25, 4)
-            try:
-                self.pressuar_gno_label.setParent(None)
-                self.pressuar_gno_combo.setParent(None)
-            except:
-                pass
+        self.grid.addWidget(self.pressuar_gno_label, 6, 1)
+        self.grid.addWidget(self.pressuar_gno_combo, 7, 1)
 
-        elif index == 'НВ':
+        self.grid.addWidget(self.determination_of_the_weight_text_label, 6, 3)
+        self.grid.addWidget(self.determination_of_the_weight_text_line, 7, 3)
 
-            self.complications_of_failure_label.setText('Рассхаживание')
-            self.complications_during_disassembly_label.setText('Осложнения при демонтаже')
-
-            self.pressuar_gno_label = QLabel('Опрессовка ГНО')
-            self.pressuar_gno_combo = QComboBox(self)
-            self.pressuar_gno_combo.addItems(['Нет', 'Да'])
-
-            self.determination_of_the_weight_text_label = QLabel('Определение веса штанг')
-            self.determination_of_the_weight_text_line = QLineEdit(self)
-
-            self.sucker_pod_19_lenght_label = QLabel('Длина штанги 19мм')
-            self.sucker_pod_22_lenght_label = QLabel('Длина штанги 22мм')
-            self.sucker_pod_25_lenght_label = QLabel('Длина штанги 25мм')
-
-            self.sucker_pod_19_lenght_edit = QLineEdit(self)
-            self.sucker_pod_19_lenght_edit.setValidator(self.validator_float)
-            self.sucker_pod_19_lenght_edit.setText('8')
-
-            self.sucker_pod_19_count_label = QLabel('Кол-во штанги 19мм')
-            self.sucker_pod_19_count_edit = QLineEdit(self)
-            self.sucker_pod_19_count_edit.setValidator(self.validator_float)
-
-            self.sucker_pod_22_lenght_edit = QLineEdit(self)
-            self.sucker_pod_22_lenght_edit.setText('8')
-            self.sucker_pod_22_lenght_edit.setValidator(self.validator_float)
-
-            self.sucker_pod_22_count_label = QLabel('Кол-во штанги 22мм')
-            self.sucker_pod_22_count_edit = QLineEdit(self)
-            self.sucker_pod_22_count_edit.setValidator(self.validator_float)
-
-            self.sucker_pod_25_lenght_edit = QLineEdit(self)
-            self.sucker_pod_25_lenght_edit.setText('8')
-            self.sucker_pod_25_lenght_edit.setValidator(self.validator_float)
-
-            self.sucker_pod_25_count_label = QLabel('Кол-во штанги 25мм')
-            self.sucker_pod_25_count_edit = QLineEdit(self)
-            self.sucker_pod_25_count_edit.setValidator(self.validator_float)
-
-            self.grid.addWidget(self.sucker_pod_19_lenght_label, 26, 1)
-            self.grid.addWidget(self.sucker_pod_19_lenght_edit, 27, 1)
-
-            self.grid.addWidget(self.sucker_pod_22_lenght_label, 26, 2)
-            self.grid.addWidget(self.sucker_pod_22_lenght_edit, 27, 2)
-
-            self.grid.addWidget(self.sucker_pod_25_lenght_label, 26, 3)
-            self.grid.addWidget(self.sucker_pod_25_lenght_edit, 27, 3)
-
-            self.grid.addWidget(self.sucker_pod_19_count_label, 28, 1)
-            self.grid.addWidget(self.sucker_pod_19_count_edit, 29, 1)
-
-            self.grid.addWidget(self.sucker_pod_22_count_label, 28, 2)
-            self.grid.addWidget(self.sucker_pod_22_count_edit, 29, 2)
-
-            self.grid.addWidget(self.sucker_pod_25_count_label, 28, 3)
-            self.grid.addWidget(self.sucker_pod_25_count_edit, 29, 3)
-
-            self.grid.addWidget(self.pressuar_gno_label, 6, 1)
-            self.grid.addWidget(self.pressuar_gno_combo, 7, 1)
-
-            self.grid.addWidget(self.determination_of_the_weight_text_label, 6, 3)
-            self.grid.addWidget(self.determination_of_the_weight_text_line, 7, 3)
-
-            self.pressuar_gno_combo.currentTextChanged.connect(self.update_pressuar_gno_combo)
+        self.pressuar_gno_combo.currentTextChanged.connect(self.update_pressuar_gno_combo)
         self.complications_during_disassembly_combo.currentTextChanged.connect(
             self.update_complications_during_disassembly)
         self.complications_of_failure_combo.currentTextChanged.connect(self.update_complications_of_failure)
         self.complications_when_lifting_combo.currentTextChanged.connect(self.update_complications_when_lifting)
-
 
     def update_pressuar_gno_combo(self, index):
         if index == 'Нет':
@@ -250,9 +174,6 @@ class TabPage_SO_Lifting_gno(QWidget):
 
             self.complications_of_failure_time_end_date.dateTimeChanged.connect(self.update_date_of_failure)
             self.complications_of_failure_time_begin_date.dateTimeChanged.connect(self.update_date_of_failure)
-        if self.gno_combo.currentText() in ['НВ', 'НН']:
-            self.complications_of_failure_text_label.setText(None)
-            self.complications_of_failure_text_label.setText('Текст рассхаживания')
 
     def update_date_when_lifting(self):
         time_begin = self.complications_when_lifting_time_begin_date.dateTime()
@@ -275,16 +196,14 @@ class TabPage_SO_Lifting_gno(QWidget):
         time_difference = self.calculate_date(time_begin, time_end)
         self.complications_of_failure_time_line.setText(str(time_difference))
 
-
-    def calculate_date(self,  time_begin, time_end):
+    @staticmethod
+    def calculate_date(time_begin, time_end):
         # Вычисляем разницу в секундах
         difference_in_seconds = time_begin.secsTo(time_end)
 
         # Преобразуем в часы
         difference_in_hours = round(difference_in_seconds / 3600, 1)
         return difference_in_hours
-
-
 
     def update_complications_when_lifting(self, index):
         if index == 'Нет':
@@ -340,9 +259,6 @@ class TabPage_SO_Lifting_gno(QWidget):
             self.complications_during_disassembly_q_time_end_label.setParent(None)
             self.complications_during_disassembly_q_time_end_date.setParent(None)
 
-
-            self.complications_during_disassembly_q_time_end_label = QLabel('Окончание осложнения')
-            self.complications_during_disassembly_q_time_end_date
         else:
             self.complications_during_disassembly_q_label = QLabel('Текст осложнения')
             self.complications_during_disassembly_q_line = QLineEdit(self)
@@ -373,17 +289,19 @@ class TabPage_SO_Lifting_gno(QWidget):
             self.grid.addWidget(self.complications_during_disassembly_time_label, 20, 5)
             self.grid.addWidget(self.complications_during_disassembly_time_line, 21, 5)
 
-            self.complications_during_disassembly_q_time_end_date.dateTimeChanged.connect(self.update_date_during_disassembly_q)
-            self.complications_during_disassembly_q_time_begin_date.dateTimeChanged.connect(self.update_date_during_disassembly_q)
+            self.complications_during_disassembly_q_time_end_date.dateTimeChanged.connect(
+                self.update_date_during_disassembly_q)
+            self.complications_during_disassembly_q_time_begin_date.dateTimeChanged.connect(
+                self.update_date_during_disassembly_q)
 
 
 class TabWidget(QTabWidget):
     def __init__(self):
         super().__init__()
-        self.addTab(TabPage_SO_Lifting_gno(self), 'Подьем ГНО')
+        self.addTab(TabPage_SO_Lifting_Shgn(self), 'Подьем ШГН')
 
 
-class LiftingWindow(QMainWindow):
+class LiftingShgnWindow(QMainWindow):
     def __init__(self, ins_ind, table_widget, parent=None):
         super(QMainWindow, self).__init__(parent)
         self.centralWidget = QWidget()
@@ -453,14 +371,7 @@ class LiftingWindow(QMainWindow):
         self.complications_of_failure_time_line = None
         self.complications_of_failure_time_begin_date = None
         self.complications_of_failure_time_end_date = None
-        self.nkt_48_lenght_edit = None
-        self.nkt_48_count_edit = None
-        self.nkt_60_lenght_edit = None
-        self.nkt_60_count_edit = None
-        self.nkt_73_lenght_edit = None
-        self.nkt_73_count_edit = None
-        self.nkt_89_lenght_edit = None
-        self.nkt_89_count_edit = None
+
         self.sucker_pod_19_lenght_edit = None
         self.sucker_pod_19_count_edit = None
 
@@ -486,68 +397,38 @@ class LiftingWindow(QMainWindow):
 
         current_widget = self.tabWidget.currentWidget()
 
-        self.gno_combo = current_widget.gno_combo.currentText()
-
         self.date_work_line = current_widget.date_work_line.text()
 
-        if self.gno_combo in ['пакер']:
-            try:
-                self.nkt_48_lenght_edit = current_widget.nkt_48_lenght_edit.text()
-                self.nkt_48_count_edit = current_widget.nkt_48_count_edit.text()
-                self.nkt_60_lenght_edit = current_widget.nkt_60_lenght_edit.text()
-                self.nkt_60_count_edit = current_widget.nkt_60_count_edit.text()
-                self.nkt_73_lenght_edit = current_widget.nkt_73_lenght_edit.text()
-                self.nkt_73_count_edit = current_widget.nkt_73_count_edit.text()
-                self.nkt_89_lenght_edit = current_widget.nkt_89_lenght_edit.text()
-                self.nkt_89_count_edit = current_widget.nkt_89_count_edit.text()
+        self.determination_of_the_weight_text_line = current_widget.determination_of_the_weight_text_line.text()
+        if self.determination_of_the_weight_text_line == '':
+            QMessageBox.warning(self, 'Ошибка', f'Не введены текст опрессовки ГНО')
+            return
+        try:
+            self.sucker_pod_19_lenght_edit = current_widget.sucker_pod_19_lenght_edit.text()
+            self.sucker_pod_19_count_edit = current_widget.sucker_pod_19_count_edit.text()
 
-                if self.nkt_48_lenght_edit != '' and self.nkt_48_count_edit != '':
-                    self.dict_nkt.setdefault('48мм',
-                                             (int(float(self.nkt_48_lenght_edit)), int(float(self.nkt_48_count_edit))))
-                if self.nkt_60_lenght_edit != '' and self.nkt_60_count_edit != '':
-                    self.dict_nkt.setdefault('60мм',
-                                             (int(float(self.nkt_60_lenght_edit)), int(float(self.nkt_60_count_edit))))
-                if self.nkt_73_lenght_edit != '' and self.nkt_73_count_edit != '':
-                    self.dict_nkt.setdefault('73мм',
-                                             (int(float(self.nkt_73_lenght_edit)), int(float(self.nkt_73_count_edit))))
-                if self.nkt_89_lenght_edit != '' and self.nkt_89_count_edit != '':
-                    self.dict_nkt.setdefault('89мм',
-                                             (int(float(self.nkt_89_lenght_edit)), int(float(self.nkt_89_count_edit))))
-            except Exception as e:
-                QMessageBox.warning(self, 'Ошибка', f'ВВедены не все значения {e}')
-                return
+            self.sucker_pod_22_lenght_edit = current_widget.sucker_pod_22_lenght_edit.text()
+            self.sucker_pod_22_count_edit = current_widget.sucker_pod_22_count_edit.text()
 
-        if self.gno_combo in ['НВ', 'НН']:
-            self.determination_of_the_weight_text_line = current_widget.determination_of_the_weight_text_line.text()
-            if self.determination_of_the_weight_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст опрессовки ГНО')
-                return
-            try:
-                self.sucker_pod_19_lenght_edit = current_widget.sucker_pod_19_lenght_edit.text()
-                self.sucker_pod_19_count_edit = current_widget.sucker_pod_19_count_edit.text()
+            self.sucker_pod_25_lenght_edit = current_widget.sucker_pod_25_lenght_edit.text()
+            self.sucker_pod_25_count_edit = current_widget.sucker_pod_25_count_edit.text()
 
-                self.sucker_pod_22_lenght_edit = current_widget.sucker_pod_22_lenght_edit.text()
-                self.sucker_pod_22_count_edit = current_widget.sucker_pod_22_count_edit.text()
+            if self.sucker_pod_19_lenght_edit != '' and self.sucker_pod_19_count_edit != '':
+                self.dict_sucker_pod.setdefault(19,
+                                                (int(float(self.sucker_pod_19_lenght_edit)),
+                                                 int(float(self.sucker_pod_19_count_edit))))
+            if self.sucker_pod_22_lenght_edit != '' and self.sucker_pod_22_count_edit != '':
+                self.dict_sucker_pod.setdefault(22,
+                                                (int(float(self.sucker_pod_22_lenght_edit)),
+                                                 int(float(self.sucker_pod_22_count_edit))))
+            if self.sucker_pod_25_lenght_edit != '' and self.sucker_pod_25_count_edit != '':
+                self.dict_sucker_pod.setdefault(25,
+                                                (int(float(self.sucker_pod_25_lenght_edit)),
+                                                 int(float(self.sucker_pod_25_count_edit))))
 
-                self.sucker_pod_25_lenght_edit = current_widget.sucker_pod_25_lenght_edit.text()
-                self.sucker_pod_25_count_edit = current_widget.sucker_pod_25_count_edit.text()
-
-                if self.sucker_pod_19_lenght_edit != '' and self.sucker_pod_19_count_edit != '':
-                    self.dict_sucker_pod.setdefault(19,
-                                                    (int(float(self.sucker_pod_19_lenght_edit)),
-                                                     int(float(self.sucker_pod_19_count_edit))))
-                if self.sucker_pod_22_lenght_edit != '' and self.sucker_pod_22_count_edit != '':
-                    self.dict_sucker_pod.setdefault(22,
-                                                    (int(float(self.sucker_pod_22_lenght_edit)),
-                                                     int(float(self.sucker_pod_22_count_edit))))
-                if self.sucker_pod_25_lenght_edit != '' and self.sucker_pod_25_count_edit != '':
-                    self.dict_sucker_pod.setdefault(25,
-                                                    (int(float(self.sucker_pod_25_lenght_edit)),
-                                                     int(float(self.sucker_pod_25_count_edit))))
-
-            except Exception as e:
-                QMessageBox.warning(self, 'Ошибка', f'ВВедены не все значения {e}')
-                return
+        except Exception as e:
+            QMessageBox.warning(self, 'Ошибка', f'ВВедены не все значения {e}')
+            return
 
         self.complications_of_failure_combo = current_widget.complications_of_failure_combo.currentText()
         self.complications_during_disassembly_combo = current_widget.complications_during_disassembly_combo.currentText()
@@ -562,12 +443,12 @@ class LiftingWindow(QMainWindow):
 
         if self.complications_of_failure_combo == 'Да':
             self.complications_of_failure_text_line = current_widget.complications_of_failure_text_line.text()
-            self.complications_of_failure_time_begin_date =\
+            self.complications_of_failure_time_begin_date = \
                 current_widget.complications_of_failure_time_begin_date.dateTime().toPyDateTime()
             self.complications_of_failure_time_begin_date = \
                 self.change_string_in_date(self.complications_of_failure_time_begin_date)
 
-            self.complications_of_failure_time_end_date =\
+            self.complications_of_failure_time_end_date = \
                 current_widget.complications_of_failure_time_end_date.dateTime().toPyDateTime()
             self.complications_of_failure_time_end_date = \
                 self.change_string_in_date(self.complications_of_failure_time_end_date)
@@ -579,11 +460,15 @@ class LiftingWindow(QMainWindow):
             if self.complications_of_failure_text_line == '':
                 QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
                 return
+
             self.complications_of_failure_time_line = current_widget.complications_of_failure_time_line.text()
+            asssd = self.complications_of_failure_time_line
+
             if self.complications_of_failure_time_line == '':
-                self.complications_of_failure_time_line = round(float(self.complications_of_failure_time_line), 1)
                 QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
-                return
+            else:
+                self.complications_of_failure_time_line = round(float(self.complications_of_failure_time_line), 1)
+
             if self.complications_of_failure_time_line <= 0:
                 QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
                 return
@@ -610,12 +495,14 @@ class LiftingWindow(QMainWindow):
                     QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при подьеме штанг')
                     return
                 if self.complications_when_lifting_time_line == '':
-                    self.complications_when_lifting_time_line = round(float(self.complications_when_lifting_time_line),
-                                                                      1)
                     QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при подьеме штанг')
                     return
+                else:
+                    self.complications_when_lifting_time_line = round(float(self.complications_when_lifting_time_line),
+                                                                      1)
                 if self.complications_when_lifting_time_line <= 0:
-                    QMessageBox.warning(self, 'Ошибка', f'Затраченное время при подьеме штанг не может быть отрицательным')
+                    QMessageBox.warning(self, 'Ошибка',
+                                        f'Затраченное время при подьеме штанг не может быть отрицательным')
                     return
 
             except Exception as e:
@@ -644,30 +531,23 @@ class LiftingWindow(QMainWindow):
                 QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при демонтаже ПШ ')
                 return
 
-            self.complications_during_disassembly_time_line =\
+            self.complications_during_disassembly_time_line = \
                 current_widget.complications_during_disassembly_time_line.text()
             if self.complications_during_disassembly_time_line != '':
                 self.complications_during_disassembly_time_line = round(
                     float(self.complications_during_disassembly_time_line), 1)
+            else:
+                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при демонтаже ПШ')
 
             if self.complications_during_disassembly_time_line <= 0:
                 QMessageBox.warning(self, 'Ошибка', f'Затраченное время при демонтаже ПШ не может быть отрицательным')
                 return
 
-        asd = self.gno_combo
-
-        if self.gno_combo == 'пакер':
-            work_list = self.lifting_paker_def()
-            if len(self.dict_nkt) == 0:
-                question = QMessageBox.question(self, 'Ошибка', f'НКТ отсутствуют?')
-                if question == QMessageBox.StandardButton.No:
-                    return
-        elif self.gno_combo in ['НВ']:
-            work_list = self.lifting_sucker_pod_list()
-            if len(self.dict_sucker_pod) == 0:
-                question = QMessageBox.question(self, 'Ошибка', f'НКТ отсутствуют?')
-                if question == QMessageBox.StandardButton.No:
-                    return
+        work_list = self.lifting_sucker_pod_list()
+        if len(self.dict_sucker_pod) == 0:
+            question = QMessageBox.question(self, 'Ошибка', f'НКТ отсутствуют?')
+            if question == QMessageBox.StandardButton.No:
+                return
 
         well_data.date_work = self.date_work_line
 
@@ -682,6 +562,7 @@ class LiftingWindow(QMainWindow):
         return formatted_date
 
     def lifting_sucker_pod_list(self):
+        from normir.rod_head_work import LiftingRodHeadWindow
 
         work_list = [
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, self.pressuar_gno_text_line, None,
@@ -704,7 +585,7 @@ class LiftingWindow(QMainWindow):
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
              f'{self.complications_of_failure_text_line} {self.complications_of_failure_time_begin_date}-'
              f'{self.complications_of_failure_time_end_date}', None, None, None, None, None, None, None, None,
-             'АКТ№', None, None, None, 'факт', None, 'час', self.complications_of_failure_time_line, 1, 1,
+             'АКТ№', None, None, None, 'факт', None, 'час', self.complications_of_failure_time_line - 0.15, 1, 1,
              '=V138*W138*X138', '=Y138-AA138-AB138-AC138-AD138',
              None, None, None, None, None],
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж ГКШ-1200', None, None,
@@ -739,21 +620,23 @@ class LiftingWindow(QMainWindow):
 
         if self.complications_during_disassembly_combo == 'Да':
             work_list.insert(2, ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-             f'{self.complications_during_disassembly_q_line} '
-             f'{self.complications_during_disassembly_q_time_begin_date}-'
-             f'{self.complications_during_disassembly_q_time_end_date}',
+                                 f'{self.complications_during_disassembly_q_line} '
+                                 f'{self.complications_during_disassembly_q_time_begin_date}-'
+                                 f'{self.complications_during_disassembly_q_time_end_date}',
                                  None, None, None, None, None, None, None, None,
-             'АКТ№', None, None, None, 'факт', None, 'час', self.complications_during_disassembly_time_line, 1, 1,
-             '=V138*W138*X138', '=Y138-AA138-AB138-AC138-AD138',
-             None, None, None, None, None])
+                                 'АКТ№', None, None, None, 'факт', None, 'час',
+                                 self.complications_during_disassembly_time_line, 1, 1,
+                                 '=V138*W138*X138', '=Y138-AA138-AB138-AC138-AD138',
+                                 None, None, None, None, None])
             self.date_work_line = self.complications_during_disassembly_q_time_end_date.split(' ')[1]
         # нормирование штанг
-        work_list.extend(self.lifting_sucker_pod(self.dict_sucker_pod, 'ШТАНГИ'))
+        work_list.extend(LiftingRodHeadWindow.lifting_sucker_pod(self, self.dict_sucker_pod, 'ШТАНГИ'))
 
         if self.complications_when_lifting_combo == 'Да':
             work_list.append(
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'ШТАНГИ',
-                 f'{self.complications_when_lifting_text_line} {self.complications_when_lifting_time_begin_date}- {self.complications_when_lifting_time_end_date}' , None,
+                 f'{self.complications_when_lifting_text_line} {self.complications_when_lifting_time_begin_date}- {self.complications_when_lifting_time_end_date}',
+                 None,
                  None, None,
                  None, None, None, 'Объем', None, None, None, None, None, '§9разд.1', None, 'час',
                  f'=SUM(Z{self.ins_ind}:Z{self.ins_ind + len(work_list)} - {self.complications_when_lifting_time_line}',
@@ -781,266 +664,20 @@ class LiftingWindow(QMainWindow):
              None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V154*W154*X154',
              '=Y154-AA154-AB154-AC154-AD154', None, None, None, None, None]]
 
-
-
         work_list.extend(list_end)
 
-
-
         return work_list
 
-    def lifting_sucker_pod(self, dict_sucker_pod, type_equipment):
-        work_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'ПЗР СПО перед подъемом штанг',
-             None, None, None, None, None,
-             None, None, None, None, None, None, None, '§191разд.1', None, 'шт', 1, 0.73, 1, '=V145*W145*X145',
-             '=Y145-AA145-AB145-AC145-AD145', None, None, None, None, None]]
-        sucker_count_all = sum(map(lambda x: x[1], dict_sucker_pod.values()))
-        for sucker_key, sucker in dict_sucker_pod.items():
-            sucker_lenght = sucker[0]
-            sucker_count = sucker[1]
-            aderg = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo]
-            if well_data.lifting_unit_combo not in ['УПА-60/80 (Оснастка 3×4)', 'УПТ-32 (Оснастка 3×4)']:
-                max_count = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['III'][1]
-                koef_norm = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['III'][0]
-                razdel_3 = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['раздел']
-            else:
-                max_count = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['IV'][1]
-                koef_norm = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['IV'][0]
-                razdel_3 = LIFTING_NORM_SUCKER_POD[well_data.lifting_unit_combo][sucker_key]['раздел']
-            work_list.append(
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
-                 f'Подъем штанг {sucker_key}мм (L={sucker_lenght}м )',
-                 None, None,
-                 None, None, None, None, None, max_count, None, None, None, None,
-                 razdel_3, None, 'шт', sucker_count,
-                 koef_norm, 1, '=V147*W147*X147', '=Y147-AA147-AB147-AC147-AD147', None, None, None, None, None])
 
-        work_list.append(
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'ШТАНГИ',
-             'Очистка штанг от окалини солей (АСПО)(акт ревизии)',
-             None,
-             None, None, None, None, None, None, None, None, None, None, None, '§9разд.1', None, 'час',
-             sucker_count_all,
-             0.017, 1, '=V149*W149*X149', '=Y149-AA149-AB149-AC149-AD149', None, None, None, None, None])
-
-        return work_list
-
-    def lifting_nkt(self, dict_nkt, type_equipment):
-
-        middle_nkt = ''
-        for nkt_key, nkt_value in dict_nkt.items():
-            middle_nkt_value = nkt_value[0] / nkt_value[1]
-            nkt_lenght = nkt_value[0]
-            nkt_count = nkt_value[1]
-            if 6.5 <= middle_nkt_value <= 7.5:
-                middle_nkt = '6.5-7.5'
-            elif 7.6 <= middle_nkt_value <= 8.5:
-                middle_nkt = '7.6-8.5'
-            elif 8.6 <= middle_nkt_value <= 9.5:
-                middle_nkt = '8.6-9.5'
-            elif 9.6 <= middle_nkt_value <= 10.5:
-                middle_nkt = '9.6-10.5'
-            elif 10.6 <= middle_nkt_value <= 11.5:
-                middle_nkt = '10.6-11.5'
-            elif 11.6 <= middle_nkt_value <= 12.5:
-                middle_nkt = '11.6-12.5'
-
-            max_count_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III'][middle_nkt][1]
-            koef_norm_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III'][middle_nkt][0]
-            razdel_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III']['раздел']
-
-            if max_count_3 >= nkt_lenght:
-                max_count_3 = nkt_lenght
-
-            lenght_nkt_3 = int(middle_nkt_value * max_count_3)
-
-            work_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
-                 'ПЗР СПО перед подъемом труб из скважины',
-                 None, None, None,
-                 None, None, None, None, None, None, None, None, None, '§207разд.1', None, 'шт', 1, 0.07, 1,
-                 '=V199*W199*X199', '=Y199-AA199-AB199-AC199-AD199', None, None, None, None, None]]
-
-            podien_3_list = ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
-                             'Подъем НКТ  3 скорость',
-                             None, None, None, None, nkt_key, lenght_nkt_3, middle_nkt, max_count_3,
-                             None, None, None, None, razdel_3, None, 'шт', max_count_3, koef_norm_3,
-                             1, '=V202*W202*X202', '=Y202-AA202-AB202-AC202-AD202', None, None, None, None, None]
-
-            work_list.append(podien_3_list)
-
-            nkt_count -= max_count_3
-
-            if nkt_count > 0:
-                max_count_2 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['II'][middle_nkt][1]
-                koef_norm_2 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['II'][middle_nkt][0]
-                razdel_2 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['II']['раздел']
-                if max_count_2 >= nkt_count:
-                    max_count_2 = nkt_count
-                lenght_nkt_2 = int(middle_nkt_value * max_count_2)
-                podiem_list_2 = ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
-                                 'Подъем НКТ  2 скорость',
-                                 None, None, None, None, nkt_key, lenght_nkt_2, middle_nkt, max_count_2,
-                                 None, None, None, None, razdel_2, None, 'шт', max_count_2, koef_norm_2,
-                                 1, '=V202*W202*X202', '=Y202-AA202-AB202-AC202-AD202', None, None, None, None, None]
-                nkt_count -= max_count_2
-                work_list.insert(1, podiem_list_2)
-
-            if nkt_count > 0:
-                max_count_1 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['I'][middle_nkt][1]
-                koef_norm_1 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['I'][middle_nkt][0]
-                razdel_1 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['I']['раздел']
-
-                if max_count_1 >= nkt_count:
-                    max_count_1 = nkt_count
-
-                lenght_nkt_1 = int(middle_nkt_value * max_count_1)
-                podiem_list_1 = [
-                    '=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'Подъем НКТ  1 скорость',
-                    None, None, None, None, nkt_key, lenght_nkt_1, middle_nkt, max_count_1,
-                    None, None, None, None, razdel_1, None, 'шт', max_count_1, koef_norm_1,
-                    1, '=V202*W202*X202', '=Y202-AA202-AB202-AC202-AD202', None, None, None, None, None]
-                nkt_count -= max_count_1
-                work_list.insert(1, podiem_list_1)
-
-            work_list.extend([
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'Долив скважины', None, None,
-                 None, None,
-                 None, None, None,
-                 None, None, None, None, None, '§168разд.1', None, 'шт', '=V205/10', 0.003, 1, '=V204*W204*X204',
-                 '=Y204-AA204-AB204-AC204-AD204', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
-                 'Навернуть/отвернуть предохранительное кольцо', None, None,
-                 None, None, None, None, None, None, None, None, None, None, '§300разд.1', None, 'шт',
-                 '=SUM(V200:V202)',
-                 0.003, 1, '=V205*W205*X205', '=Y205-AA205-AB205-AC205-AD205', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'Осложнение при подъеме НКТ',
-                 None, None,
-                 None, None, None,
-                 None, 'Объем', 0, None, None, None, None, 'факт', None, 'час', 0, 1, 1, '=V206*W206*X206',
-                 '=Y206-AA206-AB206-AC206-AD206', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'Замер НКТ ', None, None, None,
-                 None, None,
-                 None, None, None,
-                 None, None, None, None, '§47разд.1', None, 'шт', '=V205', 0.008, 1, '=V207*W207*X207',
-                 '=Y207-AA207-AB207-AC207-AD207', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', 'подъем 73мм', None, 'спо', type_equipment, 'Откатывание труб с 201 трубы ',
-                 None, None, None,
-                 None, None, None, None, None, None, None, None, None, '§40разд.1', None, 'шт', '=V205-201', 0.008, 1,
-                 '=V208*W208*X208', '=Y208-AA208-AB208-AC208-AD208', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Очистка от замазученности',
-                 None, None, None,
-                 None,
-                 None, None, None, None, 'АКТ№', None, None, None, 'факт', None, 'шт', 1, 0.67, 1, '=V209*W209*X209',
-                 '=Y209-AA209-AB209-AC209-AD209', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Ревизия ГНО ', None, None, None,
-                 None, None,
-                 None,
-                 None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V210*W210*X210',
-                 '=Y210-AA210-AB210-AC210-AD210', None, None, None, None, None]])
-
-        return work_list
-
-    def lifting_paker_def(self):
-        complications_of_failure_list = []
-        complications_during_disassembly_list = []
-        work_list = []
-
-        if self.complications_of_failure_combo == 'Да':
-            complications_of_failure_list = [
-                '=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-                f'{self.complications_of_failure_text_line} {self.complications_of_failure_time_begin_date}-'
-             f'{self.complications_of_failure_time_end_date}', None, None, None, None, None,
-                None, None, None, 'АКТ№', None, None, None, 'факт', None, 'час',
-                {self.complications_of_failure_text_line}, 1, 1, '=V280*W280*X280',
-                '=Y280-AA280-AB280-AC280-AD280', None, None, None, None, None]
-            work_list.append(complications_of_failure_list)
-
-        work_list.extend([
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Демонтаж ПШ', None, None, None,
-             None, None, None, None, None, None, None, None, None, '§121разд.1', None, 'шт', 1, 0.3, 1,
-             '=V281*W281*X281', '=Y281-AA281-AB281-AC281-AD281', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-             'Срыв пакера в эксплуатационной колонне', None, None, None, None, None, None, None, None,
-             None, None, None, None, '§146разд.1', None, 'шт', 1, 0.15, 1, '=V282*W282*X282',
-             '=Y282-AA282-AB282-AC282-AD282', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-             'Демонтаж планшайбы с устья скважины', None, None, None, None, None, None, None, None, None,
-             None, None, None, '§107разд.1', None, 'шт', 1, 0.32, 1, '=V283*W283*X283',
-             '=Y283-AA283-AB283-AC283-AD283', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Демонтаж АУ фонтанной арматуры',
-             None, None, None, None, None, None, None, None, None, None, None, None, '§102разд.1', None,
-             'раз', 1, 0.75, 1, '=V284*W284*X284', '=Y284-AA284-AB284-AC284-AD284', None, None, None,
-             None, None]])
-
-        if self.complications_during_disassembly_combo == "Да":
-            complications_during_disassembly_list = ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции',
-                                                     None,
-                                                     f'{self.complications_during_disassembly_text_line}', None,
-                                                     None, None, None, None, None,
-                                                     None, None, 'АКТ№', None, None, None, 'факт', None, 'час',
-                                                     self.complications_during_disassembly_time_line, 1, 1,
-                                                     '=V286*W286*X286', '=Y286-AA286-AB286-AC286-AD286', None, None,
-                                                     None, None, None],
-            work_list.append(complications_during_disassembly_list)
-
-        relocation_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Демонтаж крестовины', None,
-             None, None, None, None, None, None, None, None, None, None, None, '§300разд.1', None, 'шт',
-             1, 0.45, 1, '=V285*W285*X285', '=Y285-AA285-AB285-AC285-AD285', None, None, None, None,
-             None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Монтаж превентора ПМТ ', None,
-             None, None, None, None, None, None, None, None, None, None, None, '§109разд.1', None, 'шт',
-             1, 0.67, 1, '=V287*W287*X287', '=Y287-AA287-AB287-AC287-AD287', None, None, None, None,
-             None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-             'Поднести тяги,штурвалы,присоеденить их к превентору,установить стойки под тяги и защитные щиты',
-             None, None, None, None, None, None, None, None, None, None, None, None,
-             '§110расд.1', None, 'шт', 1, 0.23, 1, '=V288*W288*X288',
-             '=Y288-AA288-AB288-AC288-AD288', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Монтаж выкидной линии', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§301разд.1', None, 'раз', 1,
-             0.3, 1, '=V289*W289*X289', '=Y289-AA289-AB289-AC289-AD289', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', 'ПРС', self.date_work_line, 'Тех.операции', None, 'Опрессовка превентора Р=80атм (+)',
-             None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§115разд.1',
-             None, 'шт', 1, 0.92, 1, 0, '=Y290-AA290-AB290-AC290-AD290', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Устройство  рабочей площадки', None,
-             None, None, None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт',
-             1, 0.83, 1, '=V291*W291*X291', '=Y291-AA291-AB291-AC291-AD291', None, None, None, None,
-             None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж ГКШ-1200', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§184разд.1', None, 'шт', 1,
-             0.33, 1, '=V292*W292*X292', '=Y292-AA292-AB292-AC292-AD292', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж СПГ', None, None, None,
-             None, None, None, None, None, None, None, None, None, '§185разд.1', None, 'шт', 1, 0.07, 1,
-             '=V293*W293*X293', '=Y293-AA293-AB293-AC293-AD293', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'Пакер', 'ПЗР СПО пакера', None, None, None, None,
-             None, None, None, None, None, None, None, None, '§136разд.1', None, 'шт', 1, 0.48, 1, 0,
-             '=Y294-AA294-AB294-AC294-AD294', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-             'Срыв пакера в эксплуатационной колонне', None, None, None, None, None, None, None, None,
-             None, None, None, None, '§146разд.1', None, 'шт', 1, 0.15, 1, 0,
-             '=Y299-AA299-AB299-AC299-AD299', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'Пакер',
-             'Навернуть/отвернуть предохранительное кольцо', None, None, None, None, None, None, None,
-             None, None, None, None, None, '§300разд.1', None, 'шт', '=SUM(V300:V301)', 0.003, 1, 0,
-             '=Y302-AA302-AB302-AC302-AD302', None, None, None, None, None]]
-
-        if self.gno_combo == 'пакер':
-            work_list = self.lifting_nkt(self.dict_nkt, 'Фондовый пакер')
-        relocation_list.extend(work_list)
-        return relocation_list
 
 
 if __name__ == "__main__":
     # app3 = QApplication(sys.argv)
 
     app = QApplication(sys.argv)
-    window = LiftingWindow(22, 22)
+    window = LiftingShgnWindow(22, 22)
     window.show()
     sys.exit(app.exec_())
-
 
 
 def lifting_shgn(self):
@@ -1048,7 +685,7 @@ def lifting_shgn(self):
         ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР.Опрессовка ГНО на Р=40атм (+)', None, None, None,
          None, None, None, None, None, "'АКТ №1'!A1", None, None, None, '§150-152разд.1', None, 'шт', 1, 0.67, 1,
          '=V133*W133*X133', '=Y133-AA133-AB133-AC133-AD133', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None , None, 'Тех.операции', None, 'демонтаж АУШГН', None,
+        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'демонтаж АУШГН', None,
          None, None, None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт', 1, 0.67, 1,
          '=V134*W134*X134', '=Y134-AA134-AB134-AC134-AD134', None, None, None, None, None],
         ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,

@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+name: Build PyInstaller
+on:  ['push', 'pull_request']
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.8'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller pywin32
+#      - name: Install requirements
+#        run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+#          - name: Build executable
+#              run: pyinstaller --onefile --hidden-import data_base.data_base_well.database_well main.py
+      - name: Build executable
+        run:
+          pyinstaller --noconfirm --onedir --icon=imageFiles/icon/zima_ico.ico --console --name "ZIMA"
+          --add-data "normir;normir/" 
+          --add-data "users;users/" 
+          --add-data "log_files;log_files/" 
+          --add-data "property_excel;property_excel/" 
+          --add-data "data_base;data_base/" 
+          --add-data "podpisant.json;." 
+          --add-data "well_data.py;." 
+          --add-data "requirements.txt;." 
+          --add-data "perforation_correct.py;." 
+          --add-data "open_pz.py;." 
+          --add-data "find.py;." 
+          --add-data "data_correct_position_people.py;." 
+          --add-data "data_correct.py;." 
+          --add-data "cdng.py;." 
+          --add-data "category_correct.py;."          
+          "main.py"
+
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZIMA_Normir
+          path: dist/*

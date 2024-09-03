@@ -1,3 +1,4 @@
+from datetime import datetime
 import sys
 
 import well_data
@@ -7,7 +8,9 @@ from normir.files_with_list import cause_presence_of_jamming, cause_discharge_li
 
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, QTabWidget, QMainWindow, QPushButton, \
-    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit
+    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateTimeEdit
+
+from normir.lifting_gno import TabPage_SO_Lifting_gno, LiftingWindow
 
 
 class TabPage_SO_Jamming(QWidget):
@@ -20,7 +23,10 @@ class TabPage_SO_Jamming(QWidget):
 
         self.date_work_label = QLabel('Дата работы')
         self.date_work_line = QLineEdit(self)
-        # self.date_work_line.setText(f'{well_data.date_work}')
+        self.date_work_line.setText(f'{well_data.date_work}')
+
+        self.date_work_str = datetime.strptime(self.date_work_line.text(), '%d.%m.%Y')
+
 
         self.count_jamming_label = QLabel("Счет глушения", self)
         self.count_jamming_combo = QComboBox(self)
@@ -115,12 +121,27 @@ class TabPage_SO_Jamming(QWidget):
 
             self.volume_well_discharge_label.setParent(None)
             self.volume_well_discharge_line.setParent(None)
+            self.time_well_discharge_end_label.setParent(None)
+            self.time_well_discharge_end_date.setParent(None)
+            self.time_well_discharge_begin_label.setParent(None)
+            self.time_well_discharge_begin_date.setParent(None)
         else:
             self.volume_well_discharge_label = QLabel('Объем разрядки')
             self.volume_well_discharge_line = QLineEdit(self)
 
+            self.time_well_discharge_begin_label = QLabel('начало демонтажа')
+            self.time_well_discharge_begin_date = QDateTimeEdit(self)
+            self.time_well_discharge_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.time_well_discharge_begin_date.setDateTime(self.date_work_str)
+
+            self.time_well_discharge_end_label = QLabel('Окончание демонтажа')
+            self.time_well_discharge_end_date = QDateTimeEdit(self)
+            self.time_well_discharge_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.time_well_discharge_end_date.setDateTime(self.date_work_str)
+
             self.time_well_discharge_label = QLabel('Продолжительность разрядки')
             self.time_well_discharge_line = QLineEdit(self)
+            self.time_well_discharge_line.setValidator(self.validator_float)
 
             self.need_well_discharge_more_label = QLabel('Была ли разрядка более 2ч')
             self.need_well_discharge_more_combo = QComboBox(self)
@@ -129,18 +150,40 @@ class TabPage_SO_Jamming(QWidget):
             self.cause_discharge_label = QLabel('Причина разрядки')
             self.cause_discharge_combo = QComboBox(self)
             self.cause_discharge_combo.addItems(cause_discharge_list)
+            self.cause_discharge_combo.setCurrentIndex(1)
 
             self.grid.addWidget(self.volume_well_discharge_label, 6, 2)
             self.grid.addWidget(self.volume_well_discharge_line, 7, 2)
-            self.grid.addWidget(self.time_well_discharge_label, 6, 3)
-            self.grid.addWidget(self.time_well_discharge_line, 7, 3)
-            self.grid.addWidget(self.cause_discharge_label, 6, 4)
-            self.grid.addWidget(self.cause_discharge_combo, 7, 4)
+            self.grid.addWidget(self.time_well_discharge_begin_label, 6, 3)
+            self.grid.addWidget(self.time_well_discharge_begin_date, 7, 3)
+            self.grid.addWidget(self.time_well_discharge_end_label, 6, 4)
+            self.grid.addWidget(self.time_well_discharge_end_date, 7, 4)
+            self.grid.addWidget(self.time_well_discharge_label, 6, 5)
+            self.grid.addWidget(self.time_well_discharge_line, 7, 5)
+            self.grid.addWidget(self.cause_discharge_label, 6, 6)
+            self.grid.addWidget(self.cause_discharge_combo, 7, 6)
             self.grid.addWidget(self.need_well_discharge_more_label, 8, 1)
             self.grid.addWidget(self.need_well_discharge_more_combo, 9, 1)
 
             self.need_well_discharge_more_combo.currentTextChanged.connect(self.update_need_well_discharge_more_combo)
 
+            self.time_well_discharge_begin_date.dateTimeChanged.connect(
+                self.update_time_well_discharge_time)
+            self.time_well_discharge_end_date.dateTimeChanged.connect(
+                self.update_time_well_discharge_time)
+
+
+    def update_time_well_discharge_time(self):
+
+        time_end = self.time_well_discharge_end_date.dateTime()
+        time_begin = self.time_well_discharge_begin_date.dateTime()
+
+        time_difference = TabPage_SO_Lifting_gno.calculate_date(self, time_begin, time_end)
+        self.time_well_discharge_line.setText(str(time_difference))
+        if float(self.time_well_discharge_line.text()) > 2:
+            self.need_well_discharge_more_combo.setCurrentIndex(1)
+        else:
+            self.need_well_discharge_more_combo.setCurrentIndex(0)
     def update_need_well_discharge_more_combo(self, index):
         if index == 'Нет':
             self.need_well_discharge_more_text_label.setParent(None)
@@ -149,11 +192,6 @@ class TabPage_SO_Jamming(QWidget):
             self.cause_discharge_more_label.setParent(None)
             self.cause_discharge_more_combo.setParent(None)
 
-
-
-            self.time_well_discharge_more_label.setParent(None)
-            self.time_well_discharge_more_line.setParent(None)
-
             self.cause_discharge_more_label.setParent(None)
             self.cause_discharge_more_combo.setParent(None)
 
@@ -161,9 +199,8 @@ class TabPage_SO_Jamming(QWidget):
 
             self.need_well_discharge_more_text_label = QLabel('Текст разрядки скважины')
             self.need_well_discharge_more_text_line = QLineEdit(self)
-            self.need_well_discharge_more_text_line.setText('Разрядка скважины (ВРЕМЯ)')
-
-
+            self.need_well_discharge_more_text_line.setText(f'Разрядка скважины '
+                                                            f'{self.volume_well_discharge_line.text()}м3')
 
             self.volume_well_discharge_more_label = QLabel('Объем разрядки')
             self.volume_well_discharge_more_line = QLineEdit(self)
@@ -254,6 +291,10 @@ class JammingWindow(QMainWindow):
         self.volume_well_discharge_more_line = None
         self.time_well_discharge_more_line = None
 
+        self.time_well_discharge_end_date = None
+
+        self.time_well_discharge_begin_date = None
+
     def adjustRowHeight(self, row, text):
         font_metrics = self.tableWidget.fontMetrics()  # Получаем метрики шрифта
         text_height = font_metrics.height()  # Высота строки на основе шрифта
@@ -272,7 +313,10 @@ class JammingWindow(QMainWindow):
 
         self.count_jamming_combo = current_widget.count_jamming_combo.currentText()
         self.need_well_discharge_combo = current_widget.need_well_discharge_combo.currentText()
-        self.need_well_discharge_more_combo = current_widget.need_well_discharge_more_combo.currentText()
+
+        self.need_well_discharge_combo = current_widget.need_well_discharge_combo.currentText()
+
+
         self.date_work_line = current_widget.date_work_line.text()
         self.volume_jamming_line = current_widget.volume_jamming_line.text()
         self.fluid_well_line = current_widget.fluid_well_line.text()
@@ -282,6 +326,7 @@ class JammingWindow(QMainWindow):
         self.expectation_combo = current_widget.expectation_combo.currentText()
         work_list = []
         if self.need_well_discharge_combo == 'Да':
+            self.need_well_discharge_more_combo = current_widget.need_well_discharge_more_combo.currentText()
             self.source_of_work_combo = current_widget.source_of_work_combo.currentText()
             self.cause_discharge_combo = current_widget.cause_discharge_combo.currentText()
             self.volume_well_discharge_line = current_widget.volume_well_discharge_line.text()
@@ -292,6 +337,29 @@ class JammingWindow(QMainWindow):
                 self.time_well_discharge_line = float(self.time_well_discharge_line)
             if self.time_well_discharge_line > 2:
                 self.time_well_discharge_line_2 = 2
+
+            self.time_well_discharge_end_date = current_widget.time_well_discharge_end_date.dateTime().toPyDateTime()
+
+            self.time_well_discharge_end_date = \
+               LiftingWindow.change_string_in_date(self.time_well_discharge_end_date)
+
+            self.time_well_discharge_begin_date = current_widget.time_well_discharge_begin_date.dateTime().toPyDateTime()
+
+            self.time_well_discharge_begin_date = \
+                LiftingWindow.change_string_in_date(self.time_well_discharge_begin_date)
+
+
+            if self.time_well_discharge_line != '':
+                self.time_well_discharge_line = round(float(self.time_well_discharge_line), 1)
+
+            else:
+                QMessageBox.warning(self, 'Ошибка', f'Не введены время разрядки')
+                return
+
+            if self.time_well_discharge_line <= 0:
+                QMessageBox.warning(self, 'Ошибка', f'Затраченное время разрядки не может быть отрицательным или равным нулю')
+                return
+
 
             work_list.append(self.well_discharge())
             if self.need_well_discharge_more_combo == 'Да':
@@ -330,11 +398,13 @@ class JammingWindow(QMainWindow):
 
     def well_discharge_more(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Разрядка', None, self.need_well_discharge_more_text_line, None, None,
+            ['=ROW()-ROW($A$46)', None, None, 'Разрядка', None, f'{self.need_well_discharge_more_text_line} '
+                                                                f'{self.time_well_discharge_begin_date}-'
+                                                                f'{self.time_well_discharge_end_date}', None, None,
              None, 'Объем',
              self.volume_well_discharge_more_line, 'причины рязрядки:', self.cause_discharge_more_combo,
              None, 'АКТ№', None, None, None, 'факт',
-             None, 'час', self.time_well_discharge_more_line, 1, 1,
+             None, 'час', self.time_well_discharge_more_line - 2, 1, 1,
              '=V121*W121*X121', '=Y121-AA121-AB121-AC121-AD121', None, None, None, None, None]]
         return work_list
 

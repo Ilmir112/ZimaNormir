@@ -569,13 +569,7 @@ class MyWindow(QMainWindow):
         context_menu = QMenu(self)
         action_menu = context_menu.addMenu("вид работ")
 
-        del_menu = context_menu.addMenu('удаление строки')
-        deleteString_action = QAction("Удалить строку", self)
-        del_menu.addAction(deleteString_action)
-        deleteString_action.triggered.connect(self.deleteString)
-        emptyString_action = QAction("добавить пустую строку", self)
-        del_menu.addAction(emptyString_action)
-        emptyString_action.triggered.connect(self.emptyString)
+
 
         relocation_menu = QAction('Переезд')
         action_menu.addAction(relocation_menu)
@@ -585,15 +579,53 @@ class MyWindow(QMainWindow):
         action_menu.addAction(jamming_menu)
         jamming_menu.triggered.connect(self.jamming_menu_work)
 
-        lifting_gno_menu = QAction('Подьем ГНО')
-        action_menu.addAction(lifting_gno_menu)
-        lifting_gno_menu.triggered.connect(self.lifting_gno_menu)
+        lifting_gno_menu = action_menu.addMenu('Подьем ГНО')
+
+        lifting_paker_menu = QAction('Подьем НКТ')
+        lifting_gno_menu.addAction(lifting_paker_menu)
+        lifting_paker_menu.triggered.connect(self.lifting_paker_menu)
+
+        lifting_shgn_menu = QAction('Подьем штанг')
+        lifting_gno_menu.addAction(lifting_shgn_menu)
+        lifting_shgn_menu.triggered.connect(self.lifting_shgn_menu)
+
+        spo_template_without_skm_menu = QAction('СПО ПСШ, СПО шаблона, воронки, пера')
+        action_menu.addAction(spo_template_without_skm_menu)
+        spo_template_without_skm_menu.triggered.connect(self.template_without_skm_action)
+
+        rod_head_action = QAction('СПО Штанголовки')
+        action_menu.addAction(rod_head_action)
+        rod_head_action.triggered.connect(self.rod_head_action_def)
+
+        raid_action = QAction('СПО Райбера')
+        action_menu.addAction(raid_action)
+        raid_action.triggered.connect(self.raid_action_def)
+
+        spo_paker_action = QAction('СПО пакер')
+        action_menu.addAction( spo_paker_action )
+        spo_paker_action.triggered.connect(self.spo_paker_action)
+
+        work_of_third_parties_action = QAction('Работа сторонних организаций при спущенных НКТ')
+        action_menu.addAction(work_of_third_parties_action)
+        work_of_third_parties_action.triggered.connect(self.work_of_third_parties_action)
+
+        work_of_third_parties_without_action = QAction('Работа сторонних организаций при спущенных НКТ')
+        action_menu.addAction(work_of_third_parties_without_action)
+        work_of_third_parties_without_action.triggered.connect(self.work_of_third_parties_without_action)
 
         alone_menu = action_menu.addMenu('одиночные операции')
 
         mkp_action = QAction('Копка шахты')
         alone_menu.addAction(mkp_action)
         mkp_action.triggered.connect(self.earthwork_work)
+
+        del_menu = context_menu.addMenu('удаление строки')
+        deleteString_action = QAction("Удалить строку", self)
+        del_menu.addAction(deleteString_action)
+        deleteString_action.triggered.connect(self.deleteString)
+        emptyString_action = QAction("добавить пустую строку", self)
+        del_menu.addAction(emptyString_action)
+        emptyString_action.triggered.connect(self.emptyString)
 
         context_menu.exec_(self.mapToGlobal(position))
 
@@ -612,10 +644,118 @@ class MyWindow(QMainWindow):
             self.raid_window.close()  # Close window.
             self.raid_window = None
 
-    def lifting_gno_menu(self):
+    def lifting_paker_menu(self):
         from normir.lifting_gno import LiftingWindow
         if self.raid_window is None:
             self.raid_window = LiftingWindow(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+
+    def close_raid_window(self, event):
+        # Вызов обработчика закрытия окна `TemplateWithoutSKM`
+        event.accept()  # Разрешаем стандартное закрытие
+
+        # Сброс ссылки на окно
+        self.raid_window = None
+    def template_without_skm_action(self):
+        from normir.template_without_skm import TemplateWithoutSKM
+
+        if self.raid_window is None:
+            self.raid_window = TemplateWithoutSKM(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+    def lifting_shgn_menu(self):
+        from normir.lifting_shgn import LiftingShgnWindow
+        if self.raid_window is None:
+            self.raid_window = LiftingShgnWindow(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+    def rod_head_action_def(self):
+        from normir.rod_head_work import LiftingRodHeadWindow
+        if self.raid_window is None:
+            self.raid_window = LiftingRodHeadWindow(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+    def spo_paker_action(self):
+        from normir.spo_pakera import SpoPakerAction
+        if self.raid_window is None:
+            self.raid_window = SpoPakerAction(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+    def raid_action_def(self):
+        from normir.raider_work import RaidWork
+        if self.raid_window is None:
+            self.raid_window = RaidWork(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+    def work_of_third_parties_action(self):
+        from normir.work_of_third_parties import WorkOfThirdPaties
+        if self.raid_window is None:
+            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+    def work_of_third_parties_without_action(self):
+        from normir.work_of_third_parties_without_nkt import WorkOfThirdPaties
+        if self.raid_window is None:
+            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
             # self.raid_window.setGeometry(200, 400, 300, 400)
 
             self.set_modal_window(self.raid_window)
@@ -711,6 +851,7 @@ class MyWindow(QMainWindow):
     def deleteString(self):
         selected_ranges = self.table_widget.selectedRanges()
         selected_rows = []
+        aaaa = well_data.count_row_well
         if self.ins_ind > well_data.count_row_well:
             # Получение индексов выбранных строк
             for selected_range in selected_ranges:
@@ -726,11 +867,12 @@ class MyWindow(QMainWindow):
             # print(selected_rows)
             for row in selected_rows:
                 self.table_widget.removeRow(row)
-                well_data.data_list.pop(row - well_data.count_row_well)
+
 
     def emptyString(self):
         if self.ins_ind > well_data.count_row_well:
-            ryber_work_list = [[None, None, None, None, None, None, None, None, None, None, None, None]]
+            ryber_work_list = [
+                [None, None, None, None, None, None, None, None, None, None, None, None]]
             self.populate_row(self.ins_ind, ryber_work_list, self.table_widget)
 
     def populate_row(self, ins_ind, work_list, table_widget, work_plan='krs'):
@@ -753,8 +895,20 @@ class MyWindow(QMainWindow):
                         text = data
                         table_widget.setRowHeight(row, int(len(text)/2))
 
-            if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+            if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]) :
                 table_widget.setSpan(i + ins_ind, 5, 1, 5)
+            elif any(['Демонтаж ЭЦН' in row_str  or 'Демонтаж УЭЦН' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                table_widget.setSpan(i + ins_ind, 5, 1, 2)
+                table_widget.setSpan(i + ins_ind, 7, 1, 3)
+                table_widget.setSpan(i + ins_ind, 11, 1, 2)
+
+            elif any(['Крезол - НС' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                table_widget.setSpan(i + ins_ind, 5, 1, 3)
+                table_widget.setSpan(i + ins_ind, 9, 1, 2)
+                table_widget.setSpan(i + ins_ind, 11, 1, 2)
+
+            elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                table_widget.setSpan(i + ins_ind, 5, 1, 6)
             elif any(['Осложнение при подъеме' in row_str for row_index, row_str in enumerate(row_data) if
                       type(row_str) == str]) or any(['Объем' == row_str for row_index, row_str in enumerate(row_data) if
                       type(row_str) == str]):
