@@ -30,7 +30,7 @@ class TabPage_SO_Timplate(QWidget):
 
         self.select_type_combo_label = QLabel('Выбор компоновки спуска')
         self.select_type_combo = QComboBox(self)
-        self.select_type_combo.addItems(['', 'НКТ', 'СБТ'])
+        self.select_type_combo.addItems(['', 'НКТ'])
 
         self.grid = QGridLayout(self)
 
@@ -58,11 +58,11 @@ class TabPage_SO_Timplate(QWidget):
         self.nkt_89_lenght_label = QLabel('Длина НКТ89-102')
         self.nkt_89_count_label = QLabel('Кол-во НКТ89-102')
         self.volume_well_flush_label = QLabel('Объем промывки')
-        self.solvent_injection_label = QLabel('Закачка растворителя')
+        self.installation_pipe_perforator_label = QLabel('монтаж трубного перфоратора')
         self.nkt_is_same_label = QLabel('Кол-во НКТ на подъем совпадает со спуском')
-        self.normalization_question_label = QLabel('Была ли нормализация')
-        self.raid_work_text_label = QLabel('Интервалы райбирования')
-        self.count_of_nkt_extensions_label = QLabel('Кол-во метров райбирования')
+        self.deinstallation_perforation_label = QLabel('Был ли демонтаж трубного перфоратора')
+
+        # self.count_of_nkt_extensions_label = QLabel('Кол-во метров райбирования')
 
     def update_select_type_combo(self, index):
 
@@ -132,20 +132,20 @@ class TabPage_SO_Timplate(QWidget):
         self.grid.addWidget(self.complications_of_failure_label, 28, 1)
         self.grid.addWidget(self.complications_of_failure_combo, 29, 1)
 
-        self.volume_well_flush_line = QLineEdit(self)
-        self.volume_well_flush_line.setValidator(self.validator_float)
-
-        self.grid.addWidget(self.volume_well_flush_label, 30, 3)
-        self.grid.addWidget(self.volume_well_flush_line, 31, 3)
+        # self.volume_well_flush_line = QLineEdit(self)
+        # self.volume_well_flush_line.setValidator(self.validator_float)
+        #
+        # self.grid.addWidget(self.volume_well_flush_label, 30, 3)
+        # self.grid.addWidget(self.volume_well_flush_line, 31, 3)
 
         self.grid.addWidget(self.complications_when_lifting_label, 46, 1)
         self.grid.addWidget(self.complications_when_lifting_combo, 47, 1)
 
-        self.solvent_injection_combo = QComboBox(self)
-        self.solvent_injection_combo.addItems(['Нет', 'Да'])
+        self.installation_pipe_perforator_combo = QComboBox(self)
+        self.installation_pipe_perforator_combo.addItems(['Нет', 'Да'])
 
-        self.grid.addWidget(self.solvent_injection_label, 32, 1)
-        self.grid.addWidget(self.solvent_injection_combo, 33, 1)
+        self.grid.addWidget(self.installation_pipe_perforator_label, 12, 1)
+        self.grid.addWidget(self.installation_pipe_perforator_combo, 13, 1)
 
         self.nkt_is_same_combo = QComboBox(self)
         self.nkt_is_same_combo.addItems(['Да', 'Нет'])
@@ -153,17 +153,17 @@ class TabPage_SO_Timplate(QWidget):
         self.grid.addWidget(self.nkt_is_same_label, 34, 1)
         self.grid.addWidget(self.nkt_is_same_combo, 35, 1)
 
-        self.normalization_question_combo = QComboBox(self)
-        self.normalization_question_combo.addItems(['Нет', 'Да'])
+        self.deinstallation_perforation_combo = QComboBox(self)
+        self.deinstallation_perforation_combo.addItems(['Нет', 'Да'])
 
-        self.grid.addWidget(self.normalization_question_label, 50, 1)
-        self.grid.addWidget(self.normalization_question_combo, 51, 1)
-
-        self.technological_crap_question_combo = QComboBox(self)
-        self.technological_crap_question_combo.addItems(['Нет', 'Да'])
-
-        self.grid.addWidget(self.technological_crap_question_label, 52, 1)
-        self.grid.addWidget(self.technological_crap_question_combo, 53, 1)
+        self.grid.addWidget(self.deinstallation_perforation_label, 50, 1)
+        self.grid.addWidget(self.deinstallation_perforation_combo, 51, 1)
+        #
+        # self.technological_crap_question_combo = QComboBox(self)
+        # self.technological_crap_question_combo.addItems(['Нет', 'Да'])
+        #
+        # self.grid.addWidget(self.technological_crap_question_label, 52, 1)
+        # self.grid.addWidget(self.technological_crap_question_combo, 53, 1)
 
         self.equipment_audit_label = QLabel('Была ли ревизия')
         self.equipment_audit_combo = QComboBox(self)
@@ -174,10 +174,11 @@ class TabPage_SO_Timplate(QWidget):
 
         self.equipment_audit_combo.currentTextChanged.connect(self.update_equipment_audit_combo)
         # self.pressuar_gno_combo.currentTextChanged.connect(self.update_pressuar_gno_combo)
-        self.technological_crap_question_combo.currentTextChanged.connect(self.update_technological_crap_question_combo)
-        self.solvent_injection_combo.currentTextChanged.connect(self.update_solvent_injection_combo)
+        # self.technological_crap_question_combo.currentTextChanged.connect(self.update_technological_crap_question_combo)
+        self.installation_pipe_perforator_combo.currentTextChanged.connect(
+            self.update_installation_pipe_perforator_combo)
         # self.pressuar_gno_combo.currentTextChanged.connect(self.update_pressuar_gno_combo)
-        self.normalization_question_combo.currentTextChanged.connect(self.update_normalization_question_combo)
+        self.deinstallation_perforation_combo.currentTextChanged.connect(self.update_deinstallation_perforation_combo)
         self.complications_of_failure_combo.currentTextChanged.connect(self.update_complications_of_failure)
         self.complications_when_lifting_combo.currentTextChanged.connect(self.update_complications_when_lifting)
 
@@ -185,49 +186,69 @@ class TabPage_SO_Timplate(QWidget):
             self.update_complications_during_tubing_running_combo)
         self.nkt_is_same_combo.currentTextChanged.connect(self.update_nkt_is_same_combo)
 
-        self.raid_work_text_edit = QLineEdit(self)
+        self.initition_combo_label = QLabel('Была ли инициация')
+        self.initition_combo = QComboBox(self)
+        self.initition_combo.addItems(['Нет', 'Да'])
 
-        self.count_of_nkt_extensions_line = QLineEdit(self)
-        self.count_of_nkt_extensions_line.setValidator(self.validator_float)
+        self.grid.addWidget(self.initition_combo_label, 30, 1)
+        self.grid.addWidget(self.initition_combo, 31, 1)
 
-        self.grid.addWidget(self.raid_work_text_label, 30, 1)
-        self.grid.addWidget(self.raid_work_text_edit, 31, 1)
+        # self.grid.addWidget(self.count_of_nkt_extensions_label, 30, 4)
+        # self.grid.addWidget(self.count_of_nkt_extensions_line, 31, 4)
 
-        self.drilling_ek_combo_label = QLabel('Что бурили')
-        self.drilling_ek_combo = QComboBox(self)
-        self.drilling_ek_combo.addItems(drilling_ek_list)
+        self.installation_pipe_perforator_combo.setCurrentIndex(1)
 
-        self.grid.addWidget(self.drilling_ek_combo_label, 30, 2)
-        self.grid.addWidget(self.drilling_ek_combo, 31, 2)
+        self.initition_combo.currentTextChanged.connect(self.update_initition_combo)
+        self.initition_combo.setCurrentIndex(1)
+        self.deinstallation_perforation_combo.setCurrentIndex(1)
+        self.equipment_audit_combo.setCurrentIndex(1)
 
-        self.grid.addWidget(self.count_of_nkt_extensions_label, 30, 4)
-        self.grid.addWidget(self.count_of_nkt_extensions_line, 31, 4)
+    def update_initition_combo(self, index):
+        if index == 'Нет':
 
-        self.raid_work_time_begin_label = QLabel('начало райбирования')
-        self.raid_work_time_begin_date = QDateTimeEdit(self)
-        self.raid_work_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-        self.raid_work_time_begin_date.setDateTime(self.date_work_str)
+            self.initition_perforator_text_label.setParent(None)
+            self.initition_perforator_text_edit.setParent(None)
 
-        self.raid_work_time_end_label = QLabel('Окончание осложнения райбирования')
-        self.raid_work_time_end_date = QDateTimeEdit(self)
-        self.raid_work_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-        self.raid_work_time_end_date.setDateTime(self.date_work_str)
+            self.initition_perforator_time_begin_label.setParent(None)
+            self.initition_perforator_time_begin_date.setParent(None)
 
-        self.raid_work_time_label = QLabel('затраченное время')
-        self.raid_work_time_line = QLineEdit(self)
-        self.raid_work_time_line.setValidator(self.validator_float)
+            self.initition_perforator_time_end_label.setParent(None)
+            self.initition_perforator_time_end_date.setParent(None)
 
-        self.grid.addWidget(self.raid_work_time_begin_label, 30, 5)
-        self.grid.addWidget(self.raid_work_time_begin_date, 31, 5)
-        self.grid.addWidget(self.raid_work_time_end_label, 30, 6)
-        self.grid.addWidget(self.raid_work_time_end_date, 31, 6)
-        self.grid.addWidget(self.raid_work_time_label, 30, 7)
-        self.grid.addWidget(self.raid_work_time_line, 31, 7)
+            self.initition_perforator_time_label.setParent(None)
+            self.initition_perforator_time_line.setParent(None)
 
-        self.raid_work_time_end_date.dateTimeChanged.connect(self.update_date_of_raid)
-        self.raid_work_time_begin_date.dateTimeChanged.connect(self.update_date_of_raid)
+        else:
 
-        self.raid_work_text_edit.editingFinished.connect(self.update_raid_work)
+            self.initition_perforator_text_label = QLabel('Текст инициации перфорации')
+            self.initition_perforator_text_edit = QLineEdit(self)
+
+            self.initition_perforator_time_begin_label = QLabel('начало инициации')
+            self.initition_perforator_time_begin_date = QDateTimeEdit(self)
+            self.initition_perforator_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.initition_perforator_time_begin_date.setDateTime(self.date_work_str)
+
+            self.initition_perforator_time_end_label = QLabel('Окончание инициации')
+            self.initition_perforator_time_end_date = QDateTimeEdit(self)
+            self.initition_perforator_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.initition_perforator_time_end_date.setDateTime(self.date_work_str)
+
+            self.initition_perforator_time_label = QLabel('затраченное время')
+            self.initition_perforator_time_line = QLineEdit(self)
+            self.initition_perforator_time_line.setValidator(self.validator_float)
+
+            self.grid.addWidget(self.initition_perforator_time_begin_label, 30, 5)
+            self.grid.addWidget(self.initition_perforator_time_begin_date, 31, 5)
+            self.grid.addWidget(self.initition_perforator_time_end_label, 30, 6)
+            self.grid.addWidget(self.initition_perforator_time_end_date, 31, 6)
+            self.grid.addWidget(self.initition_perforator_time_label, 30, 7)
+            self.grid.addWidget(self.initition_perforator_time_line, 31, 7)
+
+            self.initition_perforator_time_end_date.dateTimeChanged.connect(self.update_date_of_raid)
+            self.initition_perforator_time_begin_date.dateTimeChanged.connect(self.update_date_of_raid)
+
+            self.grid.addWidget(self.initition_perforator_text_label, 30, 2)
+            self.grid.addWidget(self.initition_perforator_text_edit, 31, 2)
 
     def update_equipment_audit_combo(self, index):
         if index == 'Нет':
@@ -240,21 +261,6 @@ class TabPage_SO_Timplate(QWidget):
 
             self.grid.addWidget(self.equipment_audit_text_label, 54, 3)
             self.grid.addWidget(self.equipment_audit_text_line, 55, 3)
-
-    def update_raid_work(self):
-        text = self.raid_work_text_edit.text()
-        count_skm = 0
-        if ',' in text and '-' in text:
-            for interval in text.split(','):
-                if len(interval.split('-')) == 2:
-                    roof, sole = list(map(int, interval.split('-')))
-                    count_skm += (sole - roof)
-        elif '-' in text:
-            if len(text.split('-')) == 2:
-                roof, sole = list(map(int, text.split('-')))
-                count_skm += int((sole - roof))
-
-        self.count_of_nkt_extensions_line.setText(str(count_skm))
 
     def update_nkt_is_same_combo(self, index):
         if index == 'Да':
@@ -380,58 +386,59 @@ class TabPage_SO_Timplate(QWidget):
             self.complications_of_failure_time_end_date.dateTimeChanged.connect(self.update_date_of_failure)
             self.complications_of_failure_time_begin_date.dateTimeChanged.connect(self.update_date_of_failure)
 
-    def update_normalization_question_combo(self, index):
+
+    def update_deinstallation_perforation_combo(self, index):
 
         if index == 'Нет':
-            self.normalization_question_text_label.setParent(None)
-            self.normalization_question_text_line.setParent(None)
-            self.normalization_question_time_label.setParent(None)
-            self.normalization_question_time_line.setParent(None)
-            self.normalization_question_time_end_label.setParent(None)
-            self.normalization_question_time_end_date.setParent(None)
-            self.normalization_question_time_begin_label.setParent(None)
-            self.normalization_question_time_begin_date.setParent(None)
+            self.deinstallation_perforation_text_label.setParent(None)
+            self.deinstallation_perforation_text_line.setParent(None)
+            self.deinstallation_perforation_time_label.setParent(None)
+            self.deinstallation_perforation_time_line.setParent(None)
+            self.deinstallation_perforation_time_end_label.setParent(None)
+            self.deinstallation_perforation_time_end_date.setParent(None)
+            self.deinstallation_perforation_time_begin_label.setParent(None)
+            self.deinstallation_perforation_time_begin_date.setParent(None)
         else:
-            self.normalization_question_text_label = QLabel('Текст осложнения')
-            self.normalization_question_text_line = QLineEdit(self)
+            self.deinstallation_perforation_text_label = QLabel('Текст демонтажа')
+            self.deinstallation_perforation_text_line = QLineEdit(self)
 
-            self.normalization_question_time_begin_label = QLabel('начало осложнения')
-            self.normalization_question_time_begin_date = QDateTimeEdit(self)
-            self.normalization_question_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.normalization_question_time_begin_date.setDateTime(self.date_work_str)
+            self.deinstallation_perforation_time_begin_label = QLabel('начало демонтажа')
+            self.deinstallation_perforation_time_begin_date = QDateTimeEdit(self)
+            self.deinstallation_perforation_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.deinstallation_perforation_time_begin_date.setDateTime(self.date_work_str)
 
-            self.normalization_question_time_end_label = QLabel('Окончание осложнения')
-            self.normalization_question_time_end_date = QDateTimeEdit(self)
-            self.normalization_question_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.normalization_question_time_end_date.setDateTime(self.date_work_str)
+            self.deinstallation_perforation_time_end_label = QLabel('Окончание демонтажа')
+            self.deinstallation_perforation_time_end_date = QDateTimeEdit(self)
+            self.deinstallation_perforation_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.deinstallation_perforation_time_end_date.setDateTime(self.date_work_str)
 
-            self.normalization_question_time_label = QLabel('затраченное время')
-            self.normalization_question_time_line = QLineEdit(self)
-            self.normalization_question_time_line.setValidator(self.validator_float)
+            self.deinstallation_perforation_time_label = QLabel('затраченное время')
+            self.deinstallation_perforation_time_line = QLineEdit(self)
+            self.deinstallation_perforation_time_line.setValidator(self.validator_float)
 
-            self.grid.addWidget(self.normalization_question_text_label, 50, 2)
-            self.grid.addWidget(self.normalization_question_text_line, 51, 2)
-            self.grid.addWidget(self.normalization_question_time_begin_label, 50, 3)
-            self.grid.addWidget(self.normalization_question_time_begin_date, 51, 3)
-            self.grid.addWidget(self.normalization_question_time_end_label, 50, 4)
-            self.grid.addWidget(self.normalization_question_time_end_date, 51, 4)
-            self.grid.addWidget(self.normalization_question_time_label, 50, 5)
-            self.grid.addWidget(self.normalization_question_time_line, 51, 5)
+            self.grid.addWidget(self.deinstallation_perforation_text_label, 50, 2)
+            self.grid.addWidget(self.deinstallation_perforation_text_line, 51, 2)
+            self.grid.addWidget(self.deinstallation_perforation_time_begin_label, 50, 3)
+            self.grid.addWidget(self.deinstallation_perforation_time_begin_date, 51, 3)
+            self.grid.addWidget(self.deinstallation_perforation_time_end_label, 50, 4)
+            self.grid.addWidget(self.deinstallation_perforation_time_end_date, 51, 4)
+            self.grid.addWidget(self.deinstallation_perforation_time_label, 50, 5)
+            self.grid.addWidget(self.deinstallation_perforation_time_line, 51, 5)
 
-            self.normalization_question_time_end_date.dateTimeChanged.connect(self.update_date_of_normalization)
-            self.normalization_question_time_begin_date.dateTimeChanged.connect(self.update_date_of_normalization)
+            self.deinstallation_perforation_time_end_date.dateTimeChanged.connect(self.update_date_of_normalization)
+            self.deinstallation_perforation_time_begin_date.dateTimeChanged.connect(self.update_date_of_normalization)
 
-    def update_solvent_injection_combo(self, index):
+    def update_installation_pipe_perforator_combo(self, index):
 
         if index == 'Нет':
-            self.solvent_volume_text_label.setParent(None)
-            self.solvent_volume_text_line.setParent(None)
-            self.solvent_volume_time_label.setParent(None)
-            self.solvent_volume_time_line.setParent(None)
-            self.solvent_volume_time_end_label.setParent(None)
-            self.solvent_volume_time_end_date.setParent(None)
-            self.solvent_volume_time_begin_label.setParent(None)
-            self.solvent_volume_time_begin_date.setParent(None)
+            self.installation_pipe_perforator_text_label.setParent(None)
+            self.installation_pipe_perforator_text_line.setParent(None)
+            self.installation_pipe_perforator_time_label.setParent(None)
+            self.installation_pipe_perforator_time_line.setParent(None)
+            self.installation_pipe_perforator_time_end_label.setParent(None)
+            self.installation_pipe_perforator_time_end_date.setParent(None)
+            self.installation_pipe_perforator_time_begin_label.setParent(None)
+            self.installation_pipe_perforator_time_begin_date.setParent(None)
             self.volume_of_finishing_label.setParent(None)
             self.volume_of_finishing_line.setParent(None)
             self.volume_flush_line.setParent(None)
@@ -439,50 +446,38 @@ class TabPage_SO_Timplate(QWidget):
             self.volume_flush_label.setParent(None)
 
         else:
-            self.solvent_volume_text_label = QLabel('Объем раствооителя')
-            self.solvent_volume_text_line = QLineEdit(self)
-            self.solvent_volume_text_line.setValidator(self.validator_float)
-            self.solvent_volume_text_line.setText('2')
+            self.installation_pipe_perforator_text_label = QLabel('Текст монтажа трубного перфоратора')
+            self.installation_pipe_perforator_text_line = QLineEdit(self)
+            self.installation_pipe_perforator_text_line.setText('ГИС - м/ж трубного перфоратора')
 
-            self.volume_of_finishing_label = QLabel('Объем доводки тех водой')
-            self.volume_of_finishing_line = QLineEdit(self)
-            self.volume_of_finishing_line.setValidator(self.validator_float)
+            self.installation_pipe_perforator_time_begin_label = QLabel('начало реагирования')
+            self.installation_pipe_perforator_time_begin_date = QDateTimeEdit(self)
+            self.installation_pipe_perforator_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.installation_pipe_perforator_time_begin_date.setDateTime(self.date_work_str)
 
-            self.volume_flush_label = QLabel('Объем промывки')
-            self.volume_flush_line = QLineEdit(self)
-            self.volume_flush_line.setValidator(self.validator_float)
+            self.installation_pipe_perforator_time_end_label = QLabel('Окончание реагирования')
+            self.installation_pipe_perforator_time_end_date = QDateTimeEdit(self)
+            self.installation_pipe_perforator_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+            self.installation_pipe_perforator_time_end_date.setDateTime(self.date_work_str)
 
-            self.solvent_volume_time_begin_label = QLabel('начало реагирования')
-            self.solvent_volume_time_begin_date = QDateTimeEdit(self)
-            self.solvent_volume_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.solvent_volume_time_begin_date.setDateTime(self.date_work_str)
+            self.installation_pipe_perforator_time_label = QLabel('затраченное время реагирования')
+            self.installation_pipe_perforator_time_line = QLineEdit(self)
+            self.installation_pipe_perforator_time_line.setValidator(self.validator_float)
 
-            self.solvent_volume_time_end_label = QLabel('Окончание реагирования')
-            self.solvent_volume_time_end_date = QDateTimeEdit(self)
-            self.solvent_volume_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.solvent_volume_time_end_date.setDateTime(self.date_work_str)
+            self.grid.addWidget(self.installation_pipe_perforator_text_label, 12, 2)
+            self.grid.addWidget(self.installation_pipe_perforator_text_line, 13, 2)
 
-            self.solvent_volume_time_label = QLabel('затраченное время реагирования')
-            self.solvent_volume_time_line = QLineEdit(self)
-            self.solvent_volume_time_line.setValidator(self.validator_float)
+            self.grid.addWidget(self.installation_pipe_perforator_time_begin_label, 12, 5)
+            self.grid.addWidget(self.installation_pipe_perforator_time_begin_date, 13, 5)
+            self.grid.addWidget(self.installation_pipe_perforator_time_end_label, 12, 6)
+            self.grid.addWidget(self.installation_pipe_perforator_time_end_date, 13, 6)
+            self.grid.addWidget(self.installation_pipe_perforator_time_label, 12, 7)
+            self.grid.addWidget(self.installation_pipe_perforator_time_line, 13, 7)
 
-            self.grid.addWidget(self.solvent_volume_text_label, 32, 2)
-            self.grid.addWidget(self.solvent_volume_text_line, 33, 2)
-            self.grid.addWidget(self.volume_of_finishing_label, 32, 3)
-            self.grid.addWidget(self.volume_of_finishing_line, 33, 3)
-            self.grid.addWidget(self.volume_flush_label, 32, 4)
-            self.grid.addWidget(self.volume_flush_line, 33, 4)
-            self.grid.addWidget(self.solvent_volume_time_begin_label, 32, 5)
-            self.grid.addWidget(self.solvent_volume_time_begin_date, 33, 5)
-            self.grid.addWidget(self.solvent_volume_time_end_label, 32, 6)
-            self.grid.addWidget(self.solvent_volume_time_end_date, 33, 6)
-            self.grid.addWidget(self.solvent_volume_time_label, 32, 7)
-            self.grid.addWidget(self.solvent_volume_time_line, 33, 7)
-
-            self.solvent_volume_time_end_date.dateTimeChanged.connect(
-                self.update_date_solvent_volume)
-            self.solvent_volume_time_begin_date.dateTimeChanged.connect(
-                self.update_date_solvent_volume)
+            self.installation_pipe_perforator_time_end_date.dateTimeChanged.connect(
+                self.update_date_installation_pipe_perforator)
+            self.installation_pipe_perforator_time_begin_date.dateTimeChanged.connect(
+                self.update_date_installation_pipe_perforator)
 
     def update_technological_crap_question_combo(self, index):
 
@@ -611,11 +606,11 @@ class TabPage_SO_Timplate(QWidget):
         self.complications_during_disassembly_time_line.setText(str(time_difference))
 
     def update_date_of_normalization(self):
-        time_begin = self.normalization_question_time_begin_date.dateTime()
-        time_end = self.normalization_question_time_end_date.dateTime()
+        time_begin = self.deinstallation_perforation_time_begin_date.dateTime()
+        time_end = self.deinstallation_perforation_time_end_date.dateTime()
 
         time_difference = self.calculate_date(time_begin, time_end)
-        self.normalization_question_time_line.setText(str(time_difference))
+        self.deinstallation_perforation_time_line.setText(str(time_difference))
 
     def update_date_technological_crap(self):
         time_begin = self.technological_crap_question_time_begin_date.dateTime()
@@ -633,11 +628,11 @@ class TabPage_SO_Timplate(QWidget):
         self.complications_of_failure_time_line.setText(str(time_difference))
 
     def update_date_of_raid(self):
-        time_begin = self.raid_work_time_begin_date.dateTime()
-        time_end = self.raid_work_time_end_date.dateTime()
+        time_begin = self.initition_perforator_time_begin_date.dateTime()
+        time_end = self.initition_perforator_time_end_date.dateTime()
 
         time_difference = self.calculate_date(time_begin, time_end)
-        self.raid_work_time_line.setText(str(time_difference))
+        self.initition_perforator_time_line.setText(str(time_difference))
 
     def update_date_tubing_running(self):
         time_begin = self.complications_during_tubing_running_time_begin_date.dateTime()
@@ -646,12 +641,12 @@ class TabPage_SO_Timplate(QWidget):
         time_difference = self.calculate_date(time_begin, time_end)
         self.complications_during_tubing_running_time_line.setText(str(time_difference))
 
-    def update_date_solvent_volume(self):
-        time_begin = self.solvent_volume_time_begin_date.dateTime()
-        time_end = self.solvent_volume_time_end_date.dateTime()
+    def update_date_installation_pipe_perforator(self):
+        time_begin = self.installation_pipe_perforator_time_begin_date.dateTime()
+        time_end = self.installation_pipe_perforator_time_end_date.dateTime()
 
         time_difference = self.calculate_date(time_begin, time_end)
-        self.solvent_volume_time_line.setText(str(time_difference))
+        self.installation_pipe_perforator_time_line.setText(str(time_difference))
 
     @staticmethod
     def calculate_date(time_begin, time_end):
@@ -709,10 +704,10 @@ class TabPage_SO_Timplate(QWidget):
 class TabWidget(QTabWidget):
     def __init__(self):
         super().__init__()
-        self.addTab(TabPage_SO_Timplate(self), 'Райбер')
+        self.addTab(TabPage_SO_Timplate(self), 'Трубный перфоратор')
 
 
-class RaidWork(QMainWindow):
+class PipePerforator(QMainWindow):
     def __init__(self, ins_ind, table_widget, parent=None):
         super(QMainWindow, self).__init__(parent)
         self.centralWidget = QWidget()
@@ -833,30 +828,16 @@ class RaidWork(QMainWindow):
         if self.select_type_combo == '':
             return
         elif self.select_type_combo in ['НКТ']:
-            self.type_equipment = 'Райбер'
-            self.coefficient_lifting = 1.2
+            self.coefficient_lifting = 1
 
-            self.raid_work_text_edit = current_widget.raid_work_text_edit.text()
-
-            self.count_of_nkt_extensions_line = current_widget.count_of_nkt_extensions_line.text()
-            if self.count_of_nkt_extensions_line != '':
-                self.count_of_nkt_extensions_line = int(self.count_of_nkt_extensions_line)
-            else:
-                question = QMessageBox.question(self, 'райбирование', 'Райбирования не было?')
-                if question == QMessageBox.StandardButton.No:
-                    return
+            self.initition_perforator_text_edit = current_widget.initition_perforator_text_edit.text()
 
         self.nkt_is_same_combo = current_widget.nkt_is_same_combo.currentText()
         self.equipment_audit_combo = current_widget.equipment_audit_combo.currentText()
         if self.equipment_audit_combo == 'Да':
             self.equipment_audit_text_line = current_widget.equipment_audit_text_line.text()
-
-        self.volume_well_flush_line = current_widget.volume_well_flush_line.text()
-        if self.volume_well_flush_line != ['', None]:
-            self.volume_well_flush_line = int(self.volume_well_flush_line)
-        else:
-            question = QMessageBox.question(self, 'Промывка', 'Промывки не было?')
-            if question == QMessageBox.StandardButton.No:
+            if self.equipment_audit_text_line == '':
+                QMessageBox.warning(self, 'Ошибка', 'Нужно внести текст ревизии')
                 return
 
         try:
@@ -932,135 +913,73 @@ class RaidWork(QMainWindow):
 
         self.complications_of_failure_combo = current_widget.complications_of_failure_combo.currentText()
         self.complications_during_tubing_running_combo = current_widget.complications_during_tubing_running_combo.currentText()
-        self.normalization_question_combo = current_widget.normalization_question_combo.currentText()
-        self.solvent_injection_combo = current_widget.solvent_injection_combo.currentText()
-        self.technological_crap_question_combo = current_widget.technological_crap_question_combo.currentText()
+
+        self.installation_pipe_perforator_combo = current_widget.installation_pipe_perforator_combo.currentText()
+
         self.complications_when_lifting_combo = current_widget.complications_when_lifting_combo.currentText()
-        self.drilling_ek_combo = current_widget.drilling_ek_combo.currentText()
-        if self.drilling_ek_combo == '':
-            QMessageBox.warning(self, 'Нужно выбрать что бурили')
-            return
+        self.initition_combo = current_widget.initition_combo.currentText()
+        if self.initition_combo == 'Да':
 
-        # self.pressuar_gno_combo = current_widget.pressuar_gno_combo.currentText()
+            # self.pressuar_gno_combo = current_widget.pressuar_gno_combo.currentText()
 
-        self.raid_work_time_begin_date = \
-            current_widget.raid_work_time_begin_date.dateTime().toPyDateTime()
-        self.raid_work_time_begin_date = \
-            self.change_string_in_date(self.raid_work_time_begin_date)
+            self.initition_perforator_time_begin_date = \
+                current_widget.initition_perforator_time_begin_date.dateTime().toPyDateTime()
+            self.initition_perforator_time_begin_date = \
+                self.change_string_in_date(self.initition_perforator_time_begin_date)
 
-        self.raid_work_time_end_date = \
-            current_widget.raid_work_time_end_date.dateTime().toPyDateTime()
-        self.raid_work_time_end_date = \
-            self.change_string_in_date(self.raid_work_time_end_date)
+            self.initition_perforator_time_end_date = \
+                current_widget.initition_perforator_time_end_date.dateTime().toPyDateTime()
+            self.initition_perforator_time_end_date = \
+                self.change_string_in_date(self.initition_perforator_time_end_date)
 
-        if self.raid_work_time_end_date == self.raid_work_time_begin_date:
-            QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-            return
-
-        self.raid_work_time_line = current_widget.raid_work_time_line.text()
-        if self.raid_work_time_line != '':
-            self.raid_work_time_line = round(float(self.raid_work_time_line), 1)
-
-        else:
-            QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
-            return
-
-        if self.raid_work_time_line <= 0:
-            QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
-            return
-
-        if self.solvent_injection_combo == 'Да':
-
-            self.solvent_volume_text_line = current_widget.solvent_volume_text_line.text()
-            self.solvent_volume_time_begin_date = \
-                current_widget.solvent_volume_time_begin_date.dateTime().toPyDateTime()
-            self.solvent_volume_time_begin_date = \
-                self.change_string_in_date(self.solvent_volume_time_begin_date)
-
-            self.solvent_volume_time_end_date = \
-                current_widget.solvent_volume_time_end_date.dateTime().toPyDateTime()
-            self.solvent_volume_time_end_date = \
-                self.change_string_in_date(self.solvent_volume_time_end_date)
-
-            if current_widget.solvent_volume_text_line.text() == self.solvent_volume_time_begin_date:
+            if self.initition_perforator_time_end_date == self.initition_perforator_time_begin_date:
                 QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
                 return
 
-            if self.solvent_volume_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены обьем растворителя')
-                return
-            else:
-                self.solvent_volume_text_line = round(float(self.solvent_volume_text_line), 1)
-
-            self.solvent_volume_time_line = current_widget.solvent_volume_time_line.text()
-            if self.solvent_volume_time_line != '':
-                self.solvent_volume_time_line = round(float(self.solvent_volume_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время реагирования')
-                return
-            self.volume_of_finishing_line = current_widget.volume_of_finishing_line.text()
-            self.volume_flush_line = current_widget.volume_flush_line.text()
-
-            if self.volume_of_finishing_line != '':
-                self.volume_of_finishing_line = round(float(self.volume_of_finishing_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены обьем доводки техводой растворителя')
-                return
-
-            if self.volume_flush_line != '':
-                self.volume_flush_line = round(float(self.volume_flush_line), 1)
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не обьем промывки скважины после реагирования')
-                return
-
-            if self.solvent_volume_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
-                return
-
-        if self.technological_crap_question_combo == 'Да':
-            self.count_nkt_line = current_widget.count_nkt_line.text()
-            self.roof_definition_depth_line = current_widget.roof_definition_depth_line.text()
-            if self.count_nkt_line not in [None, '']:
-                self.count_nkt_line = int(float(self.count_nkt_line))
-            else:
-                QMessageBox.warning(self, 'количество НКТ', 'Не указано количество НКТ при подьеме на техотстой')
-                return
-            if self.roof_definition_depth_line != '':
-                self.roof_definition_depth_line = int(float(self.roof_definition_depth_line))
-            else:
-                QMessageBox.warning(self, 'количество НКТ', 'Не указано глубина определения забоя')
-                return
-
-            self.technological_crap_question_text_line = current_widget.technological_crap_question_text_line.text()
-            self.technological_crap_question_time_begin_date = \
-                current_widget.technological_crap_question_time_begin_date.dateTime().toPyDateTime()
-            self.technological_crap_question_time_begin_date = \
-                self.change_string_in_date(self.technological_crap_question_time_begin_date)
-
-            self.technological_crap_question_time_end_date = \
-                current_widget.technological_crap_question_time_end_date.dateTime().toPyDateTime()
-            self.technological_crap_question_time_end_date = \
-                self.change_string_in_date(self.technological_crap_question_time_end_date)
-
-            if current_widget.technological_crap_question_text_line.text() == self.technological_crap_question_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.technological_crap_question_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
-                return
-
-            self.technological_crap_question_time_line = current_widget.technological_crap_question_time_line.text()
-            if self.technological_crap_question_time_line != '':
-                self.technological_crap_question_time_line = round(float(self.technological_crap_question_time_line), 1)
+            self.initition_perforator_time_line = current_widget.initition_perforator_time_line.text()
+            if self.initition_perforator_time_line != '':
+                self.initition_perforator_time_line = round(float(self.initition_perforator_time_line), 1)
 
             else:
                 QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
                 return
 
-            if self.technological_crap_question_time_line <= 0:
+            if self.initition_perforator_time_line <= 0:
+                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
+                return
+
+        if self.installation_pipe_perforator_combo == 'Да':
+
+            self.installation_pipe_perforator_text_line = current_widget.installation_pipe_perforator_text_line.text()
+            self.installation_pipe_perforator_time_begin_date = \
+                current_widget.installation_pipe_perforator_time_begin_date.dateTime().toPyDateTime()
+            self.installation_pipe_perforator_time_begin_date = \
+                self.change_string_in_date(self.installation_pipe_perforator_time_begin_date)
+
+            self.installation_pipe_perforator_time_end_date = \
+                current_widget.installation_pipe_perforator_time_end_date.dateTime().toPyDateTime()
+            self.installation_pipe_perforator_time_end_date = \
+                self.change_string_in_date(self.installation_pipe_perforator_time_end_date)
+
+            if current_widget.installation_pipe_perforator_text_line.text() == self.installation_pipe_perforator_time_begin_date:
+                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
+                return
+
+            if self.installation_pipe_perforator_text_line == '':
+                QMessageBox.warning(self, 'Ошибка', f'Не введены обьем растворителя')
+                return
+
+            self.installation_pipe_perforator_time_line = current_widget.installation_pipe_perforator_time_line.text()
+            a = self.installation_pipe_perforator_time_line
+            if self.installation_pipe_perforator_time_line != '':
+                self.installation_pipe_perforator_time_line = round(float(self.installation_pipe_perforator_time_line),
+                                                                    1)
+
+            else:
+                QMessageBox.warning(self, 'Ошибка', f'Не введены время реагирования')
+                return
+
+            if self.installation_pipe_perforator_time_line <= 0:
                 QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
                 return
 
@@ -1128,6 +1047,40 @@ class RaidWork(QMainWindow):
             if self.complications_during_tubing_running_time_line <= 0:
                 QMessageBox.warning(self, 'Ошибка',
                                     f'Затраченное время при срыве демонтаже арматуры не может быть отрицательным')
+                return
+
+        self.deinstallation_perforation_combo = current_widget.deinstallation_perforation_combo.currentText()
+
+        if self.deinstallation_perforation_combo == 'Да':
+            self.deinstallation_perforation_text_line = current_widget.deinstallation_perforation_text_line.text()
+            self.deinstallation_perforation_time_begin_date = \
+                current_widget.deinstallation_perforation_time_begin_date.dateTime().toPyDateTime()
+            self.deinstallation_perforation_time_begin_date = \
+                self.change_string_in_date(self.deinstallation_perforation_time_begin_date)
+
+            self.deinstallation_perforation_time_end_date = \
+                current_widget.deinstallation_perforation_time_end_date.dateTime().toPyDateTime()
+            self.deinstallation_perforation_time_end_date = \
+                self.change_string_in_date(self.deinstallation_perforation_time_end_date)
+
+            if current_widget.deinstallation_perforation_text_line.text() == self.deinstallation_perforation_time_begin_date:
+                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
+                return
+
+            if self.deinstallation_perforation_text_line == '':
+                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
+                return
+
+            self.deinstallation_perforation_time_line = current_widget.deinstallation_perforation_time_line.text()
+            if self.deinstallation_perforation_time_line != '':
+                self.deinstallation_perforation_time_line = round(float(self.deinstallation_perforation_time_line), 1)
+
+            else:
+                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
+                return
+
+            if self.deinstallation_perforation_time_line <= 0:
+                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
                 return
 
         if self.complications_when_lifting_combo == 'Да':
@@ -1217,7 +1170,7 @@ class RaidWork(QMainWindow):
                  f'Райберование в инт. {self.raid_work_text_edit}м '
                  f'{self.raid_work_time_begin_date}-{self.raid_work_time_end_date}',
                  None,
-                 None, None, None, None, None, 'что бурили:', self.drilling_ek_combo, 'АКТ№', None, None, None,
+                 None, None, None, None, None, 'что бурили:', self.initition_combo, 'АКТ№', None, None, None,
                  'факт', None, 'час',
                  self.raid_work_time_line, 1, 1,
                  '=V744*W744*X744', '=Y744-AA744-AB744-AC744-AD744', None, None, None, None, None],
@@ -1240,27 +1193,16 @@ class RaidWork(QMainWindow):
         complications_of_failure_list = []
         complications_during_disassembly_list = []
         work_list = [
-            ['=ROW()-ROW($A$46)', 'кроме СБТ', None, 'Тех.операции', None, 'Монтаж и демонтаж автокрана', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§32разд.1', None, 'шт', 1, 0.27, 1,
-             '=V728*W728*X728', '=Y728-AA728-AB728-AC728-AD728', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', 'кроме СБТ', None, 'Тех.операции', None, 'Разгрузить ВЗД + райбер', None, None, None,
-             None, None, None, None, None, None, None, None, None, '§299разд.1 ', None, 'шт', 2, 0.12, 1,
-             '=V729*W729*X729', '=Y729-AA729-AB729-AC729', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'Райбер', 'ПЗР СПО райбер', None, None, None, None,
-             None, None,
-             None, None, None, None, None, None, '§260,262разд.1', None, 'шт', 1, 0.4, 1, '=V730*W730*X730',
-             '=Y730-AA730-AB730-AC730-AD730', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None,
-             None, None, None,
-             None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V731*W731*X731',
-             '=Y731-AA731-AB731-AC731-AD731', None, None, None, None, None],
-            # ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'Райбер', 'ПЗР СПО шламоуловитель', None, None, None, None, None,
-            #  None, None, None, None, None, None, None, ' §174,175 разд.1', None, 'раз', 1, '=0.13+0.17', 1,
-            #  '=V732*W732*X732', '=Y732-AA732-AB732-AC732', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', 'новый шаблон', None, 'спо', 'Райбер', 'ПЗР СПО ЗД', None, None, None, None, None,
-             None, None, None, None, None, None, None, '§263разд.1', None, 'шт', 1, 0.38, 1, '=V733*W733*X733',
-             '=Y733-AA733-AB733-AC733-AD733', None, None, None, None, None],
-        ]
+            ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'Прочие',
+             f'{self.installation_pipe_perforator_text_line} '
+             f'{self.installation_pipe_perforator_time_begin_date}-{self.installation_pipe_perforator_time_end_date}',
+             None, None, None, None,
+             None, None, None, None, 'АКТ№', None, None, None, 'Факт', None, 'час',
+             self.installation_pipe_perforator_text_line, 1, 1, '=V901*W901*X901',
+             '=Y901-AA901-AB901-AC901-AD901', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'спо', 'Перфоратор', 'ПЗР СПО трубного перфоратора', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§311разд.1', None, 'шт', 1, 0.9, 1,
+             '=V902*W902*X902', '=Y902-AA902-AB902-AC902-AD902', None, None, None, None, None]]
 
         if len(self.dict_nkt) != 0:
             work_list.extend(TemplateWithoutSKM.descent_nkt_work(self))
@@ -1289,44 +1231,16 @@ class RaidWork(QMainWindow):
             work_list.append(complications_of_failure_list)
             self.date_work_line = self.complications_of_failure_time_end_date.split(' ')[0]
 
-        if self.count_of_nkt_extensions_line != 0:
-            work_list.extend(self.skm_work())
+        work_list.extend(self.initiation_perforator())
 
-        # if self.volume_well_flush_line != '':
-        #     work_list.extend(self.volume_well_work())
 
-        if self.solvent_injection_combo == 'Да':
-            work_list.extend(self.solvent_injection_work())
-
-        if self.technological_crap_question_combo == 'Да':
-            technological_crap_question_list = TemplateWithoutSKM.descent_nkt_work(self)
-
-            for row in technological_crap_question_list:
-                technological_crap_question_list[row][13] = self.count_nkt_line * 10
-                technological_crap_question_list[row][21] = self.count_nkt_line
-
-            technological_crap_question_list.extend([
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-                 f'{self.technological_crap_question_text_line} {self.technological_crap_question_time_begin_date}-'
-                 f'{self.technological_crap_question_time_end_date}', None, None, None,
-                 None, None, None,
-                 None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание',
-                 'час', self.technological_crap_question_time_line, 1, 1,
-                 '=V467*W467*X467',
-                 '=Y467-AA467-AB467-AC467-AD467', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
-                 f'Определение кровли на гл. {self.roof_definition_depth_line}м', None, None,
-                 None, None, None, None, None, None, 'АКТ№', None, None, None,
-                 '§289разд.1', None, 'шт', 1, 0.17, 1,
-                 '=V468*W468*X468', '=Y468-AA468-AB468-AC468-AD468', None, None, None,
-                 None, None]])
-
-            work_list.extend(technological_crap_question_list)
-            self.date_work_line = self.technological_crap_question_time_end_date.split(' ')[0]
-
-        work_list.extend(TemplateWithoutSKM.deinstallation_of_washing_equipment(self))
 
         work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
+        if self.deinstallation_perforation_combo == 'Да':
+            work_list.extend(self.deinstallation_perforation_work())
+
+
+
         if self.equipment_audit_combo == 'Да':
             work_list.extend([
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
@@ -1336,6 +1250,30 @@ class RaidWork(QMainWindow):
                  None, None, None, None]]
             )
 
+        return work_list
+
+    def deinstallation_perforation_work(self):
+        work_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'Прочие',
+                 f'{self.deinstallation_perforation_text_line} '
+                 f'{self.deinstallation_perforation_time_begin_date}-{self.deinstallation_perforation_time_end_date}', None,
+                 None, None, None, None, None, None, None, 'АКТ№', None, None, None, 'Факт', None, 'час',
+                 self.deinstallation_perforation_time_line,
+                 1, 1, '=V919*W919*X919', '=Y919-AA9(19-AB919-AC919-AD919', None, None, None, None, None]]
+        self.date_work_line = self.deinstallation_perforation_time_begin_date.split(' ')[0]
+        return work_list
+
+    def initiation_perforator(self):
+        work_list = [
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Д/ж, м/ж спайдера', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.14, 1, '=V908*W908*X908',
+             '=Y908-AA908-AB908-AC908-AD908', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Д/ж, м/ж спайдера', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.14, 1, '=V909*W909*X909',
+             '=Y909-AA909-AB909-AC909-AD909', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'ПВР', 'ГИС - ПВР (инициация)', None, None, None, None, None, None,
+             None, None, 'АКТ№', None, None, None, 'Факт', None, 'час', 1, 1, 1, '=V910*W910*X910',
+             '=Y910-AA910-AB910-AC910-AD910', None, None, None, None, None]]
         return work_list
 
     def volume_well_work(self):
@@ -1358,63 +1296,11 @@ class RaidWork(QMainWindow):
         work_list.extend(volume_list)
         return work_list
 
-    def solvent_injection_work(self):
-        work_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-             'Подготовительные работы, выполняемые ', None,
-             None, None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'РАСТВОРИТЕЛЬ',
-             'Растворитель АСПО Реком 7125 серия 4, КР-4Р', None, '§227,229разд.1', None, 'шт', 1, 0.96, 1,
-             '=V589*W589*X589', '=Y589-AA589-AB589-AC589-AD589', None, None, None, None, None]]
-        if self.solvent_volume_text_line > 1:
-            solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-                 f'Закачка растворителя первого 1м3',
-                 None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1,
-                 0.2,
-                 1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-                 f'Закачка растворителя следующего {self.solvent_volume_text_line - 1}м3', None, None,
-                 None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.1,
-                 1, '=V591*W591*X591', '=Y591-AA591-AB591-AC591-AD591', None, None, None, None, None]]
-        else:
-            solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-                 f'Закачка растворителя первого {self.solvent_volume_text_line}м3', None,
-                 None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.2,
-                 1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-            ]
-        work_list.extend(solvent_volume_list)
-        volume_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-             f'Доводка растворителя в объеме {self.volume_of_finishing_line}', None, None, None, None,
-             None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3', self.volume_of_finishing_line,
-             0.033, 1, '=V592*W592*X592',
-             '=Y592-AA592-AB592-AC592-AD592', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-             f'Реагирование {self.solvent_volume_time_begin_date}-{self.solvent_volume_time_end_date}', None, None,
-             None,
-             None,
-             None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
-             self.solvent_volume_time_line, 1, 1,
-             '=V593*W593*X593', '=Y593-AA593-AB593-AC593-AD593', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка', 'Переход на труб.простр.',
-             None, None,
-             None,
-             None, None, None, None, None, None, None, None, None, '§162разд.1', None, 'раз', 1, 0.15, 1,
-             '=V594*W594*X594', '=Y594-AA594-AB594-AC594-AD594', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка',
-             f'Промывка в объеме {self.volume_flush_line}',
-             None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§301разд.1', None, 'м3',
-             {self.volume_flush_line}, 0.033, 1, '=V595*W595*X595',
-             '=Y595-AA595-AB595-AC595-AD595', None, None, None, None, None]]
-        work_list.extend(volume_list)
-        return work_list
-
 
 if __name__ == "__main__":
     # app3 = QApplication(sys.argv)
 
     app = QApplication(sys.argv)
-    window = RaidWork(22, 22)
+    window = PipePerforator(22, 22)
     window.show()
     sys.exit(app.exec_())

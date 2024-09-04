@@ -601,15 +601,23 @@ class MyWindow(QMainWindow):
         action_menu.addAction(raid_action)
         raid_action.triggered.connect(self.raid_action_def)
 
+        drilling_action = QAction('СПО Долото фрез')
+        action_menu.addAction(drilling_action)
+        drilling_action.triggered.connect(self.drilling_action_def)
+
         spo_paker_action = QAction('СПО пакер')
         action_menu.addAction( spo_paker_action )
         spo_paker_action.triggered.connect(self.spo_paker_action)
+
+        pipe_perforation_action = QAction('СПО Трубного перфоратора')
+        action_menu.addAction(pipe_perforation_action)
+        pipe_perforation_action.triggered.connect(self.pipe_perforation_action)
 
         work_of_third_parties_action = QAction('Работа сторонних организаций при спущенных НКТ')
         action_menu.addAction(work_of_third_parties_action)
         work_of_third_parties_action.triggered.connect(self.work_of_third_parties_action)
 
-        work_of_third_parties_without_action = QAction('Работа сторонних организаций при спущенных НКТ')
+        work_of_third_parties_without_action = QAction('Работа сторонних организаций без НКТ')
         action_menu.addAction(work_of_third_parties_without_action)
         work_of_third_parties_without_action.triggered.connect(self.work_of_third_parties_without_action)
 
@@ -618,6 +626,16 @@ class MyWindow(QMainWindow):
         mkp_action = QAction('Копка шахты')
         alone_menu.addAction(mkp_action)
         mkp_action.triggered.connect(self.earthwork_work)
+
+        descent_gno_menu = action_menu.addMenu('Спуск ГНО')
+
+        descent_paker_menu = QAction('спуск НКТ')
+        descent_gno_menu.addAction(descent_paker_menu)
+        descent_paker_menu.triggered.connect(self.descent_paker_menu)
+
+        descent_shgn_menu = QAction('Спуск штанг')
+        descent_gno_menu.addAction(descent_shgn_menu)
+        descent_shgn_menu.triggered.connect(self.descent_shgn_menu)
 
         del_menu = context_menu.addMenu('удаление строки')
         deleteString_action = QAction("Удалить строку", self)
@@ -643,11 +661,41 @@ class MyWindow(QMainWindow):
         else:
             self.raid_window.close()  # Close window.
             self.raid_window = None
+    def pipe_perforation_action(self):
+        from normir.perforation_tubing import PipePerforator
+        if self.raid_window is None:
+            self.raid_window = PipePerforator(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
 
     def lifting_paker_menu(self):
         from normir.lifting_gno import LiftingWindow
         if self.raid_window is None:
             self.raid_window = LiftingWindow(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+
+    def descent_paker_menu(self):
+        from normir.descent_gno import DescentGnoWindow
+        if self.raid_window is None:
+            self.raid_window = DescentGnoWindow(well_data.ins_ind, self.table_widget)
             # self.raid_window.setGeometry(200, 400, 300, 400)
 
             self.set_modal_window(self.raid_window)
@@ -695,6 +743,21 @@ class MyWindow(QMainWindow):
         else:
             self.raid_window.close()  # Close window.
             self.raid_window = None
+    def descent_shgn_menu(self):
+        pass
+        # from normir.lifting_shgn import LiftingShgnWindow
+        # if self.raid_window is None:
+        #     self.raid_window = LiftingShgnWindow(well_data.ins_ind, self.table_widget)
+        #     # self.raid_window.setGeometry(200, 400, 300, 400)
+        #
+        #     self.set_modal_window(self.raid_window)
+        #     well_data.pause = True
+        #     self.pause_app()
+        #     well_data.pause = True
+        #     self.raid_window = None
+        # else:
+        #     self.raid_window.close()  # Close window.
+        #     self.raid_window = None
     def rod_head_action_def(self):
         from normir.rod_head_work import LiftingRodHeadWindow
         if self.raid_window is None:
@@ -727,6 +790,21 @@ class MyWindow(QMainWindow):
         from normir.raider_work import RaidWork
         if self.raid_window is None:
             self.raid_window = RaidWork(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+    def drilling_action_def(self):
+        from normir.drilling_work import DrillingWork
+        if self.raid_window is None:
+            self.raid_window = DrillingWork(well_data.ins_ind, self.table_widget)
             # self.raid_window.setGeometry(200, 400, 300, 400)
 
             self.set_modal_window(self.raid_window)
@@ -897,18 +975,21 @@ class MyWindow(QMainWindow):
 
             if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]) :
                 table_widget.setSpan(i + ins_ind, 5, 1, 5)
-            elif any(['Демонтаж ЭЦН' in row_str  or 'Демонтаж УЭЦН' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+            elif any(['Демонтаж ЭЦН' in row_str or 'Демонтаж УЭЦН' in row_str
+                      for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 2)
                 table_widget.setSpan(i + ins_ind, 7, 1, 3)
                 table_widget.setSpan(i + ins_ind, 11, 1, 2)
 
-            elif any(['Крезол - НС' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+            elif any(['Крезол' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 3)
                 table_widget.setSpan(i + ins_ind, 9, 1, 2)
                 table_widget.setSpan(i + ins_ind, 11, 1, 2)
 
             elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                 table_widget.setSpan(i + ins_ind, 5, 1, 6)
+            elif any(['что бурили' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                table_widget.setSpan(i + ins_ind, 5, 1, 5)
             elif any(['Осложнение при подъеме' in row_str for row_index, row_str in enumerate(row_data) if
                       type(row_str) == str]) or any(['Объем' == row_str for row_index, row_str in enumerate(row_data) if
                       type(row_str) == str]):
