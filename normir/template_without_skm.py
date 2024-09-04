@@ -29,7 +29,8 @@ class TabPage_SO_Timplate(QWidget):
 
         self.select_type_combo_label = QLabel('Выбор компоновки спуска')
         self.select_type_combo = QComboBox(self)
-        self.select_type_combo.addItems(['', 'ПСШ', 'шаблон', 'перо', 'воронка', 'печать'])
+        self.select_type_combo.addItems(['', 'ПСШ', 'шаблон', 'перо', 'воронка', 'печать', 'магнит',
+                                         'КОТ', 'Заглушка', 'Гидрожелонка'])
 
         self.grid = QGridLayout(self)
 
@@ -86,7 +87,6 @@ class TabPage_SO_Timplate(QWidget):
         self.nkt_60_lenght_edit = QLineEdit(self)
         self.nkt_60_lenght_edit.setValidator(self.validator_int)
 
-
         self.nkt_60_count_edit = QLineEdit(self)
         self.nkt_60_count_edit.setValidator(self.validator_int)
 
@@ -98,7 +98,6 @@ class TabPage_SO_Timplate(QWidget):
 
         self.nkt_89_lenght_edit = QLineEdit(self)
         self.nkt_89_lenght_edit.setValidator(self.validator_int)
-
 
         self.nkt_89_count_edit = QLineEdit(self)
         self.nkt_89_count_edit.setValidator(self.validator_int)
@@ -142,7 +141,6 @@ class TabPage_SO_Timplate(QWidget):
         self.grid.addWidget(self.complications_when_lifting_label, 46, 1)
         self.grid.addWidget(self.complications_when_lifting_combo, 47, 1)
 
-
         self.solvent_injection_combo = QComboBox(self)
         self.solvent_injection_combo.addItems(['Нет', 'Да'])
 
@@ -160,7 +158,6 @@ class TabPage_SO_Timplate(QWidget):
 
         self.grid.addWidget(self.normalization_question_label, 50, 1)
         self.grid.addWidget(self.normalization_question_combo, 51, 1)
-
 
         self.technological_crap_question_combo = QComboBox(self)
         self.technological_crap_question_combo.addItems(['Нет', 'Да'])
@@ -187,22 +184,31 @@ class TabPage_SO_Timplate(QWidget):
         self.complications_during_tubing_running_combo.currentTextChanged.connect(
             self.update_complications_during_tubing_running_combo)
         self.nkt_is_same_combo.currentTextChanged.connect(self.update_nkt_is_same_combo)
+        self.interval_skm_text_edit = QLineEdit(self)
 
-        if index in ['ПСШ']:
+        self.count_of_nkt_extensions_line = QLineEdit(self)
+        self.count_of_nkt_extensions_line.setValidator(self.validator_float)
 
-            self.interval_skm_text_edit = QLineEdit(self)
-
-
-            self.count_of_nkt_extensions_line = QLineEdit(self)
-            self.count_of_nkt_extensions_line.setValidator(self.validator_float)
+        if index in ['ПСШ', 'печать', 'магнит', 'КОТ', 'Гидрожелонка']:
 
             self.grid.addWidget(self.interval_skm_text_label, 30, 1)
             self.grid.addWidget(self.interval_skm_text_edit, 31, 1)
 
             self.grid.addWidget(self.count_of_nkt_extensions_label, 30, 2)
             self.grid.addWidget(self.count_of_nkt_extensions_line, 31, 2)
+            if index == 'ПСШ':
+                self.interval_skm_text_edit.editingFinished.connect(self.update_interval_skm)
+            elif index in ['печать', 'магнит']:
+                self.interval_skm_text_label.setText('текст работы печатью или магнитом')
+                self.count_of_nkt_extensions_label.setText('Кол-во раз работы')
+                self.count_of_nkt_extensions_line.setText('1')
+            elif index in ['КОТ']:
+                self.interval_skm_text_label.setText('текст работы КОТ или ГВЖ')
+                self.count_of_nkt_extensions_label.setText('Кол-во раз работы')
+                self.count_of_nkt_extensions_line.setText('1')
 
-            self.interval_skm_text_edit.editingFinished.connect(self.update_interval_skm)
+
+
         else:
             try:
                 self.interval_skm_text_label.setParent(None)
@@ -222,7 +228,7 @@ class TabPage_SO_Timplate(QWidget):
             self.equipment_audit_text_line = QLineEdit(self)
 
             self.grid.addWidget(self.equipment_audit_text_label, 54, 3)
-            self.grid.addWidget(self.equipment_audit_text_line, 55 , 3)
+            self.grid.addWidget(self.equipment_audit_text_line, 55, 3)
 
     def update_interval_skm(self):
         text = self.interval_skm_text_edit.text()
@@ -766,6 +772,7 @@ class TemplateWithoutSKM(QMainWindow):
         self.nkt_48_lenght_edit = None
         self.nkt_48_count_edit = None
         self.nkt_60_lenght_edit = None
+        self.coefficient_lifting = 1
         self.nkt_60_count_edit = None
         self.nkt_73_lenght_edit = None
         self.nkt_73_count_edit = None
@@ -808,11 +815,23 @@ class TemplateWithoutSKM(QMainWindow):
         self.select_type_combo = current_widget.select_type_combo.currentText()
         if self.select_type_combo == '':
             return
-        elif self.select_type_combo in ['ПСШ', 'шаблон']:
+        elif self.select_type_combo in ['ПСШ', 'шаблон', 'печать', 'магнит']:
             self.type_equipment = 'Шаблон'
             self.coefficient_lifting = 1.15
-            if self.select_type_combo == 'ПСШ':
-                self.type_equipment = 'ПСШ'
+            if self.select_type_combo in ['ПСШ', 'печать', 'магнит', 'КОТ', 'Трубный перфоратор', 'Гидрожелонка']:
+                if self.select_type_combo in ['ПСШ']:
+                    self.type_equipment = 'ПСШ'
+                elif self.select_type_combo in ['печать']:
+                    self.coefficient_lifting = 1
+                    self.type_equipment = 'магнит'
+                elif self.select_type_combo in ['магнит']:
+                    self.coefficient_lifting = 1
+                    self.type_equipment = 'магнит'
+
+                elif self.select_type_combo in ['Гидрожелонка']:
+                    self.coefficient_lifting = 1.15
+                    self.type_equipment = 'ГВЖ'
+
                 self.interval_skm_text_edit = current_widget.interval_skm_text_edit.text()
 
                 self.count_of_nkt_extensions_line = current_widget.count_of_nkt_extensions_line.text()
@@ -822,7 +841,10 @@ class TemplateWithoutSKM(QMainWindow):
                     question = QMessageBox.question(self, 'Скреперование', 'Скреперования не было?')
                     if question == QMessageBox.StandardButton.No:
                         return
-        else:
+        elif self.select_type_combo in ['Заглушка']:
+            self.coefficient_lifting = 1
+            self.type_equipment = 'Заглушка'
+        elif self.select_type_combo in ['перо', 'воронка']:
             self.type_equipment = 'Перо, воронка'
             self.coefficient_lifting = 1
 
@@ -902,12 +924,13 @@ class TemplateWithoutSKM(QMainWindow):
 
         self.complications_of_failure_combo = current_widget.complications_of_failure_combo.currentText()
         self.complications_during_tubing_running_combo = current_widget.complications_during_tubing_running_combo.currentText()
-        self.normalization_question_combo = current_widget.normalization_question_combo.currentText()
+
         self.solvent_injection_combo = current_widget.solvent_injection_combo.currentText()
         self.technological_crap_question_combo = current_widget.technological_crap_question_combo.currentText()
         self.complications_when_lifting_combo = current_widget.complications_when_lifting_combo.currentText()
 
         # self.pressuar_gno_combo = current_widget.pressuar_gno_combo.currentText()
+        self.normalization_question_combo = current_widget.normalization_question_combo.currentText()
 
         if self.normalization_question_combo == 'Да':
             self.normalization_question_text_line = current_widget.normalization_question_text_line.text()
@@ -1163,6 +1186,20 @@ class TemplateWithoutSKM(QMainWindow):
         formatted_date = date_str.strftime("%d.%m.%Y %H:%M")
         return formatted_date
 
+    def print_work(self):
+        work_list = [
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати', 'ПЗР при промывке скважины', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1,
+             '=V649*W649*X649', '=Y649-AA649-AB649-AC649', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати', 'Опрессовка нагнетательной линии', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
+             '=X650*W650*V650', '=Y650-AA650-AB650-AC650', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати',
+             self.interval_skm_text_edit, None, None, None, None, None, None, None, None, 'АКТ№',
+             None, None, None, '§269разд.1', None, 'раз', self.count_of_nkt_extensions_line, 0.75, 1,
+             '=V651*W651*X651', '=Y651-AA651-AB651-AC651-AD651', None, None, None, None, None]]
+        return work_list
+
     def lifting_nkt(self):
 
         middle_nkt = '9.6-10.5'
@@ -1276,7 +1313,7 @@ class TemplateWithoutSKM(QMainWindow):
              None, None, None, None,
              None, None, None, None, None, None, None, None, '§185разд.1', None, 'шт', 1, 0.07, 1, '=V209*W209*X209',
              '=Y209-AA209-AB209-AC209-AD209', None, None, None, None, None],
-            ])
+        ])
 
         if self.complications_when_lifting_combo == 'Да':
             work_list.insert(-4, ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment,
@@ -1353,6 +1390,48 @@ class TemplateWithoutSKM(QMainWindow):
 
         return work_list
 
+    def gvzh_work(self):
+        work_list = [
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1, '=V865*W865*X865',
+             '=Y865-AA865-AB865-AC865', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
+             '=X866*W866*V866', '=Y866-AA866-AB866-AC866', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
+             None, None, None, None, None, None, None, None, None, None, None, None, '§182разд.1', None, 'шт', 1, 0.22,
+             1, '=V867*W867*X867', '=Y867-AA867-AB867-AC867-AD867', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Посадка гидрожелонки', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§252разд.1', None, 'шт', 1, 0.33, 1, '=V868*W868*X868',
+             '=Y868-AA868-AB868-AC868-AD868', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
+             '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None]]
+        return work_list
+
+    def kot_work(self):
+        work_list = [
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1, '=V865*W865*X865',
+             '=Y865-AA865-AB865-AC865', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
+             '=X866*W866*V866', '=Y866-AA866-AB866-AC866', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
+             None, None, None, None, None, None, None, None, None, None, None, None, '§182разд.1', None, 'шт', 1, 0.22,
+             1, '=V867*W867*X867', '=Y867-AA867-AB867-AC867-AD867', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Посадка КОТ', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§252разд.1', None, 'шт', 1, 0.33, 1, '=V868*W868*X868',
+             '=Y868-AA868-AB868-AC868-AD868', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
+             '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
+             '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None]
+        ]
+        return work_list
+
     def template_with_skm(self):
         complications_of_failure_list = []
         complications_during_disassembly_list = []
@@ -1381,12 +1460,25 @@ class TemplateWithoutSKM(QMainWindow):
                  None, None,
                  None, None, None, None, None, None, None, '§176разд.1', None, 'шт', 1, 0.52, 1, '=V484*W484*X484',
                  '=Y484-AA484-AB484-AC484-AD484', None, None, None, None, None]]
-        elif self.select_type_combo in ['перо', 'воронка']:
+        elif self.select_type_combo in ['перо', 'воронка', 'КОТ']:
             work_list = [
                 ['=ROW()-ROW($A$46)', None, None, 'спо', 'Перо,воронка', 'ПЗР СПО работы перед спуском  НКТ ',
                  None, None, None, None,
                  None, None, None, None, None, None, None, None, '§177разд.1', None, 'шт', 1, 0.17, 1,
                  '=V530*W530*X530', '=Y530-AA530-AB530-AC530-AD530', None, None, None, None, None]]
+        elif self.select_type_combo in ['печать']:
+            self.type_equipment = 'печать'
+            work_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'спо', 'магнит', 'ПЗР СПО НКТ с магнитом', None, None, None,
+                 None, None, None, None, None, None, None, None, None, '§269разд.1', None, 'шт', 1, 0.38, 1,
+                 '=V639*W639*X639', '=Y639-AA639-AB639-AC639-AD639', None, None, None, None, None]]
+
+        elif self.select_type_combo in ['магнит']:
+            self.type_equipment = 'магнит'
+            work_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'спо', 'Печать', 'ПЗР СПО НКТ с печатью', None, None, None,
+                 None, None, None, None, None, None, None, None, None, '§269разд.1', None, 'шт', 1, 0.38, 1,
+                 '=V639*W639*X639', '=Y639-AA639-AB639-AC639-AD639', None, None, None, None, None]]
 
         if len(self.dict_nkt) != 0:
             work_list.extend(self.descent_nkt_work())
@@ -1419,8 +1511,18 @@ class TemplateWithoutSKM(QMainWindow):
             if self.count_of_nkt_extensions_line != 0:
                 work_list.extend(self.skm_work())
 
-        if self.volume_well_flush_line != '':
+        if self.select_type_combo not in ['ПСШ']:
+            work_list.extend(self.installation_of_washing_equipment())
+
+        if self.volume_well_flush_line != '' and self.select_type_combo not in ['печать', 'магнит']:
             work_list.extend(self.volume_well_work())
+
+        if self.select_type_combo == 'печать':
+            work_list.extend(self.print_work())
+        elif self.select_type_combo == 'КОТ':
+            work_list.extend(self.kot_work())
+        elif self.select_type_combo == 'Гидрожелонка':
+            work_list.extend(self.gvzh_work())
 
         if self.normalization_question_combo == 'Да':
             normalization_question_list = [
@@ -1442,7 +1544,6 @@ class TemplateWithoutSKM(QMainWindow):
             for row in technological_crap_question_list:
                 technological_crap_question_list[row][13] = self.count_nkt_line * 10
                 technological_crap_question_list[row][21] = self.count_nkt_line
-
 
             technological_crap_question_list.extend([
                 ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
@@ -1472,15 +1573,13 @@ class TemplateWithoutSKM(QMainWindow):
                  None, None, None, None, None, None, None, None, None, None, None,
                  None, 'факт', None, 'час', 0.5, 1, 1, '=V480*W480*X480', '=Y480-AA480-AB480-AC480-AD480', None,
                  None, None, None, None]]
-)
-
+            )
 
         return work_list
 
     def volume_well_work(self):
         work_list = []
-        if self.select_type_combo not in ['ПСШ']:
-            work_list = self.installation_of_washing_equipment()
+
         volume_list = [
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка',
              'ПЗР при промывке скважины ',

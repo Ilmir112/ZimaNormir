@@ -13,6 +13,7 @@ from normir.template_without_skm import TemplateWithoutSKM
 from PyQt5.QtCore import Qt
 
 from normir.relocation_brigade import TextEditTableWidgetItem
+from normir.drilling_work import DrillingWork
 
 
 class TabPage_SO_Timplate(QWidget):
@@ -66,6 +67,49 @@ class TabPage_SO_Timplate(QWidget):
 
     def update_select_type_combo(self, index):
 
+        self.type_rotor_label = QLabel('Тип ротора')
+        self.type_rotor_combo = QComboBox(self)
+        self.type_rotor_combo.addItems(['Мех ротор', 'Гидроротор'])
+
+        self.count_spo_sbt_label = QLabel('Первое спо СБТ')
+        self.count_spo_sbt_combo = QComboBox(self)
+        self.count_spo_sbt_combo.addItems(['Нет', 'Да'])
+
+        if well_data.count_SBT != 0:
+            self.count_spo_sbt_combo.setCurrentIndex(1)
+
+        self.type_key_label = QLabel('монтаж мех ключей при подьеме')
+        self.type_key_combo = QComboBox(self)
+        self.type_key_combo.addItems(['Нет', 'Да'])
+
+        if index == 'СБТ':
+            self.nkt_48_lenght_label = QLabel('Длина на спуск СБТ48')
+            self.nkt_48_count_label = QLabel('Кол-во на спуск СБТ48')
+            self.nkt_60_lenght_label = QLabel('Длина на спуск СБТ60')
+            self.nkt_60_lenght_label = QLabel('Длина на спуск СБТ60')
+            self.technological_crap_question_label = QLabel('Был ли тех. отстой')
+            self.nkt_60_count_label = QLabel('Кол-во на спуск СБТ60')
+            self.nkt_73_lenght_label = QLabel('Длина СБТ73')
+            self.nkt_73_count_label = QLabel('Кол-во СБТ73')
+            self.nkt_89_lenght_label = QLabel('Длина СБТ89-102')
+            self.nkt_89_count_label = QLabel('Кол-во СБТ89-102')
+
+            self.grid.addWidget(self.type_rotor_label, 10, 1)
+            self.grid.addWidget(self.type_rotor_combo, 11, 1)
+            self.grid.addWidget(self.count_spo_sbt_label, 10, 2)
+            self.grid.addWidget(self.count_spo_sbt_combo, 11, 2)
+            self.grid.addWidget(self.type_key_label, 10, 3)
+            self.grid.addWidget(self.type_key_combo, 11, 3)
+
+        else:
+            self.type_rotor_label.setParent(None)
+            self.type_rotor_combo.setParent(None)
+            self.count_spo_sbt_label.setParent(None)
+            self.count_spo_sbt_combo.setParent(None)
+            self.type_key_label.setParent(None)
+            self.type_key_combo.setParent(None)
+
+
         self.complications_during_tubing_running_combo = QComboBox(self)
         self.complications_during_tubing_running_combo.addItems(['Нет', 'Да'])
 
@@ -77,54 +121,54 @@ class TabPage_SO_Timplate(QWidget):
 
         # self.grid.addWidget(self.complications_of_failure_label, 10, 1)
         # self.grid.addWidget(self.complications_of_failure_combo, 11, 1)
-        if index == 'НКТ':
-            self.nkt_48_lenght_edit = QLineEdit(self)
-            self.nkt_48_lenght_edit.setValidator(self.validator_int)
 
-            self.nkt_48_count_edit = QLineEdit(self)
-            self.nkt_48_count_edit.setValidator(self.validator_int)
+        self.nkt_48_lenght_edit = QLineEdit(self)
+        self.nkt_48_lenght_edit.setValidator(self.validator_int)
 
-            self.nkt_60_lenght_edit = QLineEdit(self)
-            self.nkt_60_lenght_edit.setValidator(self.validator_int)
+        self.nkt_48_count_edit = QLineEdit(self)
+        self.nkt_48_count_edit.setValidator(self.validator_int)
 
-            self.nkt_60_count_edit = QLineEdit(self)
-            self.nkt_60_count_edit.setValidator(self.validator_int)
+        self.nkt_60_lenght_edit = QLineEdit(self)
+        self.nkt_60_lenght_edit.setValidator(self.validator_int)
 
-            self.nkt_73_lenght_edit = QLineEdit(self)
-            self.nkt_73_lenght_edit.setValidator(self.validator_int)
+        self.nkt_60_count_edit = QLineEdit(self)
+        self.nkt_60_count_edit.setValidator(self.validator_int)
 
-            self.nkt_73_count_edit = QLineEdit(self)
-            self.nkt_73_count_edit.setValidator(self.validator_int)
+        self.nkt_73_lenght_edit = QLineEdit(self)
+        self.nkt_73_lenght_edit.setValidator(self.validator_int)
 
-            self.nkt_89_lenght_edit = QLineEdit(self)
-            self.nkt_89_lenght_edit.setValidator(self.validator_int)
+        self.nkt_73_count_edit = QLineEdit(self)
+        self.nkt_73_count_edit.setValidator(self.validator_int)
 
-            self.nkt_89_count_edit = QLineEdit(self)
-            self.nkt_89_count_edit.setValidator(self.validator_int)
+        self.nkt_89_lenght_edit = QLineEdit(self)
+        self.nkt_89_lenght_edit.setValidator(self.validator_int)
 
-            self.grid.addWidget(self.nkt_48_lenght_label, 22, 1)
-            self.grid.addWidget(self.nkt_48_lenght_edit, 23, 1)
+        self.nkt_89_count_edit = QLineEdit(self)
+        self.nkt_89_count_edit.setValidator(self.validator_int)
 
-            self.grid.addWidget(self.nkt_48_count_label, 24, 1)
-            self.grid.addWidget(self.nkt_48_count_edit, 25, 1)
+        self.grid.addWidget(self.nkt_48_lenght_label, 22, 1)
+        self.grid.addWidget(self.nkt_48_lenght_edit, 23, 1)
 
-            self.grid.addWidget(self.nkt_60_lenght_label, 22, 2)
-            self.grid.addWidget(self.nkt_60_lenght_edit, 23, 2)
+        self.grid.addWidget(self.nkt_48_count_label, 24, 1)
+        self.grid.addWidget(self.nkt_48_count_edit, 25, 1)
 
-            self.grid.addWidget(self.nkt_60_count_label, 24, 2)
-            self.grid.addWidget(self.nkt_60_count_edit, 25, 2)
+        self.grid.addWidget(self.nkt_60_lenght_label, 22, 2)
+        self.grid.addWidget(self.nkt_60_lenght_edit, 23, 2)
 
-            self.grid.addWidget(self.nkt_73_lenght_label, 22, 3)
-            self.grid.addWidget(self.nkt_73_lenght_edit, 23, 3)
+        self.grid.addWidget(self.nkt_60_count_label, 24, 2)
+        self.grid.addWidget(self.nkt_60_count_edit, 25, 2)
 
-            self.grid.addWidget(self.nkt_73_count_label, 24, 3)
-            self.grid.addWidget(self.nkt_73_count_edit, 25, 3)
+        self.grid.addWidget(self.nkt_73_lenght_label, 22, 3)
+        self.grid.addWidget(self.nkt_73_lenght_edit, 23, 3)
 
-            self.grid.addWidget(self.nkt_89_lenght_label, 22, 4)
-            self.grid.addWidget(self.nkt_89_lenght_edit, 23, 4)
+        self.grid.addWidget(self.nkt_73_count_label, 24, 3)
+        self.grid.addWidget(self.nkt_73_count_edit, 25, 3)
 
-            self.grid.addWidget(self.nkt_89_count_label, 24, 4)
-            self.grid.addWidget(self.nkt_89_count_edit, 25, 4)
+        self.grid.addWidget(self.nkt_89_lenght_label, 22, 4)
+        self.grid.addWidget(self.nkt_89_lenght_edit, 23, 4)
+
+        self.grid.addWidget(self.nkt_89_count_label, 24, 4)
+        self.grid.addWidget(self.nkt_89_count_edit, 25, 4)
 
         self.grid.addWidget(self.complications_during_tubing_running_label, 26, 1)
         self.grid.addWidget(self.complications_during_tubing_running_combo, 27, 1)
@@ -832,7 +876,7 @@ class RaidWork(QMainWindow):
         self.select_type_combo = current_widget.select_type_combo.currentText()
         if self.select_type_combo == '':
             return
-        elif self.select_type_combo in ['НКТ']:
+        elif self.select_type_combo in ['НКТ', 'СБТ']:
             self.type_equipment = 'Райбер'
             self.coefficient_lifting = 1.2
 
@@ -845,6 +889,11 @@ class RaidWork(QMainWindow):
                 question = QMessageBox.question(self, 'райбирование', 'Райбирования не было?')
                 if question == QMessageBox.StandardButton.No:
                     return
+
+            if self.select_type_combo == 'СБТ':
+                self.type_rotor_combo = current_widget.type_rotor_combo.currentText()
+                self.count_spo_sbt_combo = current_widget.count_spo_sbt_combo.currentText()
+                self.type_key_combo = current_widget.type_key_combo.currentText()
 
         self.nkt_is_same_combo = current_widget.nkt_is_same_combo.currentText()
         self.equipment_audit_combo = current_widget.equipment_audit_combo.currentText()
@@ -956,8 +1005,6 @@ class RaidWork(QMainWindow):
         if self.raid_work_time_end_date == self.raid_work_time_begin_date:
             QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
             return
-
-
 
         self.raid_work_time_line = current_widget.raid_work_time_line.text()
         if self.raid_work_time_line != '':
@@ -1206,27 +1253,31 @@ class RaidWork(QMainWindow):
         if self.raid_work_text_edit != '':
             work_list = TemplateWithoutSKM.installation_of_washing_equipment(self)
             raid_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Вызов циркуляции (+)', None, None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Вызов циркуляции (+)', None,
+                 None, None, None,
                  None, None, None, None, None, None, None, None, '§301разд.1 п.72', None, 'раз', 1, '=5/60', 1,
                  '=V742*W742*X742', '=Y742-AA742-AB742-AC742-AD742', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'райбирование', 'ПЗР при райберовании', None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'райбирование', 'ПЗР при райберовании',
+                 None, None,
                  None,
                  None, None, None, None, None, None, None, None, None, '§159,161р.1', None, 'шт', 1, 1, 1,
                  '=V743*W743*X743', '=Y743-AA743-AB743-AC743-AD743', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'райбирование',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'райбирование',
                  f'Райберование в инт. {self.raid_work_text_edit}м '
                  f'{self.raid_work_time_begin_date}-{self.raid_work_time_end_date}',
                  None,
                  None, None, None, None, None, 'что бурили:', self.drilling_ek_combo, 'АКТ№', None, None, None,
                  'факт', None, 'час',
-                 self.raid_work_time_line, 1,   1,
+                 self.raid_work_time_line, 1, 1,
                  '=V744*W744*X744', '=Y744-AA744-AB744-AC744-AD744', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Наращивание', None, None, None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Наращивание', None, None, None,
+                 None, None,
                  None,
-                 None, None, None, None, None, None, '§300разд.1', None, 'шт', self.count_of_nkt_extensions_line/10,
+                 None, None, None, None, None, None, '§300разд.1', None, 'шт', self.count_of_nkt_extensions_line / 10,
                  0.17, 1, '=V745*W745*X745',
                  '=Y745-AA745-AB745-AC745-AD745', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', 'Промывка ', None, None, None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка', 'Промывка ', None, None,
+                 None, None, None,
                  None, None, None, 'АКТ№', None, None, None, '§301разд.1', None, 'м3', self.volume_flush_line, 0.033,
                  1, '=V746*W746*X746',
                  '=Y746-AA746-AB746-AC746-AD746', None, None, None, None, None]]
@@ -1237,29 +1288,47 @@ class RaidWork(QMainWindow):
     def raid_work(self):
         complications_of_failure_list = []
         complications_during_disassembly_list = []
-        work_list = [
-            ['=ROW()-ROW($A$46)', 'кроме СБТ', None, 'Тех.операции', None, 'Монтаж и демонтаж автокрана', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§32разд.1', None, 'шт', 1, 0.27, 1,
-             '=V728*W728*X728', '=Y728-AA728-AB728-AC728-AD728', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', 'кроме СБТ', None, 'Тех.операции', None, 'Разгрузить ВЗД + райбер', None, None, None,
-             None, None, None, None, None, None, None, None, None, '§299разд.1 ', None, 'шт', 2, 0.12, 1,
-             '=V729*W729*X729', '=Y729-AA729-AB729-AC729', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'спо', 'Райбер', 'ПЗР СПО райбер', None, None, None, None, None, None,
+        if self.select_type_combo != 'СБТ':
+            work_list = [
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Монтаж и демонтаж автокрана',
+                 None,
+                 None,
+                 None, None, None, None, None, None, None, None, None, None, '§32разд.1', None, 'шт', 1, 0.27, 1,
+                 '=V728*W728*X728', '=Y728-AA728-AB728-AC728-AD728', None, None, None, None, None],
+                ['=ROW()-ROW($A$46)', 'кроме СБТ', None, 'Тех.операции', None, 'Разгрузить ВЗД + долото', None, None,
+                 None, None, None, None, None, None, None, None, None, None, '§299разд.1 ', None, 'шт', 2, 0.12, 1,
+                 '=V729*W729*X729', '=Y729-AA729-AB729-AC729', None, None, None, None, None]]
+        else:
+            work_list = []
+
+        work_spo_list = [
+
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment, 'ПЗР СПО фрез(долото)', None,
+             None, None,
+             None, None, None,
              None, None, None, None, None, None, '§260,262разд.1', None, 'шт', 1, 0.4, 1, '=V730*W730*X730',
              '=Y730-AA730-AB730-AC730-AD730', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None,
+             None, None, None,
              None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V731*W731*X731',
              '=Y731-AA731-AB731-AC731-AD731', None, None, None, None, None],
-            # ['=ROW()-ROW($A$46)', None, None, 'спо', 'Райбер', 'ПЗР СПО шламоуловитель', None, None, None, None, None,
+            # ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'Райбер', 'ПЗР СПО шламоуловитель', None, None, None, None, None,
             #  None, None, None, None, None, None, None, ' §174,175 разд.1', None, 'раз', 1, '=0.13+0.17', 1,
             #  '=V732*W732*X732', '=Y732-AA732-AB732-AC732', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', 'новый шаблон', None, 'спо', 'Райбер', 'ПЗР СПО ЗД', None, None, None, None, None,
-             None, None, None, None, None, None, None, '§263разд.1', None, 'шт', 1, 0.38, 1, '=V733*W733*X733',
-             '=Y733-AA733-AB733-AC733-AD733', None, None, None, None, None],
         ]
+        if self.select_type_combo != 'СБТ':
+            work_list.extend([['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment, 'ПЗР СПО ЗД', None, None, None,
+             None, None,
+             None, None, None, None, None, None, None, '§263разд.1', None, 'шт', 1, 0.38, 1, '=V733*W733*X733',
+             '=Y733-AA733-AB733-AC733-AD733', None, None, None, None, None]])
+
+        work_list.extend(work_spo_list)
 
         if len(self.dict_nkt) != 0:
-            work_list.extend(TemplateWithoutSKM.descent_nkt_work(self))
+            if self.select_type_combo == 'НКТ':
+                work_list.extend(TemplateWithoutSKM.descent_nkt_work(self))
+            else:
+                work_list.extend(DrillingWork.descent_SBT(self))
 
         if self.complications_during_tubing_running_combo == 'Да':
             complications_during_tubing_running_list = [
@@ -1285,8 +1354,14 @@ class RaidWork(QMainWindow):
             work_list.append(complications_of_failure_list)
             self.date_work_line = self.complications_of_failure_time_end_date.split(' ')[0]
 
+        if self.select_type_combo == 'СБТ':
+            work_list.extend(DrillingWork.drilling_with_sbt_work(self))
+
         if self.count_of_nkt_extensions_line != 0:
             work_list.extend(self.skm_work())
+
+        if self.select_type_combo == 'СБТ':
+            work_list.extend(DrillingWork.drilling_with_sbt_work_up(self))
 
         # if self.volume_well_flush_line != '':
         #     work_list.extend(self.volume_well_work())
@@ -1302,7 +1377,7 @@ class RaidWork(QMainWindow):
                 technological_crap_question_list[row][21] = self.count_nkt_line
 
             technological_crap_question_list.extend([
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  f'{self.technological_crap_question_text_line} {self.technological_crap_question_time_begin_date}-'
                  f'{self.technological_crap_question_time_end_date}', None, None, None,
                  None, None, None,
@@ -1310,7 +1385,7 @@ class RaidWork(QMainWindow):
                  'час', self.technological_crap_question_time_line, 1, 1,
                  '=V467*W467*X467',
                  '=Y467-AA467-AB467-AC467-AD467', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  f'Определение кровли на гл. {self.roof_definition_depth_line}м', None, None,
                  None, None, None, None, None, None, 'АКТ№', None, None, None,
                  '§289разд.1', None, 'шт', 1, 0.17, 1,
@@ -1320,12 +1395,18 @@ class RaidWork(QMainWindow):
             work_list.extend(technological_crap_question_list)
             self.date_work_line = self.technological_crap_question_time_end_date.split(' ')[0]
 
+
         work_list.extend(TemplateWithoutSKM.deinstallation_of_washing_equipment(self))
 
-        work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
+        if self.select_type_combo == 'НКТ':
+            work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
+        else:
+            work_list.extend(DrillingWork.lifting_SBT(self))
+
         if self.equipment_audit_combo == 'Да':
             work_list.extend([
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, f'Ревизия:{self.equipment_audit_text_line}',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
+                 f'Ревизия:{self.equipment_audit_text_line}',
                  None, None, None, None, None, None, None, None, None, None, None,
                  None, 'факт', None, 'час', 0.5, 1, 1, '=V480*W480*X480', '=Y480-AA480-AB480-AC480-AD480', None,
                  None, None, None, None]]
@@ -1355,46 +1436,50 @@ class RaidWork(QMainWindow):
 
     def solvent_injection_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
+             'Подготовительные работы, выполняемые ', None,
              None, None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'РАСТВОРИТЕЛЬ',
              'Растворитель АСПО Реком 7125 серия 4, КР-4Р', None, '§227,229разд.1', None, 'шт', 1, 0.96, 1,
              '=V589*W589*X589', '=Y589-AA589-AB589-AC589-AD589', None, None, None, None, None]]
         if self.solvent_volume_text_line > 1:
             solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', f'Закачка растворителя первого 1м3',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
+                 f'Закачка растворителя первого 1м3',
                  None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1,
                  0.2,
                  1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка растворителя следующего {self.solvent_volume_text_line - 1}м3', None, None,
                  None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.1,
                  1, '=V591*W591*X591', '=Y591-AA591-AB591-AC591-AD591', None, None, None, None, None]]
         else:
             solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка растворителя первого {self.solvent_volume_text_line}м3', None,
                  None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.2,
                  1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
             ]
         work_list.extend(solvent_volume_list)
         volume_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
              f'Доводка растворителя в объеме {self.volume_of_finishing_line}', None, None, None, None,
              None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3', self.volume_of_finishing_line,
              0.033, 1, '=V592*W592*X592',
              '=Y592-AA592-AB592-AC592-AD592', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
              f'Реагирование {self.solvent_volume_time_begin_date}-{self.solvent_volume_time_end_date}', None, None,
              None,
              None,
              None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
              self.solvent_volume_time_line, 1, 1,
              '=V593*W593*X593', '=Y593-AA593-AB593-AC593-AD593', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', 'Переход на труб.простр.', None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка', 'Переход на труб.простр.',
+             None, None,
              None,
              None, None, None, None, None, None, None, None, None, '§162разд.1', None, 'раз', 1, 0.15, 1,
              '=V594*W594*X594', '=Y594-AA594-AB594-AC594-AD594', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', f'Промывка в объеме {self.volume_flush_line}',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка',
+             f'Промывка в объеме {self.volume_flush_line}',
              None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§301разд.1', None, 'м3',
              {self.volume_flush_line}, 0.033, 1, '=V595*W595*X595',
              '=Y595-AA595-AB595-AC595-AD595', None, None, None, None, None]]

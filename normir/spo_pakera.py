@@ -1404,7 +1404,7 @@ class SpoPakerAction(QMainWindow):
                  None,
                  None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V529*W529*X529',
                  '=Y529-AA529-AB529-AC529-AD529', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'спо', 'Пакер', 'ПЗР СПО ПЕРО, ВОРОНКА', None, None, None, None, None,
+                ['=ROW()-ROW($A$46)', None, None, 'спо', self.type_equipment, 'ПЗР СПО ПЕРО, ВОРОНКА', None, None, None, None, None,
                  None, None, None, None, None, None, None, '§177разд.1', None, 'шт', 1, 0.17, 1, '=V530*W530*X530',
                  '=Y530-AA530-AB530-AC530-AD530', None, None, None, None, None],
                 ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Д/ж спайдера', None, None, None, None, None,

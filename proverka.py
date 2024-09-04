@@ -9,7 +9,7 @@ name_list = wb2.sheetnames
 ws2 = wb2['АВР']
 if fname:
     normir_list = []
-    for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=728, max_row=756)):
+    for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=1040, max_row=1042)):
         list = []
         for col, value in enumerate(row):
             list.append(value.value)
@@ -18,17 +18,17 @@ if fname:
     print(normir_list)
 
 fname = '1234.xlsx'
-# wb2 = load_workbook(fname, keep_vba=True)
-# name_list = wb2.sheetnames
-# # print(name_list)
-# ws2 = wb2.active
-# lifting_norm_nkt = {}
+wb2 = load_workbook(fname, keep_vba=True)
+name_list = wb2.sheetnames
+# print(name_list)
+ws2 = wb2.active
+lifting_norm_nkt = {}
 # if fname:
 #     normir_list = []
-#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=210, max_row=229)):
+#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=241, max_row=241)):
 #         lst = []
 #
-#         if row_ind == 14:
+#         if row_ind == 0:
 #             lifting = row[0]
 #             lifting_1 = row[8]
 #         if row_ind == 17:
@@ -46,27 +46,28 @@ fname = '1234.xlsx'
 
 # if fname:
 #     normir_list = []
-#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=3, max_row=148)):
+#     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=235, max_row=235)):
 #         lst = []
 #
 #         if row[0].value:
-#             if 'спуск' not in row[0].value and 'ПА' not in row[0].value \
-#                     and 'ЭЦН' not in row[0].value and 'Штанги' not in row[0].value and 'СБТ' not in row[0].value:
+#             if 'спуск' in row[0].value:
+#                 for i in ['АЗИНМАШ-37А (Оснастка 2×3)', 'АПРС-32 (Оснастка 2×3)', 'АПРС-40 (Оснастка 2×3)', 'АПРС-40 (Оснастка 3×4)', 'АПРС-50 (Оснастка 3×4)', 'АПР60/80 (Оснастка 3×4)', 'БАРС60/80 (Оснастка 3×4)', 'УПТ-32 (Оснастка 3×4)']:
 #
-#                 lifting_norm_nkt.setdefault(row[0].value, {}).\
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('6.5-7.5', (row[3].value, row[9].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('7.6-8.5', (row[4].value, row[10].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('8.6-9.5', (row[5].value, row[11].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('9.6-10.5', (row[6].value, row[12].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('10.6-11.5', (row[7].value, row[13].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('11.6-12.5', (row[8].value, row[14].value))
-#                 lifting_norm_nkt.setdefault(row[0].value, {}). \
-#                     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('раздел', row[15].value)
+#                     lifting_norm_nkt.setdefault(i, {}).\
+#                         setdefault(row[1].value, {}).setdefault('6.5-7.5', row[3].value)
+#                     lifting_norm_nkt.setdefault(i, {}). \
+#                         setdefault(row[1].value, {}).setdefault('7.6-8.5', row[4].value)
+#                     lifting_norm_nkt.setdefault(i, {}). \
+#                         setdefault(row[1].value, {}).setdefault('8.6-9.5', row[5].value)
+#                     lifting_norm_nkt.setdefault(i, {}). \
+#                         setdefault(row[1].value, {}).setdefault('9.6-10.5', row[6].value)
+#                     lifting_norm_nkt.setdefault(i, {}). \
+#                         setdefault(row[1].value, {}).setdefault('10.6-11.5', row[7].value)
+#                     # lifting_norm_nkt.setdefault(i, {}). \
+#                     #     setdefault(row[1].value, {}).setdefault(row[2].value, {}).setdefault('11.6-12.5', (row[8].value, row[14].value))
+#                     lifting_norm_nkt.setdefault(i, {}). \
+#                         setdefault(row[1].value, {}).setdefault('раздел', row[15].value)
+# print(lifting_norm_nkt)
 # if fname:
 #     normir_list = []
 #     for row_ind, row in enumerate(ws2.iter_rows(max_col=18, min_row=3, max_row=148)):

@@ -112,8 +112,9 @@ class TabPage_SO_Timplate(QWidget):
         self.extra_work_time_begin_date.dateTimeChanged.connect(
             self.update_date_technological_crap)
 
-        if index in ['ГИС - установка ЦЖ']:
+        if index in ['ГИС - установка ЦЖ', 'Фондовый пакер']:
             self.extra_work_text_line.setText('ГИС - установка ЦЖ в инт. ')
+
             self.response_text_line = QLineEdit(self)
 
             self.response_time_begin_date = QDateTimeEdit(self)
@@ -126,12 +127,12 @@ class TabPage_SO_Timplate(QWidget):
 
             self.response_time_line_label = QLabel('Затраченное время')
             self.response_time_line = QLineEdit(self)
+            if index in ['ГИС - установка ЦЖ']:
+                self.pressuar_combo = QComboBox(self)
+                self.pressuar_combo.addItems(['Нет', 'Да'])
 
-            self.pressuar_combo = QComboBox(self)
-            self.pressuar_combo.addItems(['Нет', 'Да'])
-
-            self.grid.addWidget(self.pressuar_combo_label, 62, 0)
-            self.grid.addWidget(self.pressuar_combo, 63, 0)
+                self.grid.addWidget(self.pressuar_combo_label, 62, 0)
+                self.grid.addWidget(self.pressuar_combo, 63, 0)
 
             self.grid.addWidget(self.response_text_label, 60, 1)
             self.grid.addWidget(self.response_text_line, 61, 1)
@@ -149,9 +150,13 @@ class TabPage_SO_Timplate(QWidget):
             self.response_time_begin_date.dateTimeChanged.connect(
                 self.update_date_response)
 
-            self.response_text_line.setText('ОЗЦ')
 
-            self.extra_work_text_line.setText('Установка ЦЖ в интервале ')
+            self.response_text_line.setText('ОЗЦ')
+            if index == 'Фондовый пакер':
+
+                self.response_text_line.setText('Интерпретация')
+
+                self.extra_work_text_line.setText('ГИС - РГД ')
 
     def update_pressuar_combo(self, index):
         if index == 'Нет':

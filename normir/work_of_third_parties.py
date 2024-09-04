@@ -695,7 +695,7 @@ class WorkOfThirdPaties(QMainWindow):
         if self.combo_nkt_true == 'Да':
             self.type_equipment = current_widget.type_equipment_combo.currentText()
             if self.type_equipment == '':
-                QMessageBox.warning(self, 'не выбрана', 'Не выбрана компоновка')
+                QMessageBox.warning(self, 'не выбрана', 'Не выбрана вид спущенной компоновки')
                 return
 
             self.coefficient_lifting = 1

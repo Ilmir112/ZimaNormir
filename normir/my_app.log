@@ -160,3 +160,60 @@
 2024-09-03 09:37:19,180 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'RaidWork' object has no attribute 'raid_work_text_line', <traceback object at 0x00000148C8384640>
 2024-09-03 09:42:31,323 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001345D835400>
 2024-09-03 09:43:50,896 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001345D834F40>
+2024-09-03 10:45:07,660 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'normalization_question_combo', <traceback object at 0x00000155BB4072C0>
+2024-09-03 10:45:53,938 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001CBAC2BF340>
+2024-09-03 11:09:52,647 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x00000172CE16BF80>
+2024-09-03 11:11:37,610 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000016AF1F34080>
+2024-09-03 11:34:38,916 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, invalid literal for int() with base 10: '', <traceback object at 0x00000179FFC353C0>
+2024-09-03 11:35:19,887 - log_files.log - CRITICAL - Критическая ошибка: <class 'UnboundLocalError'>, cannot access local variable 'work_list' where it is not associated with a value, <traceback object at 0x00000179813AA740>
+2024-09-03 11:37:19,199 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002133EDDE900>
+2024-09-03 11:41:22,965 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001799A3E8D80>
+2024-09-03 11:47:05,891 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002BD8F662D40>
+2024-09-03 11:54:45,227 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000287D2976580>
+2024-09-03 12:23:25,459 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002369BC4C580>
+2024-09-03 14:33:55,341 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_well_flush_line', <traceback object at 0x000001ABCC2047C0>
+2024-09-03 14:34:30,811 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'normalization_question_combo', <traceback object at 0x0000020FBF534700>
+2024-09-03 14:43:18,139 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_line', <traceback object at 0x000001F94486B0C0>
+2024-09-03 14:44:10,468 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB72E10040>
+2024-09-03 14:45:22,355 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB72E07F80>
+2024-09-03 14:46:05,899 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76DDF400>
+2024-09-03 14:46:26,065 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76D6E4C0>
+2024-09-03 14:46:30,075 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76E23680>
+2024-09-03 14:48:40,364 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76DE9380>
+2024-09-03 14:48:43,876 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76E23D00>
+2024-09-03 14:48:49,755 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76E23680>
+2024-09-03 14:48:57,652 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x000001DB76DEA940>
+2024-09-03 14:49:27,055 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001DB76E27F00>
+2024-09-03 14:50:00,588 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D5E80>
+2024-09-03 14:50:03,467 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D5E40>
+2024-09-03 14:50:28,596 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D5E00>
+2024-09-03 14:50:30,284 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D5CC0>
+2024-09-03 14:50:35,109 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D6940>
+2024-09-03 14:50:49,756 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: 'ГИС - м/ж трубного перфоратора', <traceback object at 0x0000017B751D63C0>
+2024-09-03 14:51:45,763 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_of_finishing_line', <traceback object at 0x000001ECD1250B40>
+2024-09-03 14:53:17,357 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_of_finishing_line', <traceback object at 0x000001ECD27B7F00>
+2024-09-03 14:53:58,093 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001ECD27E0EC0>
+2024-09-03 15:21:21,774 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000021CCF4D7AC0>
+2024-09-03 15:26:31,480 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001A6DE956E80>
+2024-09-04 10:50:51,309 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyError'>, '73мм', <traceback object at 0x000002A277695280>
+2024-09-04 10:55:19,569 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000233F2AE6300>
+2024-09-04 11:20:30,026 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001B0DF59F900>
+2024-09-04 11:21:18,846 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, 'NoneType' object is not iterable, <traceback object at 0x00000259D631CCC0>
+2024-09-04 11:29:17,528 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000025555EF7E00>
+2024-09-04 11:33:18,289 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'RaidWork' object has no attribute 'drilling_with_sbt_work', <traceback object at 0x000002AA7531A2C0>
+2024-09-04 12:07:22,973 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000169BAFDCCC0>
+2024-09-04 13:59:15,294 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'complications_of_failure_combo', <traceback object at 0x000001EABE4170C0>
+2024-09-04 13:59:54,567 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'complications_of_failure_combo', <traceback object at 0x0000011ED5F79800>
+2024-09-04 14:00:32,787 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'type_equipment', <traceback object at 0x000001CC77F98EC0>
+2024-09-04 14:02:20,116 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'complications_of_failure_combo', <traceback object at 0x000001A18D4F3980>
+2024-09-04 14:07:56,359 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'anchor_lifts_combo', <traceback object at 0x00000236F1AEEA40>
+2024-09-04 14:08:52,893 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'complications_of_failure_armatura_time_end_date', <traceback object at 0x0000016A6F11E140>
+2024-09-04 14:15:16,857 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001E4ECF09180>
+2024-09-04 14:18:00,820 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002275AD8D300>
+2024-09-04 14:22:28,260 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001D08DB2C140>
+2024-09-04 15:15:38,935 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'NoneType' and 'int', <traceback object at 0x0000021C20446A40>
+2024-09-04 15:29:47,307 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'type_equipment', <traceback object at 0x000001B82A4FC380>
+2024-09-04 16:23:39,593 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000019D4EF57980>
+2024-09-04 16:31:03,901 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001CD2542A640>
+2024-09-04 16:56:31,598 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'DescentGnoWindow' object has no attribute 'type_equipment', <traceback object at 0x000001C2B0F35A80>
+2024-09-04 17:13:27,159 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000143E2F4BF00>

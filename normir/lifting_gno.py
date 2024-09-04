@@ -1336,6 +1336,8 @@ class LiftingWindow(QMainWindow):
              'Снятие барабана на автонаматыватель', None, None,
              None, None, None, None, None, None, None, None, None, None, '§219разд.1', None, 'раз', 1, 0.25, 1,
              '=V277*W277*X277', '=Y277-AA277-AB277-AC277-AD277', None, None, None, None, None]]
+        if self.esp_dismantling_time_line - time_differnce <= 0:
+            work_list.pop(-2)
         return work_list
 
 
