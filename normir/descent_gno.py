@@ -776,9 +776,59 @@ class DescentGnoWindow(QMainWindow):
 
         self.date_work_line = current_widget.date_work_line.text()
         self.gno_combo = current_widget.gno_combo.currentText()
-
+        aaa =  self.gno_combo
         if self.gno_combo in ['Фондовый пакер']:
+            self.type_equipment = 'Фондовый пакер'
             self.coefficient_lifting = 1.2
+            self.depth_paker_text_edit = current_widget.depth_paker_text_edit.text()
+
+            if self.depth_paker_text_edit not in ['', None]:
+                self.depth_paker_text_edit = int(self.depth_paker_text_edit)
+            else:
+                question = QMessageBox.question(self, 'Глубина посадки', 'Не введена глубина посадки пакера ')
+                if question == QMessageBox.StandardButton.No:
+                    return
+            self.rezult_pressuar_combo = current_widget.rezult_pressuar_combo.currentText()
+            self.pressuar_ek_line = current_widget.pressuar_ek_line.text()
+            if self.pressuar_ek_line != '':
+                self.pressuar_ek_line = int(self.pressuar_ek_line)
+            else:
+                question = QMessageBox.question(self, 'Давление', 'Не указано давление опрессовки?')
+                if question == QMessageBox.StandardButton.No:
+                    return
+
+            self.response_text_line = current_widget.response_text_line.text()
+            self.response_time_begin_date = \
+                current_widget.response_time_begin_date.dateTime().toPyDateTime()
+            self.response_time_begin_date = \
+                self.change_string_in_date(self.response_time_begin_date)
+
+            self.response_time_end_date = \
+                current_widget.response_time_end_date.dateTime().toPyDateTime()
+            self.response_time_end_date = \
+                self.change_string_in_date(self.response_time_end_date)
+
+            if current_widget.response_text_line.text() == self.response_time_begin_date:
+                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
+                return
+
+            if self.response_text_line == '':
+                QMessageBox.warning(self, 'Ошибка', f'Не введены текст работы подрядчика')
+                return
+
+            self.response_time_line = current_widget.response_time_line.text()
+            if self.response_time_line != '':
+                self.response_time_line = round(float(self.response_time_line), 1)
+
+            else:
+                QMessageBox.warning(self, 'Ошибка', f'Не введены время работы подрядчика')
+                return
+
+            if self.response_time_line <= 0:
+                QMessageBox.warning(self, 'Ошибка',
+                                    f'Затраченное время при работы подрядчика не может быть отрицательным')
+                return
+
         elif self.gno_combo in ['ЭЦН']:
             self.coefficient_lifting = 1
             self.type_equipment = 'ЭЦН'
@@ -820,25 +870,8 @@ class DescentGnoWindow(QMainWindow):
         elif self.gno_combo in ['воронка']:
             self.type_equipment = 'воронка'
             self.coefficient_lifting = 1
-        elif self.gno_combo in ['Фондовый пакер']:
-            self.type_equipment = 'Фондовый пакер'
-            self.coefficient_lifting = 1.2
-            self.depth_paker_text_edit = current_widget.depth_paker_text_edit.text()
 
-            if self.depth_paker_text_edit not in ['', None]:
-                self.depth_paker_text_edit = int(self.depth_paker_text_edit)
-            else:
-                question = QMessageBox.question(self, 'Глубина посадки', 'Не введена глубина посадки пакера ')
-                if question == QMessageBox.StandardButton.No:
-                    return
 
-            self.pressuar_ek_line = current_widget.pressuar_ek_line.text()
-            if self.pressuar_ek_line != '':
-                self.pressuar_ek_line = int(self.pressuar_ek_line)
-            else:
-                question = QMessageBox.question(self, 'Давление', 'Не указано давление опрессовки?')
-                if question == QMessageBox.StandardButton.No:
-                    return
         else:
             self.coefficient_lifting = 1
 
@@ -1201,7 +1234,8 @@ class DescentGnoWindow(QMainWindow):
         work_list.extend(self.pvo_dismantling())
 
         if self.depth_paker_text_edit != '':
-            work_list.extend(SpoPakerAction.pressuar_work(self))
+            self.determination_of_pickup_combo = 'Нет'
+            work_list.extend(SpoPakerAction.pressuar_work(self)[:-1])
 
         if self.scheme_bop_installation_problem_combo == 'Да':
             work_list.append(['=ROW()-ROW($A$46)', self.date_work_line, None, 'первая.категория', '30м',
@@ -1241,7 +1275,7 @@ class DescentGnoWindow(QMainWindow):
             ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'РГД ВТ',
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, 'Факт', None, 'час',
-             5, 1, 1, '=V353*W353*X353', '=Y353-AA353-AB353-AC353-AD353', None, None, None, None, None],
+             self.extra_work_time_line, 1, 1, '=V353*W353*X353', '=Y353-AA353-AB353-AC353-AD353', None, None, None, None, None],
             ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
              f'{self.response_text_line} ({self.response_time_begin_date}-{self.response_time_end_date})', None,
              None, None, None, None, None,
@@ -1254,257 +1288,257 @@ class DescentGnoWindow(QMainWindow):
 
 
 
-def descent_ecn(self):
-    time_difference = round(
-        (((117 + ((self.count_sections_esp_combo - 1) * 15)) + ((self.count_sections_ped_combo - 1) * 23)) / 60), 2)
-    work_list = [
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Разгрузить барабан, автонаматыватель', None, None,
-         None, None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 2, 0.33, 1,
-         '=V953*W953*X953', '=Y953-AA953-AB953-AC953', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Разгрузить подвесной ролик', None, None, None,
-         None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 1, 0.05, 1,
-         '=V954*W954*X954', '=Y954-AA954-AB954-AC954', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-         'Установить подвесной ролик для кабеля ЭЦН на мачте', None, None, None, None, None, None, None, None, None,
-         None, None, None, '§96п.18 разд.1', None, 'час', 1, '=11/60', 1, '=V955*W955*X955',
-         '=Y955-AA955-AB955-AC955-AD955', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-         'Протаскивание электрокабеля через подвесной ролик (10м)', None, None, None, None, None, None, None, None,
-         None, None, None, None, '§209разд.1', None, 'раз', 1, '=3/60', 1, '=V956*W956*X956',
-         '=Y956-AA956-AB956-AC956-AD956', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-         f'Монтаж УЭЦН  {self.esp_dismantling_time_begin_date}-{self.esp_dismantling_time_end_date}', None,
-         'Кол-во секций ЭЦН',
-         None, None, self.count_sections_esp_combo, 'Кол-во ПЭД', None, self.count_sections_ped_combo, 'АКТ№',
-         None, None, None, 'факт', None, 'час', self.esp_dismantling_time_line - time_difference, 1, 1,
-         '=V957*W957*X957', '=Y957-AA957-AB957-AC957-AD957', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-         f'Монтаж {self.esp_dismantling_text_line}', None,
-         'Кол-во секций ЭЦН', None,
-         None, self.count_sections_esp_combo, 'Кол-во ПЭД', None, self.count_sections_ped_combo, None, None,
-         None, None, '§221разд.1', None, 'шт', 1,
-         '=((117+((K958-1)*15))+((N958-1)*23))/60', 1, '=V958*W958*X958', '=Y958-AA958-AB958-AC958-AD958', None,
-         None, None, None, None]]
-
-    if self.esp_dismantling_time_line - time_difference <= 0:
-        work_list.pop(-2)
-
-    return work_list
-
-
-def finish_ecn(self):
-    if '60' in list(self.dict_nkt.keys()) or '48' in list(self.dict_nkt.keys()):
-        count_60 = 0
-        for nkt_key, nkt_value in self.dict_nkt:
-            if '60' in nkt_key or '48' in nkt_key:
-                count_60 += nkt_value[0]
-
+    def descent_ecn(self):
+        time_difference = round(
+            (((117 + ((self.count_sections_esp_combo - 1) * 15)) + ((self.count_sections_ped_combo - 1) * 23)) / 60), 2)
         work_list = [
-            ['=ROW()-ROW($A$46)', 'на 60мм НКТ', None, 'Тех.операции', None, 'Рубка клямсы на кабеле', None, None,
-             None,
-             None, None, None, None, None, None, None, None, None, '§215разд.1', None, 'шт', f'={count_60}*2',
-             '=0.25/60', 1,
-             '=V966*W966*X966', '=Y966-AA966-AB966-AC966-AD966', None, None, None, None, None]]
-    else:
-        work_list = []
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Разгрузить барабан, автонаматыватель', None, None,
+             None, None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 2, 0.33, 1,
+             '=V953*W953*X953', '=Y953-AA953-AB953-AC953', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Разгрузить подвесной ролик', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 1, 0.05, 1,
+             '=V954*W954*X954', '=Y954-AA954-AB954-AC954', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+             'Установить подвесной ролик для кабеля ЭЦН на мачте', None, None, None, None, None, None, None, None, None,
+             None, None, None, '§96п.18 разд.1', None, 'час', 1, '=11/60', 1, '=V955*W955*X955',
+             '=Y955-AA955-AB955-AC955-AD955', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+             'Протаскивание электрокабеля через подвесной ролик (10м)', None, None, None, None, None, None, None, None,
+             None, None, None, None, '§209разд.1', None, 'раз', 1, '=3/60', 1, '=V956*W956*X956',
+             '=Y956-AA956-AB956-AC956-AD956', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+             f'Монтаж УЭЦН  {self.esp_dismantling_time_begin_date}-{self.esp_dismantling_time_end_date}', None,
+             'Кол-во секций ЭЦН',
+             None, None, self.count_sections_esp_combo, 'Кол-во ПЭД', None, self.count_sections_ped_combo, 'АКТ№',
+             None, None, None, 'факт', None, 'час', self.esp_dismantling_time_line - time_difference, 1, 1,
+             '=V957*W957*X957', '=Y957-AA957-AB957-AC957-AD957', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+             f'Монтаж {self.esp_dismantling_text_line}', None,
+             'Кол-во секций ЭЦН', None,
+             None, self.count_sections_esp_combo, 'Кол-во ПЭД', None, self.count_sections_ped_combo, None, None,
+             None, None, '§221разд.1', None, 'шт', 1,
+             '=((117+((K958-1)*15))+((N958-1)*23))/60', 1, '=V958*W958*X958', '=Y958-AA958-AB958-AC958-AD958', None,
+             None, None, None, None]]
 
-    nkt_sum = sum(list(map(lambda x: x[1], self.dict_nkt.values())))
-    nkt_lenght = sum(list(map(lambda x: x[0], self.dict_nkt.values())))
+        if self.esp_dismantling_time_line - time_difference <= 0:
+            work_list.pop(-2)
 
-    work_list_ecn = [
-        ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН',
-         'Определить отклонение талевого блока, расслабить оттяжки, отцентрировать вышку и подтянуть оттяжки во время ремонта',
-         None, None, None, None, None, None, None, None, None, None, None, None, '§59п.1 разд.1', None, 'час', 0.42,
-         1, 1, '=V967*W967*X967', '=Y967-AA967-AB967-AC967-AD967', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН', 'Замер сопротивления через  300м', None, None, None, None,
-         None, None, None, None, None, None, None, None, '§221разд.1', None, 'шт', nkt_lenght,
-         '=(2+V968/300+2)*0.06',
-         1,
-         '=W968', '=Y968-AA968-AB968-AC968-AD968', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Закл.работы после спуска труб', None, None, None,
-         None, None, None, None, None, None, None, None, None, '§208разд.1', None, 'раз', 1, 0.82, 1,
-         '=V969*W969*X969', '=Y969-AA969-AB969-AC969-AD969', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Снять с мачты подвесной ролик кабеля ЭНЦ', None,
-         None, None, None, None, None, None, None, None, None, None, None, '§97п.12 разд.1', None, 'час', 1,
-         '=9/60', 1, '=V970*W970*X970', '=Y970-AA970-AB970-AC970-AD970', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН', 'Погрузить барабан, автонаматыватель', None, None, None,
-         None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'час', 2, 0.23, 1,
-         '=V971*W971*X971', '=Y971-AA971-AB971-AC971-AD971', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Погрузить подвесной ролик', None, None, None,
-         None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 1, 0.05, 1,
-         '=V972*W972*X972', '=Y972-AA972-AB972-AC972', None, None, None, None, None]]
-
-    work_list.extend(work_list_ecn)
-
-    return work_list
+        return work_list
 
 
-def equipment_dismantling_work(self):
-    work_list = [
-        ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж ГКШ-1200', None, None, None, None,
-         None, None, None, None, None, None, None, None, '§184разд.1', None, 'шт', 1, 0.12, 1, '=V974*W974*X974',
-         '=Y974-AA974-AB974-AC974-AD974', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж СПГ', None, None, None, None, None,
-         None, None, None, None, None, None, None, '§185разд.1', None, 'шт', 1, 0.07, 1, '=V975*W975*X975',
-         '=Y975-AA975-AB975-AC975-AD975', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Разборка рабочей площадки ', None, None, None,
-         None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт', 1, 0.58, 1,
-         '=V976*W976*X976', '=Y976-AA976-AB976-AC976-AD976', None, None, None, None, None]]
-    if self.gno_combo in ['ЗО']:
-        work_list[-1] = ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-                         'Разборка  рабочей площадки частично', None, None, None,
-                         None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт', 1, 0.3, 1,
-                         '=V976*W976*X976', '=Y976-AA976-AB976-AC976-AD976', None, None, None, None, None]
-    return work_list
+    def finish_ecn(self):
+        if '60' in list(self.dict_nkt.keys()) or '48' in list(self.dict_nkt.keys()):
+            count_60 = 0
+            for nkt_key, nkt_value in self.dict_nkt:
+                if '60' in nkt_key or '48' in nkt_key:
+                    count_60 += nkt_value[0]
+
+            work_list = [
+                ['=ROW()-ROW($A$46)', 'на 60мм НКТ', None, 'Тех.операции', None, 'Рубка клямсы на кабеле', None, None,
+                 None,
+                 None, None, None, None, None, None, None, None, None, '§215разд.1', None, 'шт', f'={count_60}*2',
+                 '=0.25/60', 1,
+                 '=V966*W966*X966', '=Y966-AA966-AB966-AC966-AD966', None, None, None, None, None]]
+        else:
+            work_list = []
+
+        nkt_sum = sum(list(map(lambda x: x[1], self.dict_nkt.values())))
+        nkt_lenght = sum(list(map(lambda x: x[0], self.dict_nkt.values())))
+
+        work_list_ecn = [
+            ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН',
+             'Определить отклонение талевого блока, расслабить оттяжки, отцентрировать вышку и подтянуть оттяжки во время ремонта',
+             None, None, None, None, None, None, None, None, None, None, None, None, '§59п.1 разд.1', None, 'час', 0.42,
+             1, 1, '=V967*W967*X967', '=Y967-AA967-AB967-AC967-AD967', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН', 'Замер сопротивления через  300м', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§221разд.1', None, 'шт', nkt_lenght,
+             '=(2+V968/300+2)*0.06',
+             1,
+             '=W968', '=Y968-AA968-AB968-AC968-AD968', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Закл.работы после спуска труб', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§208разд.1', None, 'раз', 1, 0.82, 1,
+             '=V969*W969*X969', '=Y969-AA969-AB969-AC969-AD969', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Снять с мачты подвесной ролик кабеля ЭНЦ', None,
+             None, None, None, None, None, None, None, None, None, None, None, '§97п.12 разд.1', None, 'час', 1,
+             '=9/60', 1, '=V970*W970*X970', '=Y970-AA970-AB970-AC970-AD970', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'спо', 'ЭЦН', 'Погрузить барабан, автонаматыватель', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'час', 2, 0.23, 1,
+             '=V971*W971*X971', '=Y971-AA971-AB971-AC971-AD971', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН', 'Погрузить подвесной ролик', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 1, 0.05, 1,
+             '=V972*W972*X972', '=Y972-AA972-AB972-AC972', None, None, None, None, None]]
+
+        work_list.extend(work_list_ecn)
+
+        return work_list
 
 
-def pvo_dismantling(self):
-    if self.scheme_bop_installation_combo == 'Первая':
+    def equipment_dismantling_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'первая.категория', '30м', 'Демонтаж Схема №1', None, None, None,
-             None,
-             None, None, None, None, None, None, None, None, '§24аразд.1', None, 'шт', 1, 1.47, 1,
-             '=V978*W978*X978',
-             '=Y978-AA978-AB978-AC978-AD978', None, None, None, None, None]]
-    else:
-        work_list = []
-
-    work_list_ecn = [
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Демонтаж превентора', None, None, None, None, None,
-         None, None, None, None, None, None, None, '§119разд.1', None, 'шт', 1, 0.52, 1, '=V979*W979*X979',
-         '=Y979-AA979-AB979-AC979-AD979', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж крестовины', None, None, None, None, None,
-         None, None, None, None, None, None, None, '§300разд.1', None, 'шт', 1, 0.5, 1, '=V980*W980*X980',
-         '=Y980-AA980-AB980-AC980-AD980', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж АУ фонтанной арматуры ', None, None,
-         None, None, None, None, None, None, None, None, None, None, '§103разд.1', None, 'раз', 1, 0.6, 1,
-         '=V981*W981*X981', '=Y981-AA981-AB981-AC981-AD981', None, None, None, None, None],
-        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж планшайбы на устье скважины', None, None,
-         None, None, None, None, None, None, None, None, None, None, '§106разд.1', None, 'шт', 1, 0.37, 1,
-         '=V982*W982*X982', '=Y982-AA982-AB982-AC982-AD982', None, None, None, None, None]]
-    if self.gno_combo in ['ЭЦН']:
-        work_list_ecn.extend([['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-                               'Опрессовка сальникового уплотнения кабельного ввода', None, None, None, None, None,
-                               None, None, None,
-                               None, None, None, None, '§212разд.1', None, 'раз', 1, 0.5, 1, '=V983*W983*X983',
-                               '=Y983-AA983-AB983-AC983-AD983', None, None, None, None, None],
-                              ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-                               'Заполнить колонны труб водой для проверки работы глубинного насоса на 100м', None, None,
-                               None, None, None,
-                               None, None, None, None, None, None, None, '§201разд.1', None, 'м', '=M960', 1, 1,
-                               '=ROUNDUP(SUM((V984*0.00058)+0.06),2)', '=ROUNDUP(Y984-AA984-AB984-AC984-AD984,2)', None,
-                               None, None, None,
-                               None],
-                              ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
-                               'ПЗР.Опрессовка ГНО при Р=60атм (+)', None, None,
-                               None, None, None, None, None, None, 'АКТ№', None, None, None, '§150-152разд.1', None,
-                               'шт', 1, 0.67, 1,
-                               '=V985*W985*X985', '=Y985-AA985-AB985-AC985-AD985', None, None, None, None, None],
-                              ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Контрольный замер изоляции (+)',
-                               None, None, None,
-                               None, None, None, None, None, 'АКТ№', None, None, None, '§221разд.1', None, 'раз', 1,
-                               0.22, 1,
-                               '=V986*W986*X986', '=Y986-AA986-AB986-AC986-AD986', None, None, None, None, None],
-                              ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Пробная эксплуатация ', None,
-                               None, None, None,
-                               None, None, None, None, 'АКТ№', None, None, None, 'Простои', None, 'шт', 1, 0.57, 1,
-                               '=V987*W987*X987',
-                               '=Y987-AA987-AB987-AC987-AD987', None, None, None, None, None],
-                              ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Пробная эксплуатация ', None,
-                               None, None, None,
-                               None, None, None, None, None, None, None, None, 'Простои', 'Тех. ожидание', 'шт', 1, 1.6,
-                               1,
-                               '=V988*W988*X988', '=Y988-AA988-AB988-AC988-AD988', None, None, None, None, None]])
-    work_list.extend(work_list_ecn)
-    return work_list
+            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж ГКШ-1200', None, None, None, None,
+             None, None, None, None, None, None, None, None, '§184разд.1', None, 'шт', 1, 0.12, 1, '=V974*W974*X974',
+             '=Y974-AA974-AB974-AC974-AD974', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж СПГ', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§185разд.1', None, 'шт', 1, 0.07, 1, '=V975*W975*X975',
+             '=Y975-AA975-AB975-AC975-AD975', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Разборка рабочей площадки ', None, None, None,
+             None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт', 1, 0.58, 1,
+             '=V976*W976*X976', '=Y976-AA976-AB976-AC976-AD976', None, None, None, None, None]]
+        if self.gno_combo in ['ЗО']:
+            work_list[-1] = ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                             'Разборка  рабочей площадки частично', None, None, None,
+                             None, None, None, None, None, None, None, None, None, '§54разд.1', None, 'шт', 1, 0.3, 1,
+                             '=V976*W976*X976', '=Y976-AA976-AB976-AC976-AD976', None, None, None, None, None]
+        return work_list
 
 
-def dismantling_lifting(self):
-    if 'А5-40' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж А5-40', None, None, None, None,
-             None,
-             None, None, None, None, None, None, None, '§69разд.1', None, 'шт', 1, 0.97, 1, '=V993*W993*X993',
-             '=Y993-AA993-AB993-AC993-AD993', None, None, None, None, None]]
-    elif 'СУРС-40' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
-             'Демонтаж подъемного агрегата СУРС-40 (подгот.)', None, None, None, None, None, None, None, None, None,
-             None, None, None, '§63разд.1', None, 'шт', 1, 0.97, 1, '=V994*W994*X994',
-             '=Y994-AA994-AB994-AC994-AD994',
-             None, None, None, None, None]]
-    elif 'УП 32/40' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
-             'Демонтаж подъемного агрегата УП32/40 (подгот.)', None, None, None, None,
-             None, None, None, None, None, None, None, None, '§63разд.1', None, 'шт', 1,
-             0.65, 1, '=V995*W995*X995', '=Y995-AA995-AB995-AC995-AD995', None, None,
-             None, None, None], ]
-    elif 'АПРС-40' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПРС-40', None, None,
-             None,
-             None, None, None, None, None, None, None, None, None, '§63разд.1', None, 'раз', 1, 0.65, 1,
-             '=V990*W990*X990', '=Y990-AA990-AB990-AC990-AD990', None, None, None, None, None], ]
-    elif 'АПРС-50' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПРС-50', None, None,
-             None,
-             None, None, None, None, None, None, None, None, None, '§71разд.1', None, 'раз', 1, 1.02, 1,
-             '=V991*W991*X991', '=Y991-AA991-AB991-AC991-AD991', None, None, None, None, None]]
-    elif 'АПР-60/80' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПР-60/80', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§87разд.1', None, 'шт', 1, 3.07, 1,
-             '=V992*W992*X992', '=Y992-AA992-AB992-AC992-AD992', None, None, None, None, None]]
-    elif 'УПА-60' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
-             'Демонтаж подъемного агрегата УПА-60 (подгот.)',
-             None, None, None, None, None, None, None, None, None, None, None, None, '§83разд.1', None, 'шт', 1,
-             3.13,
-             1, '=V996*W996*X996', '=Y996-AA996-AB996-AC996-AD996', None, None, None, None, None], ]
-    elif 'А5-40' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
-             'Центрирование мачты подъемника А5-40 во время монтажа', None, None, None,
-             None, None, None, None, None, None, None, None, None, '§59разд.1', None, 'шт',
-             1, 0.67, 1, '=V103*W103*X103', '=Y103-AA103-AB103-AC103-AD103', None, None,
-             None, None, None]]
-    elif 'А-50М' in self.lift_installation_combo:
-        lift_installation_list = [
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника А-50М',
-             None, None,
-             None,
-             None,
-             None, None, None, None, None, None, None, None, '§72 р.1', None, 'шт', 1, 3.25, 1, '=V104*W104*X104',
-             '=Y104-AA104-AB104-AC104-AD104', None, None, None, None, None]]
-    elif 'БАРС-80' in self.lift_installation_combo:
-        lift_installation_list = [
+    def pvo_dismantling(self):
+        if self.scheme_bop_installation_combo == 'Первая':
+            work_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'первая.категория', '30м', 'Демонтаж Схема №1', None, None, None,
+                 None,
+                 None, None, None, None, None, None, None, None, '§24аразд.1', None, 'шт', 1, 1.47, 1,
+                 '=V978*W978*X978',
+                 '=Y978-AA978-AB978-AC978-AD978', None, None, None, None, None]]
+        else:
+            work_list = []
+
+        work_list_ecn = [
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Демонтаж превентора', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§119разд.1', None, 'шт', 1, 0.52, 1, '=V979*W979*X979',
+             '=Y979-AA979-AB979-AC979-AD979', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж крестовины', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§300разд.1', None, 'шт', 1, 0.5, 1, '=V980*W980*X980',
+             '=Y980-AA980-AB980-AC980-AD980', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж АУ фонтанной арматуры ', None, None,
+             None, None, None, None, None, None, None, None, None, None, '§103разд.1', None, 'раз', 1, 0.6, 1,
+             '=V981*W981*X981', '=Y981-AA981-AB981-AC981-AD981', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Монтаж планшайбы на устье скважины', None, None,
+             None, None, None, None, None, None, None, None, None, None, '§106разд.1', None, 'шт', 1, 0.37, 1,
+             '=V982*W982*X982', '=Y982-AA982-AB982-AC982-AD982', None, None, None, None, None]]
+        if self.gno_combo in ['ЭЦН']:
+            work_list_ecn.extend([['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                                   'Опрессовка сальникового уплотнения кабельного ввода', None, None, None, None, None,
+                                   None, None, None,
+                                   None, None, None, None, '§212разд.1', None, 'раз', 1, 0.5, 1, '=V983*W983*X983',
+                                   '=Y983-AA983-AB983-AC983-AD983', None, None, None, None, None],
+                                  ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                                   'Заполнить колонны труб водой для проверки работы глубинного насоса на 100м', None, None,
+                                   None, None, None,
+                                   None, None, None, None, None, None, None, '§201разд.1', None, 'м', '=M960', 1, 1,
+                                   '=ROUNDUP(SUM((V984*0.00058)+0.06),2)', '=ROUNDUP(Y984-AA984-AB984-AC984-AD984,2)', None,
+                                   None, None, None,
+                                   None],
+                                  ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                                   'ПЗР.Опрессовка ГНО при Р=60атм (+)', None, None,
+                                   None, None, None, None, None, None, 'АКТ№', None, None, None, '§150-152разд.1', None,
+                                   'шт', 1, 0.67, 1,
+                                   '=V985*W985*X985', '=Y985-AA985-AB985-AC985-AD985', None, None, None, None, None],
+                                  ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Контрольный замер изоляции (+)',
+                                   None, None, None,
+                                   None, None, None, None, None, 'АКТ№', None, None, None, '§221разд.1', None, 'раз', 1,
+                                   0.22, 1,
+                                   '=V986*W986*X986', '=Y986-AA986-AB986-AC986-AD986', None, None, None, None, None],
+                                  ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Пробная эксплуатация ', None,
+                                   None, None, None,
+                                   None, None, None, None, 'АКТ№', None, None, None, 'Простои', None, 'шт', 1, 0.57, 1,
+                                   '=V987*W987*X987',
+                                   '=Y987-AA987-AB987-AC987-AD987', None, None, None, None, None],
+                                  ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Пробная эксплуатация ', None,
+                                   None, None, None,
+                                   None, None, None, None, None, None, None, None, 'Простои', 'Тех. ожидание', 'шт', 1, 1.6,
+                                   1,
+                                   '=V988*W988*X988', '=Y988-AA988-AB988-AC988-AD988', None, None, None, None, None]])
+        work_list.extend(work_list_ecn)
+        return work_list
+
+
+    def dismantling_lifting(self):
+        if 'А5-40' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж А5-40', None, None, None, None,
+                 None,
+                 None, None, None, None, None, None, None, '§69разд.1', None, 'шт', 1, 0.97, 1, '=V993*W993*X993',
+                 '=Y993-AA993-AB993-AC993-AD993', None, None, None, None, None]]
+        elif 'СУРС-40' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
+                 'Демонтаж подъемного агрегата СУРС-40 (подгот.)', None, None, None, None, None, None, None, None, None,
+                 None, None, None, '§63разд.1', None, 'шт', 1, 0.97, 1, '=V994*W994*X994',
+                 '=Y994-AA994-AB994-AC994-AD994',
+                 None, None, None, None, None]]
+        elif 'УП 32/40' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
+                 'Демонтаж подъемного агрегата УП32/40 (подгот.)', None, None, None, None,
+                 None, None, None, None, None, None, None, None, '§63разд.1', None, 'шт', 1,
+                 0.65, 1, '=V995*W995*X995', '=Y995-AA995-AB995-AC995-AD995', None, None,
+                 None, None, None], ]
+        elif 'АПРС-40' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПРС-40', None, None,
+                 None,
+                 None, None, None, None, None, None, None, None, None, '§63разд.1', None, 'раз', 1, 0.65, 1,
+                 '=V990*W990*X990', '=Y990-AA990-AB990-AC990-AD990', None, None, None, None, None], ]
+        elif 'АПРС-50' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПРС-50', None, None,
+                 None,
+                 None, None, None, None, None, None, None, None, None, '§71разд.1', None, 'раз', 1, 1.02, 1,
+                 '=V991*W991*X991', '=Y991-AA991-AB991-AC991-AD991', None, None, None, None, None]]
+        elif 'АПР-60/80' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника АПР-60/80', None, None,
+                 None, None, None, None, None, None, None, None, None, None, '§87разд.1', None, 'шт', 1, 3.07, 1,
+                 '=V992*W992*X992', '=Y992-AA992-AB992-AC992-AD992', None, None, None, None, None]]
+        elif 'УПА-60' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', None, None, 'ЗР.после.ремонта', None,
+                 'Демонтаж подъемного агрегата УПА-60 (подгот.)',
+                 None, None, None, None, None, None, None, None, None, None, None, None, '§83разд.1', None, 'шт', 1,
+                 3.13,
+                 1, '=V996*W996*X996', '=Y996-AA996-AB996-AC996-AD996', None, None, None, None, None], ]
+        elif 'А5-40' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
+                 'Центрирование мачты подъемника А5-40 во время монтажа', None, None, None,
+                 None, None, None, None, None, None, None, None, None, '§59разд.1', None, 'шт',
+                 1, 0.67, 1, '=V103*W103*X103', '=Y103-AA103-AB103-AC103-AD103', None, None,
+                 None, None, None]]
+        elif 'А-50М' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж подъемника А-50М',
+                 None, None,
+                 None,
+                 None,
+                 None, None, None, None, None, None, None, None, '§72 р.1', None, 'шт', 1, 3.25, 1, '=V104*W104*X104',
+                 '=Y104-AA104-AB104-AC104-AD104', None, None, None, None, None]]
+        elif 'БАРС-80' in self.lift_installation_combo:
+            lift_installation_list = [
+                ['=ROW()-ROW($A$56)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника БАРС-80 (с оттяжками)',
+                 None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1,
+                 2.81, 1, '=V998*W998*X998', '=Y998-AA998-AB998-AC998-AD998', None, None, None, None, None]]
+
+        if self.anchor_lifts_combo == 'Да':
+            anchor_lifts = [
+                ['=ROW()-ROW($A$46)', None, None, 'Оттяжки', None, 'Вытаскивание  якорей', None, None, None, None, None,
+                 None, None, None, None, None, None, None, '§31разд.1', None, 'шт', 4, 0.05, 1, '=V999*W999*X999',
+                 '=Y999-AA999-AB999-AC999-AD999', None, None, None, None, None]
+            ]
+            lift_installation_list.extend(anchor_lifts)
+
+        return lift_installation_list
+
+
+    def dismantling_lifting_222(self):
+        work_list = [
+            ['=ROW()-ROW($A$56)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника БАРС-80 (без оттяжек)',
+             None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1, 2.05,
+             1, '=V997*W997*X997', '=Y997-AA997-AB997-AC997-AD997', None, None, None, None, None],
             ['=ROW()-ROW($A$56)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника БАРС-80 (с оттяжками)',
-             None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1,
-             2.81, 1, '=V998*W998*X998', '=Y998-AA998-AB998-AC998-AD998', None, None, None, None, None]]
-
-    if self.anchor_lifts_combo == 'Да':
-        anchor_lifts = [
-            ['=ROW()-ROW($A$46)', None, None, 'Оттяжки', None, 'Вытаскивание  якорей', None, None, None, None, None,
-             None, None, None, None, None, None, None, '§31разд.1', None, 'шт', 4, 0.05, 1, '=V999*W999*X999',
-             '=Y999-AA999-AB999-AC999-AD999', None, None, None, None, None]
+             None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1, 2.81,
+             1, '=V998*W998*X998', '=Y998-AA998-AB998-AC998-AD998', None, None, None, None, None],
         ]
-        lift_installation_list.extend(anchor_lifts)
-
-    return lift_installation_list
-
-
-def dismantling_lifting_222(self):
-    work_list = [
-        ['=ROW()-ROW($A$56)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника БАРС-80 (без оттяжек)',
-         None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1, 2.05,
-         1, '=V997*W997*X997', '=Y997-AA997-AB997-AC997-AD997', None, None, None, None, None],
-        ['=ROW()-ROW($A$56)', None, None, 'ЗР.после.ремонта', None, 'Демонтаж подъемника БАРС-80 (с оттяжками)',
-         None, None, None, None, None, None, None, None, None, None, None, None, '§89разд.1', None, 'шт', 1, 2.81,
-         1, '=V998*W998*X998', '=Y998-AA998-AB998-AC998-AD998', None, None, None, None, None],
-    ]
 
 
 if __name__ == "__main__":

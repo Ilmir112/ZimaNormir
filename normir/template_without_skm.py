@@ -1201,7 +1201,7 @@ class TemplateWithoutSKM(QMainWindow):
         return work_list
 
     def lifting_nkt(self):
-
+        work_list = []
         middle_nkt = '9.6-10.5'
         count_nkt = 0
         for nkt_key, nkt_value in self.dict_nkt_up.items():
@@ -1645,67 +1645,6 @@ class TemplateWithoutSKM(QMainWindow):
         work_list.extend(volume_list)
         return work_list
 
-    def descent_nkt_work(self):
-        sum_nkt = sum(list(map(lambda x: x[1], list(self.dict_nkt.values()))))
-        work_list = []
-        middle_nkt = '9.6-10.5'
-        for nkt_key, nkt_value in self.dict_nkt.items():
-
-            middle_nkt_value = nkt_value[0] / nkt_value[1]
-            nkt_lenght = nkt_value[0]
-            nkt_count = nkt_value[1]
-            if 6.5 <= middle_nkt_value <= 7.6:
-                middle_nkt = '6.5-7.5'
-            elif 7.6 < middle_nkt_value <= 8.6:
-                middle_nkt = '7.6-8.5'
-            elif 8.6 < middle_nkt_value <= 9.6:
-                middle_nkt = '8.6-9.5'
-            elif 9.6 < middle_nkt_value <= 10.6:
-                middle_nkt = '9.6-10.5'
-            elif 10.6 < middle_nkt_value <= 11.6:
-                middle_nkt = '10.6-11.5'
-            elif 11.6 < middle_nkt_value <= 12.5:
-                middle_nkt = '11.6-12.5'
-
-            aaaa = DESCENT_NORM_NKT[well_data.lifting_unit_combo]
-            koef_norm_down = DESCENT_NORM_NKT[well_data.lifting_unit_combo][nkt_key][middle_nkt]
-            razdel_2_down = DESCENT_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['раздел']
-
-            work_list.extend([
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment,
-                 f'Спуск НКТ компоновка {nkt_key}', None,
-                 None, None, None,
-                 None, nkt_key, nkt_lenght,
-                 middle_nkt, None, None, None, None,
-                 razdel_2_down, None, 'шт', nkt_count,
-                 koef_norm_down, self.coefficient_lifting, '=V448*W448*X448', '=Y448-AA448-AB448-AC448-AD448', None,
-                 None,
-                 None, None, None]])
-
-            work_list.extend([
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment,
-                 'Навернуть/отвернуть предохранительное кольцо',
-                 None, None, None, None, None, None, None, None, None, None, None, None, '§300разд.1',
-                 None, 'шт',
-                 sum_nkt, 0.003, 1, '=V449*W449*X449', '=Y449-AA449-AB449-AC449-AD449', None,
-                 None, None,
-                 None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', self.type_equipment, 'Замер НКТ ', None,
-                 None,
-                 None, None, None, None,
-                 None, None, None, None, None, None, '§47разд.1', None, 'шт', sum_nkt, 0.008, 1,
-                 '=V450*W450*X450',
-                 '=Y450-AA450-AB450-AC450-AD450', None, None, None, None, None]])
-            if sum_nkt > 201:
-                work_list.append([
-                    '=ROW()-ROW($A$46)', 'спуск 73мм', None, 'спо', self.type_equipment,
-                    'Подкатывание труб с 201 трубы ', None,
-                    None, None, None, None, None, None, None, None, None, None, None, '§40разд.1', None, 'шт',
-                    sum_nkt - 201, 0.008, 1, '=V451*W451*X451', '=Y451-AA451-AB451-AC451-AD451', None, None, None,
-                    None,
-                    None])
-
-        return work_list
 
 
 if __name__ == "__main__":

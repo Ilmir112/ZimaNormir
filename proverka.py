@@ -9,7 +9,7 @@ name_list = wb2.sheetnames
 ws2 = wb2['АВР']
 if fname:
     normir_list = []
-    for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=1040, max_row=1042)):
+    for row_ind, row in enumerate(ws2.iter_rows(max_col=31, min_row=1252, max_row=1252)):
         list = []
         for col, value in enumerate(row):
             list.append(value.value)

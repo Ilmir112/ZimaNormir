@@ -621,6 +621,10 @@ class MyWindow(QMainWindow):
         action_menu.addAction(work_of_third_parties_without_action)
         work_of_third_parties_without_action.triggered.connect(self.work_of_third_parties_without_action)
 
+        injection_reagents_action = QAction('Кислота, СКВ, растворитель, незамерз жидкость, блок пачка')
+        action_menu.addAction(injection_reagents_action)
+        injection_reagents_action.triggered.connect(self.injection_reagents_action)
+
         alone_menu = action_menu.addMenu('одиночные операции')
 
         mkp_action = QAction('Копка шахты')
@@ -744,20 +748,20 @@ class MyWindow(QMainWindow):
             self.raid_window.close()  # Close window.
             self.raid_window = None
     def descent_shgn_menu(self):
-        pass
-        # from normir.lifting_shgn import LiftingShgnWindow
-        # if self.raid_window is None:
-        #     self.raid_window = LiftingShgnWindow(well_data.ins_ind, self.table_widget)
-        #     # self.raid_window.setGeometry(200, 400, 300, 400)
-        #
-        #     self.set_modal_window(self.raid_window)
-        #     well_data.pause = True
-        #     self.pause_app()
-        #     well_data.pause = True
-        #     self.raid_window = None
-        # else:
-        #     self.raid_window.close()  # Close window.
-        #     self.raid_window = None
+
+        from normir.descent_gno import DescentGnoWindow
+        if self.raid_window is None:
+            self.raid_window = DescentGnoWindow(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
     def rod_head_action_def(self):
         from normir.rod_head_work import LiftingRodHeadWindow
         if self.raid_window is None:
@@ -831,6 +835,22 @@ class MyWindow(QMainWindow):
             self.raid_window.close()  # Close window.
             self.raid_window = None
     def work_of_third_parties_without_action(self):
+        from normir.work_of_third_parties_without_nkt import WorkOfThirdPaties
+        if self.raid_window is None:
+            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+
+    def injection_reagents_action(self):
         from normir.work_of_third_parties_without_nkt import WorkOfThirdPaties
         if self.raid_window is None:
             self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)

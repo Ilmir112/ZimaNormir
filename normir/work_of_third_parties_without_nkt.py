@@ -154,7 +154,7 @@ class TabPage_SO_Timplate(QWidget):
             self.response_text_line.setText('ОЗЦ')
             if index == 'Фондовый пакер':
 
-                self.response_text_line.setText('Интерпретация')
+                self.response_text_line.setText('Интерпретация данных ГИС ')
 
                 self.extra_work_text_line.setText('ГИС - РГД ')
 
