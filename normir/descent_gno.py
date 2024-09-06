@@ -15,9 +15,10 @@ from normir.template_without_skm import TemplateWithoutSKM
 from normir.relocation_brigade import TextEditTableWidgetItem
 from normir.work_of_third_parties_without_nkt import TabPage_SO_Timplate, WorkOfThirdPaties
 from normir.spo_pakera import SpoPakerAction
+from normir.TabPageAll import TabPage
 
 
-class TabPage_SO_Lifting_gno(QWidget):
+class TabPage_SO_Lifting_gno(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
@@ -28,11 +29,7 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.gno_combo = QComboBox(self)
         self.gno_combo.addItems(['', 'ЗО', 'Фондовый пакер', 'Воронка', 'ЭЦН', 'пакер ГРП'])
 
-        self.date_work_label = QLabel('Дата работы')
-        self.date_work_line = QLineEdit(self)
-        self.date_work_line.setText(f'{well_data.date_work}')
 
-        self.date_work_str = datetime.strptime(self.date_work_line.text(), '%d.%m.%Y')
 
         self.grid = QGridLayout(self)
 
@@ -140,6 +137,14 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.esp_dismantling_time_end_date.dateTimeChanged.connect(
             self.update_esp_dismantling_time)
 
+        self.depth_paker_text_edit = QLineEdit(self)
+
+        self.pressuar_ek_line = QLineEdit(self)
+        self.pressuar_ek_line.setValidator(self.validator_float)
+
+        self.rezult_pressuar_combo = QComboBox(self)
+        self.rezult_pressuar_combo.addItems(['+', '-'])
+
         if index in 'ЭЦН':
             self.grid.addWidget(self.esp_dismantling_text_label, 9, 1, 1, 2)
             self.grid.addWidget(self.esp_dismantling_text_line, 10, 1, 1, 2)
@@ -178,13 +183,7 @@ class TabPage_SO_Lifting_gno(QWidget):
                 pass
 
         if index in ['Фондовый пакер', 'пакер ГРП']:
-            self.depth_paker_text_edit = QLineEdit(self)
 
-            self.pressuar_ek_line = QLineEdit(self)
-            self.pressuar_ek_line.setValidator(self.validator_float)
-
-            self.rezult_pressuar_combo = QComboBox(self)
-            self.rezult_pressuar_combo.addItems(['+', '-'])
 
             self.grid.addWidget(self.depth_paker_text_label, 30, 1)
             self.grid.addWidget(self.depth_paker_text_edit, 31, 1)
@@ -215,53 +214,7 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.complications_when_lifting_combo = QComboBox(self)
         self.complications_when_lifting_combo.addItems(['Нет', 'Да'])
 
-        self.nkt_48_lenght_edit = QLineEdit(self)
-        self.nkt_48_lenght_edit.setValidator(self.validator_int)
 
-        self.nkt_48_count_edit = QLineEdit(self)
-        self.nkt_48_count_edit.setValidator(self.validator_int)
-
-        self.nkt_60_lenght_edit = QLineEdit(self)
-        self.nkt_60_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_60_count_edit = QLineEdit(self)
-        self.nkt_60_count_edit.setValidator(self.validator_int)
-
-        self.nkt_73_lenght_edit = QLineEdit(self)
-        self.nkt_73_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_73_count_edit = QLineEdit(self)
-        self.nkt_73_count_edit.setValidator(self.validator_int)
-
-        self.nkt_89_lenght_edit = QLineEdit(self)
-        self.nkt_89_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_89_count_edit = QLineEdit(self)
-        self.nkt_89_count_edit.setValidator(self.validator_int)
-
-        self.grid.addWidget(self.nkt_48_lenght_label, 22, 1)
-        self.grid.addWidget(self.nkt_48_lenght_edit, 23, 1)
-
-        self.grid.addWidget(self.nkt_48_count_label, 24, 1)
-        self.grid.addWidget(self.nkt_48_count_edit, 25, 1)
-
-        self.grid.addWidget(self.nkt_60_lenght_label, 22, 2)
-        self.grid.addWidget(self.nkt_60_lenght_edit, 23, 2)
-
-        self.grid.addWidget(self.nkt_60_count_label, 24, 2)
-        self.grid.addWidget(self.nkt_60_count_edit, 25, 2)
-
-        self.grid.addWidget(self.nkt_73_lenght_label, 22, 3)
-        self.grid.addWidget(self.nkt_73_lenght_edit, 23, 3)
-
-        self.grid.addWidget(self.nkt_73_count_label, 24, 3)
-        self.grid.addWidget(self.nkt_73_count_edit, 25, 3)
-
-        self.grid.addWidget(self.nkt_89_lenght_label, 22, 4)
-        self.grid.addWidget(self.nkt_89_lenght_edit, 23, 4)
-
-        self.grid.addWidget(self.nkt_89_count_label, 24, 4)
-        self.grid.addWidget(self.nkt_89_count_edit, 25, 4)
 
         self.grid.addWidget(self.complications_when_lifting_label, 26, 1)
         self.grid.addWidget(self.complications_when_lifting_combo, 27, 1)
