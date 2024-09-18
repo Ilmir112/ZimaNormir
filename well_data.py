@@ -55,7 +55,8 @@ class ProtectedIsNonNone:
 def get_password(service_name, username):
     return keyring.get_password(service_name, username)
 
-
+brigade_number = ''
+date_end = ''
 # password = get_password("zima_app", "postgres")
 password = '195375AsD+'
 type_working = 'КРС'
@@ -262,8 +263,8 @@ region = ''
 data_in_base = False
 dict_nkt = {}
 dict_nkt_po = {}
-# path_image = '_internal/'
-path_image = ''
+path_image = '_internal/'
+# path_image = ''
 count_SBT = 0
 data_well_dict = {}
 ins_ind2 = 0
@@ -317,6 +318,9 @@ postgres_conn_gnkt = {
     f'host': f'{host_krs}',
     'port': '5432'
         }
+
+
+
 postgres_conn_work_well = {
     'database': 'databasewellwork',
     'user': 'postgres',

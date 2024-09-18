@@ -41,7 +41,7 @@ class TabPage_normir(QWidget):
         self.date_begin_datetime = QLineEdit(self)
 
         self.date_cancel_label = QLabel('Дата окончания ремонта')
-        self.date_cancel_datetime = QLineEdit(self)
+        self.date_end_datetime = QLineEdit(self)
 
         self.brigade_number_label = QLabel('Номер бригады')
         self.brigade_number_line = QLineEdit(self)
@@ -116,7 +116,7 @@ class TabPage_normir(QWidget):
         self.grid.addWidget(self.date_begin_datetime, 9, 2)
 
         self.grid.addWidget(self.date_cancel_label, 8, 3)
-        self.grid.addWidget(self.date_cancel_datetime, 9, 3)
+        self.grid.addWidget(self.date_end_datetime, 9, 3)
 
         self.grid.addWidget(self.lifting_unit_label, 8, 4)
         self.grid.addWidget(self.lifting_unit_combo, 9, 4)
@@ -219,7 +219,7 @@ class TabPage_normir(QWidget):
                         self.lifting_unit_combo.setCurrentIndex(10)
             well_data.work_list_in_ois = work_list_in_ois
             self.date_begin_datetime.setText(date_begin)
-            self.date_cancel_datetime.setText(date_cancel)
+            self.date_end_datetime.setText(date_cancel)
 
     def update_area(self):
         table_in_base_combo = self.table_in_base_combo.currentText()
@@ -435,7 +435,7 @@ class NormirWindow(QMainWindow):
         self.work_plan = work_plan
         self.dict_perforation = []
         self.date_begin_datetime = ''
-        self.date_cancel_datetime = ''
+        self.date_end_datetime = ''
         self.brigade_number_line = ''
         self.type_kr_combo_after = ''
         self.lifting_unit_combo = ''
@@ -470,7 +470,7 @@ class NormirWindow(QMainWindow):
         self.type_kr_combo_after = current_widget.type_kr_combo_after.currentText()
         self.current_after = current_widget.current_after_line.text()
         self.date_begin_datetime = current_widget.date_begin_datetime.text()
-        self.date_cancel_datetime = current_widget.date_cancel_datetime.text()
+        self.date_end_datetime = current_widget.date_end_datetime.text()
         self.brigade_number_line = current_widget.brigade_number_line.text()
         self.brigade_number_line = current_widget.brigade_number_line.text()
         self.lifting_unit_combo = current_widget.lifting_unit_combo.currentText()
@@ -594,7 +594,7 @@ class NormirWindow(QMainWindow):
              'макс, в тн (с оттяжками)', lifting,
              'Подъемник по нормативу на СПО', None, None],
             [None, 'Месторождение:', None, well_data.well_oilfield._value, None, 'Окончание работ:', None,
-             self.date_cancel_datetime,
+             self.date_end_datetime,
              None, '222222222222222222', None, None, None, None, None, None, '=D11', None, 'Мастер:', None,
              self.surname_master, None,
              'ГКШ-1500 / ГКШ 300', '111', 'АПРС-40', None, None, None, None, self.lifting_unit_combo, None, None],
@@ -772,7 +772,8 @@ class NormirWindow(QMainWindow):
             ['Объём работ по основному плану', None, None, None, None, None, None, None, None, None, None, None, None,
              None, None,
              None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]]
-
+        well_data.brigade_number = self.brigade_number_line
+        well_data.date_end = self.date_end_datetime.split(' ')[0]
         return work_list
 
 

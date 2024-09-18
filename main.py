@@ -18,42 +18,55 @@ from openpyxl.utils import get_column_letter
 from log_files.log import logger, QPlainTextEditLogger
 import well_data
 
-from PyQt5.QtCore import QThread, pyqtSlot
+from PyQt5.QtCore import Qt, QObject, QThread, pyqtSlot, pyqtSignal
 
 from normir.alone_oreration import count_row_height
 from users.login_users import LoginWindow
-from PyQt5.QtCore import Qt, QObject, pyqtSignal
 
+from openpyxl import load_workbook
+from PyQt5.QtGui import QColor
 
 class OpenTemplateNorm(QThread):
     finished = pyqtSignal()
 
     def __init__(self, file_path):
-        self.file_path = file_path
         super().__init__()
+        self.file_path = file_path
 
-    def load_excel(self):
+    def run(self):
+        print("Поток запущен")
+        while not self.isInterruptionRequested():
+            # Попытка открыть Excel файл
+            try:
+                well_data.workbook = load_workbook(self.file_path, keep_vba=True)
+                well_data.sheet = well_data.workbook.active
 
-        # Попытка открыть Excel файл
-        try:
-            well_data.workbook = load_workbook(self.file_path, keep_vba=True)
-            well_data.sheet = well_data.workbook.active
-            print(f'листаш12 {type(well_data.sheet), type(well_data.workbook)}')
+                print(f"Файл '{self.file_path}' успешно загружен!")
+                self.finished.emit()  # Уведомление о завершении работы
 
-            print(f"Файл '{self.file_path}' успешно загружен!")
-            # Здесь можно добавить код для обработки данных в файле
+                # Здесь можно добавить код для обработки данных в файле
+                break  # Завершаем цикл, так как файл успешно загружен
 
-        except Exception as esk:
-            print(f"Ошибка при открытии файла: {esk}")
+            except Exception as esk:
+                print(f"Ошибка при открытии файла: {esk}")
+                self.finished.emit()  # Уведомление о завершении работы
+                break  # Завершаем цикл при ошибке
+
+        print("Поток завершен")
 
     @staticmethod
     def open_excel():
         return well_data.workbook, well_data.sheet
 
     def start_loading(self):
-        # Создаем поток для открытия файла
-        thread = threading.Thread(target=self.load_excel)
-        thread.start()
+        self.start()  # Запустить поток
+
+    def stop(self):
+        self.requestInterruption()  # Запрос на прерывание потока
+        self.wait()  # Ждем завершения потока
+        print("Поток успешно завершен")
+
+
 
 
 class UncaughtExceptions(QObject):
@@ -114,11 +127,11 @@ class MyWindow(QMainWindow):
         self.excepthook = UncaughtExceptions()
         self.excepthook._exception_caught.connect(self.excepthook.handleException)
 
-        # # Запускаем обработчик исключений в отдельном потоке
-        self.thread = QThread()
-        self.excepthook.moveToThread(self.thread)
-        # self.thread.started.connect(self.excepthook.handleException)
-        self.thread.start()
+        # # # Запускаем обработчик исключений в отдельном потоке
+        # self.thread = QThread()
+        # self.excepthook.moveToThread(self.thread)
+        # # self.thread.started.connect(self.excepthook.handleException)
+        # self.thread.start()
 
     @staticmethod
     def check_process():
@@ -242,7 +255,7 @@ class MyWindow(QMainWindow):
 
                     self.file_path = 'property_excel/template_normir_new.xlsm'
 
-                    # # Создаем экземпляр класса и запускаем загрузку
+                    # Создаем экземпляр класса и запускаем загрузку
                     excel_loader = OpenTemplateNorm(self.file_path)
                     excel_loader.start_loading()
 
@@ -313,14 +326,19 @@ class MyWindow(QMainWindow):
 
     def save_to_krs(self):
 
+        merged_cells = []
+
         if self.table_widget:
             work_list = []
-            for row in range(self.table_widget.rowCount()):
+            row_count = self.table_widget.rowCount()
+            for row in range(row_count+1):
                 row_lst = []
                 # self.ins_ind_border += 1
                 for column in range(self.table_widget.columnCount()):
                     item = self.table_widget.item(row, column)
                     if item:
+                        if (self.table_widget.rowSpan(row, column) > 1 or self.table_widget.columnSpan(row, column) > 1) and row >= 46:
+                            merged_cells.append((row, column))
 
                         if self.check_str_isdigit(item.text()):
                             row_lst.append(item.text().replace(',', '.'))
@@ -328,10 +346,54 @@ class MyWindow(QMainWindow):
                             row_lst.append(item.text())
                     else:
                         row_lst.append("")
-
+                if row >= 46 and ('роработка' in row_lst[7] or 'Закачка в НКТ' in row_lst[7] or
+                                  'Вымывание шара' in row_lst[7] or 'Продавка ГР' in row_lst[7]
+                                  or 'Разбуривание на первые' in row_lst[7]
+                                  or 'Разбуривание на каждые' in row_lst[7]):
+                    row_lst[24] = f'AС{row + 1}'
+                    row_lst[25] = f'=Y{row + 1}-AA{row + 1}-AB{row + 1}-AC{row + 1}-AD{row + 1}'
+                elif row >= 46 and 'ПЗР+Отсыпка' in row_lst[7]:
+                    row_lst[24] = '=((1*W1167)+5+(((2.6/400)*0.75)*V1167)+2+1+(1.6*W1167)+(((2.6/400)*0.75)*V1167)+1+39+27)/60'
+                    row_lst[25] = f'=Y{row + 1}-AA{row + 1}-AB{row + 1}-AC{row + 1}-AD{row + 1}'
+                elif row >= 46 and 'Заполнить колонны труб водой для проверки работы' in row_lst[7]:
+                    row_lst[24] = '=ROUNDUP(SUM((V984*0.00058)+0.06),2)'
+                    row_lst[25] = '=ROUNDUP(Y984-AA984-AB984-AC984-AD984,2)'
+                elif row >= 46:
+                    a = row_lst
+                    row_lst[24] = f'=V{row+1}*W{row+1}*X{row+1}'
+                    row_lst[25] = f'=Y{row+1}-AA{row+1}-AB{row+1}-AC{row+1}-AD{row+1}'
+                    b = row_lst
                 work_list.append(row_lst)
 
-            count_row_height(well_data.sheet, work_list)
+            merged_cells_dict = {}
+            n = 205
+            # ws2.merge_cells(start_column=value[0], start_row=value[1],
+            #                 end_column=value[2], end_row=value[3])
+            # # print(f' индекс объ {ins_ind}')
+            for row in merged_cells:
+                if row[0] >= 46:
+                    merged_cells_dict.setdefault(row[0], []).append(row[1])
+            merge_dict2 = {}
+            for key, original_list in merged_cells_dict.items():
+                result = []
+                current_sublist = []
+
+                for num in original_list:
+                    if not current_sublist or (num - current_sublist[-1] <= 1):
+                        current_sublist.append(num)
+                    else:
+                        result.append(current_sublist)
+                        current_sublist = [num]
+
+                if current_sublist:  # Добавляем последнюю подпоследовательность, если она не пустая
+                    result.append(current_sublist)
+
+                for k in result:
+                    merge_dict2[n] = (min(k) + 1, key +1, max(k) + 1, key + 1)
+                    n += 1
+
+
+            count_row_height(well_data.sheet, work_list, merge_dict2)
 
             well_data.itog_ind_min = 46
             well_data.itog_ind_max = len(work_list)
@@ -364,7 +426,9 @@ class MyWindow(QMainWindow):
             # ws2.sheet_properties.pageSetUpPr.fitToPage = True
             # ws2.page_setup.fitToHeight = False
 
-            filenames = f"{well_data.well_number._value} {well_data.well_area._value}"
+            filenames = f"{well_data.well_number._value} {well_data.well_area._value} " \
+                        f"{well_data.type_kr.split(' ')[0]} БР№{well_data.brigade_number} " \
+                        f"{well_data.date_end}"
             full_path = filenames
 
             # # Перед сохранением установите режим расчета
@@ -553,12 +617,12 @@ class MyWindow(QMainWindow):
             well_data.problemWithEk = False
             well_data.problemWithEk_depth = well_data.current_bottom
             well_data.problemWithEk_diametr = 220
-            path = f"{well_data.path_image}/imageFiles/image_work"[1:]
-
-            for file in os.listdir(path):
-                file_path = os.path.join(path, file)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
+            # path = f"{well_data.path_image}/imageFiles/image_work"[1:]
+            #
+            # for file in os.listdir(path):
+            #     file_path = os.path.join(path, file)
+            #     if os.path.isfile(file_path):
+            #         os.remove(file_path)
 
             mes = QMessageBox.information(self, 'Обновление', 'Данные обнулены')
 
@@ -569,6 +633,13 @@ class MyWindow(QMainWindow):
         context_menu = QMenu(self)
         action_menu = context_menu.addMenu("вид работ")
 
+        simple_technological_menu = QAction('Технологический простой')
+        context_menu.addAction(simple_technological_menu)
+        simple_technological_menu.triggered.connect(self.simple_technological_work)
+
+        actual_work_menu = QAction('Фактические работы')
+        context_menu.addAction(actual_work_menu)
+        actual_work_menu.triggered.connect(self.actual_work)
 
 
         relocation_menu = QAction('Переезд')
@@ -613,6 +684,10 @@ class MyWindow(QMainWindow):
         action_menu.addAction(pipe_perforation_action)
         pipe_perforation_action.triggered.connect(self.pipe_perforation_action)
 
+        rir_with_action = QAction('РИР на пере')
+        action_menu.addAction(rir_with_action)
+        rir_with_action.triggered.connect(self.rir_with_action)
+
         work_of_third_parties_action = QAction('Работа сторонних организаций при спущенных НКТ')
         action_menu.addAction(work_of_third_parties_action)
         work_of_third_parties_action.triggered.connect(self.work_of_third_parties_action)
@@ -626,6 +701,10 @@ class MyWindow(QMainWindow):
         injection_reagents_action.triggered.connect(self.injection_reagents_action)
 
         alone_menu = action_menu.addMenu('одиночные операции')
+
+        loading_work_action = QAction('Погрузка, выгрузка НКТ или штанг')
+        alone_menu.addAction(loading_work_action)
+        loading_work_action.triggered.connect(self.loading_work)
 
         mkp_action = QAction('Копка шахты')
         alone_menu.addAction(mkp_action)
@@ -650,7 +729,6 @@ class MyWindow(QMainWindow):
         emptyString_action.triggered.connect(self.emptyString)
 
         context_menu.exec_(self.mapToGlobal(position))
-
     def earthwork_work(self):
         from normir.earthworks import Earthwor_Window
         if self.raid_window is None:
@@ -665,6 +743,37 @@ class MyWindow(QMainWindow):
         else:
             self.raid_window.close()  # Close window.
             self.raid_window = None
+
+    def loading_work(self):
+        from normir.loading_tubing import LoadingWork
+        if self.raid_window is None:
+            self.raid_window = LoadingWork(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+    def rir_with_action(self):
+        from normir.rir_with_pero import RirWithPero
+        if self.raid_window is None:
+            self.raid_window = RirWithPero(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
     def pipe_perforation_action(self):
         from normir.perforation_tubing import PipePerforator
         if self.raid_window is None:
@@ -881,6 +990,36 @@ class MyWindow(QMainWindow):
             self.raid_window.close()  # Close window.
             self.raid_window = None
 
+    def simple_technological_work(self):
+        from normir.simple_technological import SimpleWork
+        if self.raid_window is None:
+            self.raid_window = SimpleWork(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
+    def actual_work(self):
+        from normir.relocation_brigade import Relocation_Window
+        if self.raid_window is None:
+            self.raid_window = Relocation_Window(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
+
+            self.set_modal_window(self.raid_window)
+            well_data.pause = True
+            self.pause_app()
+            well_data.pause = True
+            self.raid_window = None
+        else:
+            self.raid_window.close()  # Close window.
+            self.raid_window = None
+
     def relocation_menu(self):
         from normir.relocation_brigade import Relocation_Window
         if self.raid_window is None:
@@ -949,7 +1088,7 @@ class MyWindow(QMainWindow):
     def deleteString(self):
         selected_ranges = self.table_widget.selectedRanges()
         selected_rows = []
-        aaaa = well_data.count_row_well
+
         if self.ins_ind > well_data.count_row_well:
             # Получение индексов выбранных строк
             for selected_range in selected_ranges:
@@ -974,68 +1113,73 @@ class MyWindow(QMainWindow):
             self.populate_row(self.ins_ind, ryber_work_list, self.table_widget)
 
     def populate_row(self, ins_ind, work_list, table_widget, work_plan='krs'):
+        if work_list:
+            for i, row_data in enumerate(work_list):
+                row = ins_ind + i
+                table_widget.insertRow(row)
 
-        for i, row_data in enumerate(work_list):
-            row = ins_ind + i
-            table_widget.insertRow(row)
+                for column, data in enumerate(row_data):
+                    item = QtWidgets.QTableWidgetItem(str(data))
+                    item.setFlags(item.flags() | Qt.ItemIsEditable)
 
-            for column, data in enumerate(row_data):
-                item = QtWidgets.QTableWidgetItem(str(data))
-                item.setFlags(item.flags() | Qt.ItemIsEditable)
-
-                if not data is None:
-                    table_widget.setItem(row, column, item)
-                else:
-                    table_widget.setItem(row, column, QtWidgets.QTableWidgetItem(str('')))
-
-                if column == 5:
                     if not data is None:
-                        text = data
-                        table_widget.setRowHeight(row, int(len(text)/2))
+                        table_widget.setItem(row, column, item)
+                    else:
+                        table_widget.setItem(row, column, QtWidgets.QTableWidgetItem(str('')))
 
-            if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]) :
-                table_widget.setSpan(i + ins_ind, 5, 1, 5)
-            elif any(['Демонтаж ЭЦН' in row_str or 'Демонтаж УЭЦН' in row_str
-                      for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 2)
-                table_widget.setSpan(i + ins_ind, 7, 1, 3)
-                table_widget.setSpan(i + ins_ind, 11, 1, 2)
+                    if column == 5:
+                        if not data is None:
+                            text = data
+                            table_widget.setRowHeight(row, int(len(text)/2))
+                table_widget.setSpan(i + ins_ind, 1, 1, 2)
+                if any(['Подъем НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]) :
+                    table_widget.setSpan(i + ins_ind, 5, 1, 5)
+                elif any(['Демонтаж ЭЦН' in row_str or 'Демонтаж УЭЦН' in row_str
+                          for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 2)
+                    table_widget.setSpan(i + ins_ind, 7, 1, 3)
+                    table_widget.setSpan(i + ins_ind, 11, 1, 2)
 
-            elif any(['Крезол' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 3)
-                table_widget.setSpan(i + ins_ind, 9, 1, 2)
-                table_widget.setSpan(i + ins_ind, 11, 1, 2)
+                elif any(['Крезол' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 3)
+                    table_widget.setSpan(i + ins_ind, 9, 1, 2)
+                    table_widget.setSpan(i + ins_ind, 11, 1, 2)
 
-            elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 6)
-            elif any(['что бурили' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 5)
-            elif any(['Осложнение при подъеме' in row_str for row_index, row_str in enumerate(row_data) if
-                      type(row_str) == str]) or any(['Объем' == row_str for row_index, row_str in enumerate(row_data) if
-                      type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 7)
-            elif any(['ПЗР к глушению ' in row_str for row_index, row_str in enumerate(row_data) if
-                      type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 3)
-                table_widget.setSpan(i + ins_ind, 9, 1, 5)
-            elif any(['Смена объема ' in row_str for row_index, row_str in enumerate(row_data) if
-                      type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 5)
-                table_widget.setSpan(i + ins_ind, 12, 1, 2)
-            elif any(['причины рязрядки:' in row_str for row_index, row_str in enumerate(row_data) if
-                      type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 4)
-                table_widget.setSpan(i + ins_ind, 12, 1, 2)
+                elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 6)
+                elif any(['что бурили' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 5)
+                elif any(['Осложнение при подъеме' in row_str for row_index, row_str in enumerate(row_data) if
+                          type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 7)
+                elif any(['ПЗР к глушению ' in row_str for row_index, row_str in enumerate(row_data) if
+                          type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 3)
+                    table_widget.setSpan(i + ins_ind, 9, 1, 5)
+                elif any(['Смена объема ' in row_str for row_index, row_str in enumerate(row_data) if
+                          type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 5)
+                    table_widget.setSpan(i + ins_ind, 12, 1, 2)
+                elif any(['причины рязрядки:' in row_str for row_index, row_str in enumerate(row_data) if
+                          type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 4)
+                    table_widget.setSpan(i + ins_ind, 12, 1, 2)
 
-            elif any(['Подъем штанг' in row_str for row_str in row_data if type(row_str) == str]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 8)
+                elif any(['Подъем штанг' in row_str for row_str in row_data if type(row_str) == str]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 8)
 
-            elif all([row_str == None for row_index, row_str in enumerate(row_data) if 6 < row_index < 14]):
-                table_widget.setSpan(i + ins_ind, 5, 1, 9)
-            elif 'классификация простоя' in row_data:
-                table_widget.setSpan(i + ins_ind, 5, 1, 5)
-                table_widget.setSpan(i + ins_ind, 10, 1, 2)
-                table_widget.setSpan(i + ins_ind, 12, 1, 2)
+                elif all([row_str == None for row_index, row_str in enumerate(row_data) if 6 < row_index < 14]):
+                    table_widget.setSpan(i + ins_ind, 5, 1, 9)
+                elif 'классификация простоя' in row_data:
+                    table_widget.setSpan(i + ins_ind, 5, 1, 5)
+                    table_widget.setSpan(i + ins_ind, 10, 1, 2)
+                    table_widget.setSpan(i + ins_ind, 12, 1, 2)
+
+    def set_cell_color(self, item, color):
+
+        # Преобразуем цвет из hex в RGB
+        rgb_color = (int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16))
+        item.setBackground(QColor(*rgb_color))
 
     def copy_norm(self, sheet, table_widget, work_plan='normir_new', count_col=31, list_page=1):
 
@@ -1044,39 +1188,43 @@ class MyWindow(QMainWindow):
         table_widget.setRowCount(rows)
         well_data.count_row_well = table_widget.rowCount()
 
-        border_styles = {}
-        # for row in sheet.iter_rows():
-        #     for cell in row:
-        #         border_styles[(cell.row, cell.column)] = cell.border
 
         table_widget.setColumnCount(count_col)
 
         rowHeights_exit = [sheet.row_dimensions[i + 1].height if sheet.row_dimensions[i + 1].height is not None else 18
-                           for i in range(rows)]
+                           for i in range(rows+1)]
 
-        colWidth = [sheet.column_dimensions[get_column_letter(col_ind + 1)].width * 4 for col_ind in range(46)]
-
-        for row in range(1, rows + 2):
+        colWidth = [sheet.column_dimensions[get_column_letter(col_ind + 1)].width * 4 for col_ind in range(rows)]
+        colors = []
+        data = []
+        for row in range(1, rows + 1):
+            row_colors = []
+            row_data = []
             if row > 1 and row < rows - 1:
                 try:
                     table_widget.setRowHeight(row, int(rowHeights_exit[row]))
                 except:
                     pass
             for col in range(1, count_col + 1):
-                if not sheet.cell(row=row, column=col).value is None:
-                    # if isinstance(sheet.cell(row=row, column=col).value, float) and row > 25:
-                    #     cell_value = str(round(sheet.cell(row=row, column=col).value, 2))
-                    # elif isinstance(sheet.cell(row=row, column=col).value, datetime):
-                    #     cell_value = sheet.cell(row=row, column=col).value.strftime('%d.%m.%Y')
-                    # else:
-                    #     cell_value = str(sheet.cell(row=row, column=col).value)
-                    #
-                    # item = QtWidgets.QTableWidgetItem(str(cell_value))
-                    #
-                    # table_widget.setItem(row - 1, col - 1, item)
+
+                cell = sheet.cell(row=row, column=col)
+                item = QTableWidgetItem(str(cell.value))
+                row_data.append(cell.value)
+                if cell.fill and cell.fill.fill_type == 'solid':
+                    color_cell = cell.fill.start_color.index
+                    self.set_cell_color(item, color_cell)
+                    row_colors.append(cell.fill.start_color.index)
+                else:
+                    row_colors.append('FFFFFF')
+
+                if not cell.value is None:
 
                     # Проверяем, является ли текущая ячейка объединенной
                     for merged_cell in merged_cells:
+                        if merged_cell.coord == 'A46:AE46':
+
+                            a = merged_cell
+
                         if row in range(merged_cell.min_row, merged_cell.max_row + 1) and \
                                 col in range(merged_cell.min_col, merged_cell.max_col + 1):
                             # Устанавливаем количество объединяемых строк и столбцов для текущей ячейки
@@ -1086,22 +1234,16 @@ class MyWindow(QMainWindow):
 
                 else:
                     item = QTableWidgetItem("")
+            data.append(row_data)
+            colors.append(row_colors)
+
+        table_widget.setSpan(46, 1, 1, 31)
+
 
         for column in range(table_widget.columnCount()):
             table_widget.setColumnWidth(column, int(colWidth[column]))
 
-        # if self.work_window is None:
-        #     self.work_window = GnoWindow(table_widget.rowCount(), self.table_widget, self.work_plan)
-        #
-        #     # self.work_window.setGeometry(100, 400, 200, 500)
-        #     self.work_window.show()
-        #
-        #     self.pause_app()
-        #     well_data.pause = True
-        #     self.work_window = None
-        # else:
-        #     self.work_window.close()  # Close window.
-        #     self.work_window = None
+
 
 
 if __name__ == "__main__":
