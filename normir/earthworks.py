@@ -9,19 +9,14 @@ from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, 
 from PyQt5.QtCore import Qt
 
 import well_data
-from normir.relocation_brigade import TextEditTableWidgetItem
 
+from normir.TabPageAll import TabPage, TemplateWork
 
-class TabPage_SO_Earthwork(QWidget):
+class TabPage_SO_Earthwork(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.validator_int = QIntValidator(0, 600)
-        self.validator_float = QDoubleValidator(0.2, 1000, 1)
 
-        self.date_work_label = QLabel('Дата работы')
-        self.date_work_line = QLineEdit(self)
-        self.date_work_line.setText(f'{well_data.date_work}')
 
         self.earthwork_label = QLabel('Текст Копки шахты')
         self.earthwork_line = QLineEdit(self)
@@ -38,9 +33,6 @@ class TabPage_SO_Earthwork(QWidget):
         self.opressovka_mkp_text_line = QLineEdit(self)
 
         self.grid = QGridLayout(self)
-
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
 
         self.grid.addWidget(self.date_work_label, 4, 2)
         self.grid.addWidget(self.date_work_line, 5, 2)
@@ -60,12 +52,12 @@ class TabPage_SO_Earthwork(QWidget):
 class TabWidget(QTabWidget):
     def __init__(self):
         super().__init__()
-        self.addTab(TabPage_SO_Earthwork(self), 'Переезд')
+        self.addTab(TabPage_SO_Earthwork(self), 'Земляные работы')
 
 
-class Earthwor_Window(QMainWindow):
+class Earthwor_Window(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(QMainWindow, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -79,23 +71,8 @@ class Earthwor_Window(QMainWindow):
         for i in range(1):
             self.tableWidget.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
 
-        # Заполнение QTableWidget данными из списка
-        for datа in well_data.work_list_in_ois:
-            row_position = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(row_position)
-            self.tableWidget.setItem(row_position, 0, QTableWidgetItem(datа[0]))
+        self.update_data_in_ois()
 
-            # Создание QTextEdit для переноса текста в ячейке
-            text_edit = QTextEdit()
-            text_edit.setText(datа[1])
-            text_edit.setReadOnly(True)  # Сделаем текст редактируемым только для чтения
-
-            self.tableWidget.setCellWidget(row_position, 1, text_edit)
-
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, text_edit.toPlainText())
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, datа[1])
         self.tableWidget.resizeColumnsToContents()
 
         self.tableWidget.setWordWrap(False)
@@ -116,16 +93,6 @@ class Earthwor_Window(QMainWindow):
         self.earthwork_line = None
         self.earthwork_volume_line = None
 
-    def adjustRowHeight(self, row, text):
-        font_metrics = self.tableWidget.fontMetrics()  # Получаем метрики шрифта
-        text_height = font_metrics.height()  # Высота строки на основе шрифта
-        text_length = len(text)
-
-        # Предположим, что мы используем фиксированную ширину для текстовой ячейки
-        width = self.tableWidget.columnWidth(1)
-        # Оцениваем количество необходимых строк для текста
-        number_of_lines = (text_length // (width // font_metrics.averageCharWidth())) + 1
-        self.tableWidget.setRowHeight(row, int((text_height * number_of_lines) / 2))  # Устанавливаем высоту
 
     def add_work(self):
         from main import MyWindow
@@ -146,7 +113,7 @@ class Earthwor_Window(QMainWindow):
         well_data.date_work = self.date_work_line
         work_list = self.earthwork_def()
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
 

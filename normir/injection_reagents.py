@@ -21,8 +21,7 @@ class TabPage_SO_inijection(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.validator_int = QIntValidator(0, 6000)
-        self.validator_float = QDoubleValidator(0, 6000, 1)
+
 
         self.select_type_combo_label = QLabel('Выбор реагента')
         self.select_type_combo = QComboBox(self)
@@ -39,8 +38,7 @@ class TabPage_SO_inijection(TabPage):
 
         self.select_type_combo.currentTextChanged.connect(self.update_select_type_combo)
 
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
+
 
     def update_select_type_combo(self, index):
 
@@ -120,7 +118,7 @@ class TabWidget(QTabWidget):
 
 class TemplateWithoutSKM(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(QMainWindow, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -188,7 +186,9 @@ class TemplateWithoutSKM(TemplateWork):
             if question == QMessageBox.StandardButton.No:
                 return
         else:
-            self.read_nkt_up(current_widget)
+            read_data = self.read_nkt_up(current_widget)
+        if read_data is None:
+            return
 
         if self.select_type_nkt_combo == 'пакер':
             self.type_equipment = 'пакер'
@@ -241,19 +241,19 @@ class TemplateWithoutSKM(TemplateWork):
 
         well_data.date_work = self.date_work_line
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
 
     def print_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати', 'ПЗР при промывке скважины', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'работа печати', 'ПЗР при промывке скважины', None,
              None, None, None, None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1,
              '=V649*W649*X649', '=Y649-AA649-AB649-AC649', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати', 'Опрессовка нагнетательной линии', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'работа печати', 'Опрессовка нагнетательной линии', None,
              None, None, None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
              '=X650*W650*V650', '=Y650-AA650-AB650-AC650', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'работа печати',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'работа печати',
              self.interval_skm_text_edit, None, None, None, None, None, None, None, None, 'АКТ№',
              None, None, None, '§269разд.1', None, 'раз', self.count_of_nkt_extensions_line, 0.75, 1,
              '=V651*W651*X651', '=Y651-AA651-AB651-AC651-AD651', None, None, None, None, None]]
@@ -451,41 +451,41 @@ class TemplateWithoutSKM(TemplateWork):
 
     def gvzh_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
              None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1, '=V865*W865*X865',
              '=Y865-AA865-AB865-AC865', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
              None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
              '=X866*W866*V866', '=Y866-AA866-AB866-AC866', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
              None, None, None, None, None, None, None, None, None, None, None, None, '§182разд.1', None, 'шт', 1, 0.22,
              1, '=V867*W867*X867', '=Y867-AA867-AB867-AC867-AD867', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Посадка гидрожелонки', None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Посадка гидрожелонки', None, None, None, None,
              None, None, None, None, None, None, None, None, '§252разд.1', None, 'шт', 1, 0.33, 1, '=V868*W868*X868',
              '=Y868-AA868-AB868-AC868-AD868', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
              None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
              '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None]]
         return work_list
 
     def kot_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'ПЗР при промывке скважины', None, None, None, None,
              None, None, None, None, None, None, None, None, '§159,161разд.1', None, 'шт', 1, 1, 1, '=V865*W865*X865',
              '=Y865-AA865-AB865-AC865', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Опрессовка нагнетательной линии', None, None, None,
              None, None, None, None, None, None, None, None, None, '§113разд.1', None, 'раз', 1, 0.13, 1,
              '=X866*W866*V866', '=Y866-AA866-AB866-AC866', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Отбивка уровня жидкости в скважинах (эхолотом)',
              None, None, None, None, None, None, None, None, None, None, None, None, '§182разд.1', None, 'шт', 1, 0.22,
              1, '=V867*W867*X867', '=Y867-AA867-AB867-AC867-AD867', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Посадка КОТ', None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Посадка КОТ', None, None, None, None,
              None, None, None, None, None, None, None, None, '§252разд.1', None, 'шт', 1, 0.33, 1, '=V868*W868*X868',
              '=Y868-AA868-AB868-AC868-AD868', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
              None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
              '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Набор жидкости в гидрожелонку в скважине', None,
              None, None, None, None, None, None, None, None, None, None, None, '§253разд.1', None, 'раз', 1, 0.05, 1,
              '=V869*W869*X869', '=Y869-AA869-AB869-AC869-AD869', None, None, None, None, None]
         ]
@@ -524,8 +524,7 @@ class TemplateWithoutSKM(TemplateWork):
         work_list = self.solvent_injection_work()
         return work_list
 
-    def sko_work(self):
-        volume_sko = self.solvent_volume_text_line
+    def nkt_vn(self):
         nkt_vn = 0
         for nkt_key, nkt_value in self.dict_nkt.items():
             if '60' in nkt_key:
@@ -534,9 +533,14 @@ class TemplateWithoutSKM(TemplateWork):
                 nkt_vn += nkt_value[0] * 3 / 1000
             elif '89' in nkt_key:
                 nkt_vn += nkt_value[0] * 4 / 1000
+        return nkt_vn
+
+    def sko_work(self):
+        volume_sko = self.solvent_volume_text_line
+        nkt_vn = self.nkt_vn()
 
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
              None,
              None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'КИСЛОТА',
              'Соляная кислота ингибированная ', None, '§227,229разд.1', None, 'шт', 1, 0.96, 1, '=V572*W572*X572',
@@ -552,19 +556,19 @@ class TemplateWithoutSKM(TemplateWork):
 
                 if self.select_type_nkt_combo == 'пакер':
                     work_list.extend([
-                        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', f'Посадка пакера', None, None, None,
+                        ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', f'Посадка пакера', None, None, None,
                          None,
                          None, None, None, None, None, None, None, None, '§138разд.1', None, 'шт', 1, 0.23, 1,
                          '=V584*W584*X584',
                          '=Y584-AA584-AB584-AC584-AD584', None, None, None, None, None]])
                 else:
                     work_list.extend([
-                        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Открытие закрытие скв',
+                        ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Открытие закрытие скв',
                          'Открытие закрытие скв', None, None, None, None, None, None, None, None, None,
                          None, None, None, '§300разд.1', None, 'шт', 1, 0.18, 1, '=V1252*W1252*X1252',
                          '=Y1252-AA1252-AB1252-AC1252-AD1252', None, None, None, None, None]])
                 work_list.extend([
-                        ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты тех.водой в пласт ',
+                        ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты тех.водой в пласт ',
                          None, None,
                          None, None, None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3',
                          self.volume_of_finishing_line,
@@ -574,12 +578,12 @@ class TemplateWithoutSKM(TemplateWork):
             else:
 
                 work_list.extend([
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты кислотой в пласт ', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты кислотой в пласт ', None,
                  None,
                  None, None, None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3',
                  self.solvent_volume_text_line - nkt_vn, 0.07, 1,
                  '=V576*W576*X576', '=Y576-AA576-AB576-AC576-AD576', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты тех.водой в пласт ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Продавка кислоты тех.водой в пласт ',
                  None, None,
                  None, None, None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3',
                  self.volume_of_finishing_line,
@@ -588,7 +592,7 @@ class TemplateWithoutSKM(TemplateWork):
             ])
 
         if time_skv_norm < self.solvent_volume_time_line:
-            skv_list = [['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            skv_list = [['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                          f'Проведение СКО {self.solvent_volume_time_begin_date}-{self.solvent_volume_time_end_date}',
                          None, None, None,
                          None, None, None, None, None, 'АКТ№', None, None, None, 'факт', None, 'час',
@@ -601,7 +605,7 @@ class TemplateWithoutSKM(TemplateWork):
 
     def drinirovanie(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
              f'{self.normalization_question_text_line} '
              f'{self.normalization_question_time_begin_date}-{self.normalization_question_time_end_date}', None,
              None, None, None, None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
@@ -614,14 +618,14 @@ class TemplateWithoutSKM(TemplateWork):
         if volume_skv > 1:
 
             work_list.extend([
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка кислоты первого 1м3', None, None, None,
                  None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3',
                  1, 0.2, 1,
                  '=V582*W582*X582', '=Y582-AA582-AB582-AC582-AD582', None, None, None, None, None]])
             if self.solvent_volume_text_line > nkt_vn:
                 work_list.extend([
-                    ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                    ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка кислоты следующего {round(nkt_vn - 1, 1)}м3',
                  None, None, None,
                  None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3',
@@ -630,7 +634,7 @@ class TemplateWithoutSKM(TemplateWork):
                  '=V583*W583*X583', '=Y583-AA583-AB583-AC583-AD583', None, None, None, None, None]])
             else:
                 work_list.extend([
-                    ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                    ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                      f'Закачка кислоты следующего {self.solvent_volume_text_line - 1}м3',
                      None, None, None,
                      None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3',
@@ -641,7 +645,7 @@ class TemplateWithoutSKM(TemplateWork):
             time_skv_norm = (nkt_vn -1) * 0.1 + 0.2 + 1.17
 
         else:
-            work_list.extend([['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            work_list.extend([['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                                f'Закачка кислоты первого {volume_skv}м3', None, None, None,
                                None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3',
                                volume_skv, 0.2, 1,
@@ -652,14 +656,15 @@ class TemplateWithoutSKM(TemplateWork):
 
     def skv_work(self):
         volume_skv = self.solvent_volume_text_line
+        nkt_vn = self.nkt_vn()
 
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
              None, None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'КИСЛОТА',
              'Соляная кислота ингибированная ', None, '§232,233разд.1', None, 'шт', 1, 1.167, 1, '=V581*W581*X581',
              '=Y581-AA581-AB581-AC581-AD581', None, None, None, None, None]]
-
-        skv_list, time_skv_norm = self.sko_download(volume_skv)
+        nkt_vn
+        skv_list, time_skv_norm = self.sko_download(volume_skv, nkt_vn)
         work_list.extend(skv_list)
 
         if len(self.dict_nkt) > 0:
@@ -667,7 +672,7 @@ class TemplateWithoutSKM(TemplateWork):
             work_list.extend(nkt_list)
 
         if time_skv_norm < self.solvent_volume_time_line:
-            skv_list = [['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            skv_list = [['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                          f'Проведение СКВ {self.solvent_volume_time_begin_date}-{self.solvent_volume_time_end_date}',
                          None, None, None,
                          None, None, None, None, None, 'АКТ№', None, None, None, 'факт', None, 'час',
@@ -678,7 +683,7 @@ class TemplateWithoutSKM(TemplateWork):
 
         if self.select_type_nkt_combo == 'пакер':
             work_list.append(
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Посадка пакера', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Посадка пакера', None, None, None,
                  None,
                  None, None, None, None, None, None, None, None, '§138разд.1', None, 'шт', 1, 0.23, 1,
                  '=V584*W584*X584',
@@ -708,24 +713,24 @@ class TemplateWithoutSKM(TemplateWork):
 
     def solvent_injection_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
              None, None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'РАСТВОРИТЕЛЬ',
              'Растворитель АСПО Реком 7125 серия 4, КР-4Р', None, '§227,229разд.1', None, 'шт', 1, 0.96, 1,
              '=V589*W589*X589', '=Y589-AA589-AB589-AC589-AD589', None, None, None, None, None]]
         if self.solvent_volume_text_line > 1:
             solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', f'Закачка растворителя первого 1м3',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ', f'Закачка растворителя первого 1м3',
                  None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3',
                  1,
                  0.2,
                  1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка растворителя следующего {self.solvent_volume_text_line - 1}м3', None, None,
                  None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.1,
                  1, '=V591*W591*X591', '=Y591-AA591-AB591-AC591-AD591', None, None, None, None, None]]
         else:
             solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
                  f'Закачка растворителя первого {self.solvent_volume_text_line}м3', None,
                  None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1,
                  0.2,
@@ -733,7 +738,7 @@ class TemplateWithoutSKM(TemplateWork):
             ]
         work_list.extend(solvent_volume_list)
         volume_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
              f'Доводка растворителя в объеме {self.volume_of_finishing_line}', None, None, None, None,
              None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3',
              self.volume_of_finishing_line,

@@ -21,7 +21,7 @@ jobs:
 #              run: pyinstaller --onefile --hidden-import data_base.data_base_well.database_well main.py
       - name: Build executable
         run:
-          pyinstaller --noconfirm --onedir --console --name "ZIMA"
+          pyinstaller --noconfirm --onedir --console --name "ZIMA-NORMIR"
           --add-data "normir;normir/" 
           --add-data "users;users/" 
           --add-data "log_files;log_files/" 

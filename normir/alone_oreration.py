@@ -512,53 +512,39 @@ def well_jamming(self, without_damping, lift_key, volume_well_jaming):
 
 
 
-def count_row_height(ws2, work_list):
-    from openpyxl.utils.cell import range_boundaries, get_column_letter
-
-    boundaries_dict = {}
-    for ind, _range in enumerate(ws2.merged_cells.ranges):
-        if range_boundaries(str(_range))[1] <= 46:
-            boundaries_dict[ind] = range_boundaries(str(_range))
-
-    for key, value in boundaries_dict.items():
-        try:
-            ws2.unmerge_cells(start_column=value[0], start_row=value[1],
-                             end_column=value[2], end_row=value[3])
-        except:
-            pass
+def count_row_height(ws2, work_list,  merged_cells_dict):
 
 
     ind_ins = 46
-    boundaries_dict_index = 1000
+
     stop_str = len(work_list)
     for i in range(1, stop_str + 1):  # Добавлением работ
         for j in range(1, 31):
             cell = ws2.cell(row=i, column=j)
             if cell and str(cell) != str(work_list[i - 1][j - 1]):
-                # print(work_list[i - 1][j - 1])
-                cell.value = is_num(work_list[i - 1][j - 1])
-                if i >= ind_ins:
-                    if j != 1:
-                        cell.border = well_data.thin_border
-                    if j == 11:
-                        cell.font = Font(name='Arial', size=11, bold=False)
-                    else:
-                        cell.font = Font(name='Arial', size=13, bold=False)
-                    ws2.cell(row=i, column=2).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                    vertical='center')
-                    ws2.cell(row=i, column=11).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                     vertical='center')
-                    ws2.cell(row=i, column=12).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                     vertical='center')
-                    ws2.cell(row=i, column=3).alignment = Alignment(wrap_text=True, horizontal='left',
-                                                                    vertical='center')
+                if work_list[i - 1][j - 1]:
+                    cell.value = is_num(work_list[i - 1][j - 1])
+                    if i >= ind_ins:
 
-    for key, value in boundaries_dict.items():
-        try:
-            ws2.merge_cells(start_column=value[0], start_row=value[1],
-                             end_column=value[2], end_row=value[3])
-        except:
-            pass
+                        if j == 11:
+                            cell.font = Font(name='Times New Roman', size=11, bold=False)
+                        else:
+                            cell.font = Font(name='Times New Roman', size=16, bold=False)
+                        ws2.cell(row=i, column=2).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                        vertical='center')
+                        ws2.cell(row=i, column=11).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                         vertical='center')
+                        ws2.cell(row=i, column=12).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                         vertical='center')
+                        ws2.cell(row=i, column=3).alignment = Alignment(wrap_text=True, horizontal='left',
+                                                                        vertical='center')
+
+
+    ws2.merge_cells(start_row=77, start_column=2, end_row=77, end_column=3)
+    ws2.merge_cells(start_row=77, start_column=6, end_row=77, end_column=14)
+    for key, row in merged_cells_dict.items():
+        ws2.merge_cells(start_row=row[1], start_column=row[0], end_row=row[3], end_column=row[2])
+
     return 'Высота изменена'
 
 def is_num(num):

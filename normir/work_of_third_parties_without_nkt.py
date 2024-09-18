@@ -3,30 +3,16 @@ import sys
 from datetime import datetime, timedelta
 
 import well_data
-
-from collections import namedtuple
-from normir.files_with_list import cause_presence_of_jamming
-from normir.norms import LIFTING_NORM_NKT, DESCENT_NORM_NKT
-from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, QTabWidget, QMainWindow, QPushButton, \
     QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateEdit, QDateTimeEdit
-from PyQt5.QtCore import Qt
-
-from normir.relocation_brigade import TextEditTableWidgetItem
+from normir.TabPageAll import TabPage, TemplateWork
 
 
-class TabPage_SO_Timplate(QWidget):
+class TabPage_SO_Timplate(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.validator_int = QIntValidator(0, 6000)
-        self.validator_float = QDoubleValidator(0, 6000, 1)
-
         self.dict_nkt = well_data.dict_nkt
-
-        self.date_work_label = QLabel('Дата работы')
-        self.date_work_line = QLineEdit(self)
-        self.date_work_line.setText(f'{well_data.date_work}')
 
         self.date_work_str = datetime.strptime(self.date_work_line.text(), '%d.%m.%Y')
 
@@ -45,14 +31,11 @@ class TabPage_SO_Timplate(QWidget):
 
         self.select_work_of_third_parties.currentTextChanged.connect(self.update_select_work_of_third_parties)
 
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
-
         self.complications_during_tubing_running_label = QLabel('Осложнение при спуске НКТ')
         self.complications_of_failure_label = QLabel('Получен ли прихват, наличие рассхаживания')
         self.complications_when_lifting_label = QLabel('Осложнения при подъеме НКТ')
 
-        self.extra_work_question_label = QLabel('Дополнительные работы')
+
         self.nkt_60_count_label = QLabel('Кол-во на спуск НКТ60')
 
         self.pressuar_combo_label = QLabel('Был ли опрессовка колонны после СКО для определения приемистости')
@@ -70,7 +53,7 @@ class TabPage_SO_Timplate(QWidget):
         self.rezult_zumpf_pressuar_combo_label = QLabel('Результат опрессовки')
         self.determination_of_pickup_combo_label = QLabel('Было ли определение Q?')
         self.determination_of_pickup_combo_zumpf_label = QLabel('Было ли определение Q?')
-        self.saturation_volume_label = QLabel('Насыщение')
+        self.saturation_volume_label = QLabel('объем насыщения')
         self.determination_of_pickup_text_label = QLabel('Текст определение Q')
         self.saturation_volume_zumpf_label = QLabel('Насыщение')
         self.determination_of_pickup_zumpf_text_label = QLabel('Текст определение Q')
@@ -97,7 +80,6 @@ class TabPage_SO_Timplate(QWidget):
         self.extra_work_time_label = QLabel('затраченное время')
         self.extra_work_time_line = QLineEdit(self)
         self.extra_work_time_line.setValidator(self.validator_float)
-
 
         self.grid.addWidget(self.extra_work_text_label, 52, 1)
         self.grid.addWidget(self.extra_work_text_line, 53, 1)
@@ -150,10 +132,8 @@ class TabPage_SO_Timplate(QWidget):
             self.response_time_begin_date.dateTimeChanged.connect(
                 self.update_date_response)
 
-
             self.response_text_line.setText('ОЗЦ')
             if index == 'Фондовый пакер':
-
                 self.response_text_line.setText('Интерпретация данных ГИС ')
 
                 self.extra_work_text_line.setText('ГИС - РГД ')
@@ -176,13 +156,13 @@ class TabPage_SO_Timplate(QWidget):
             self.pressuar_ek_line = QLineEdit(self)
             self.pressuar_ek_line.setValidator(self.validator_float)
 
-            self.grid.addWidget(self.depth_paker_text_label, 62, 1)
-            self.grid.addWidget(self.depth_paker_text_edit, 63, 1)
+            self.grid.addWidget(self.depth_paker_text_label, 66, 1)
+            self.grid.addWidget(self.depth_paker_text_edit, 67, 1)
 
-            self.grid.addWidget(self.pressuar_ek_label, 62, 2)
-            self.grid.addWidget(self.pressuar_ek_line, 63, 2)
-            self.grid.addWidget(self.rezult_pressuar_combo_label, 62, 3)
-            self.grid.addWidget(self.rezult_pressuar_combo, 63, 3)
+            self.grid.addWidget(self.pressuar_ek_label, 66, 2)
+            self.grid.addWidget(self.pressuar_ek_line, 67, 2)
+            self.grid.addWidget(self.rezult_pressuar_combo_label, 66, 3)
+            self.grid.addWidget(self.rezult_pressuar_combo, 67, 3)
 
     def update_date_technological_crap(self):
         time_begin = self.extra_work_time_begin_date.dateTime()
@@ -200,15 +180,6 @@ class TabPage_SO_Timplate(QWidget):
 
         self.response_time_line.setText(str(time_difference))
 
-    @staticmethod
-    def calculate_date(time_begin, time_end):
-        # Вычисляем разницу в секундах
-        difference_in_seconds = time_begin.secsTo(time_end)
-
-        # Преобразуем в часы
-        difference_in_hours = round(difference_in_seconds / 3600, 1)
-        return difference_in_hours
-
 
 class TabWidget(QTabWidget):
     def __init__(self):
@@ -216,9 +187,9 @@ class TabWidget(QTabWidget):
         self.addTab(TabPage_SO_Timplate(self), 'пакер')
 
 
-class WorkOfThirdPaties(QMainWindow):
+class WorkOfThirdPaties(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(TemplateWork, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -232,23 +203,7 @@ class WorkOfThirdPaties(QMainWindow):
         for i in range(1):
             self.tableWidget.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
 
-        # Заполнение QTableWidget данными из списка
-        for datа in well_data.work_list_in_ois:
-            row_position = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(row_position)
-            self.tableWidget.setItem(row_position, 0, QTableWidgetItem(datа[0]))
-
-            # Создание QTextEdit для переноса текста в ячейке
-            text_edit = QTextEdit()
-            text_edit.setText(datа[1])
-            text_edit.setReadOnly(True)  # Сделаем текст редактируемым только для чтения
-
-            self.tableWidget.setCellWidget(row_position, 1, text_edit)
-
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, text_edit.toPlainText())
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, datа[1])
+        self.update_data_in_ois()
 
         self.tableWidget.resizeColumnsToContents()
 
@@ -311,17 +266,6 @@ class WorkOfThirdPaties(QMainWindow):
         self.esp_dismantling_time_end_date = None
         self.esp_dismantling_time_line = None
 
-    def adjustRowHeight(self, row, text):
-        font_metrics = self.tableWidget.fontMetrics()  # Получаем метрики шрифта
-        text_height = font_metrics.height()  # Высота строки на основе шрифта
-        text_length = len(text)
-
-        # Предположим, что мы используем фиксированную ширину для текстовой ячейки
-        width = self.tableWidget.columnWidth(1)
-        # Оцениваем количество необходимых строк для текста
-        number_of_lines = (text_length // (width // font_metrics.averageCharWidth())) + 1
-        self.tableWidget.setRowHeight(row, int((text_height * number_of_lines) / 2))  # Устанавливаем высоту
-
     def add_work(self):
         from main import MyWindow
 
@@ -332,8 +276,6 @@ class WorkOfThirdPaties(QMainWindow):
 
         if self.select_work_of_third_parties == '':
             return
-
-
 
         elif self.select_work_of_third_parties in ['ГИС - установка ЦЖ']:
 
@@ -351,86 +293,21 @@ class WorkOfThirdPaties(QMainWindow):
 
                 self.rezult_pressuar_combo = current_widget.rezult_pressuar_combo.currentText()
 
-            self.response_text_line = current_widget.response_text_line.text()
-            self.response_time_begin_date = \
-                current_widget.response_time_begin_date.dateTime().toPyDateTime()
-            self.response_time_begin_date = \
-                self.change_string_in_date(self.response_time_begin_date)
+            read_data = self.read_responce(current_widget)
+            if read_data is None:
+                read_data
 
-            self.response_time_end_date = \
-                current_widget.response_time_end_date.dateTime().toPyDateTime()
-            self.response_time_end_date = \
-                self.change_string_in_date(self.response_time_end_date)
-
-            if current_widget.response_text_line.text() == self.response_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.response_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст работы подрядчика')
-                return
-
-            self.response_time_line = current_widget.response_time_line.text()
-            if self.response_time_line != '':
-                self.response_time_line = round(float(self.response_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время работы подрядчика')
-                return
-
-            if self.response_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка',
-                                    f'Затраченное время при работы подрядчика не может быть отрицательным')
-                return
-
-        self.extra_work_text_line = current_widget.extra_work_text_line.text()
-        self.extra_work_time_begin_date = \
-            current_widget.extra_work_time_begin_date.dateTime().toPyDateTime()
-        self.extra_work_time_begin_date = \
-            self.change_string_in_date(self.extra_work_time_begin_date)
-
-        self.extra_work_time_end_date = \
-            current_widget.extra_work_time_end_date.dateTime().toPyDateTime()
-        self.extra_work_time_end_date = \
-            self.change_string_in_date(self.extra_work_time_end_date)
-
-        if current_widget.extra_work_text_line.text() == self.extra_work_time_begin_date:
-            QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-            return
-
-        if self.extra_work_text_line == '':
-            QMessageBox.warning(self, 'Ошибка', f'Не введены текст работы подрядчика')
-            return
-
-        self.extra_work_time_line = current_widget.extra_work_time_line.text()
-        if self.extra_work_time_line != '':
-            self.extra_work_time_line = round(float(self.extra_work_time_line), 1)
-
-        else:
-            QMessageBox.warning(self, 'Ошибка', f'Не введены время работы подрядчика')
-            return
-
-        if self.extra_work_time_line <= 0:
-            QMessageBox.warning(self, 'Ошибка',
-                                f'Затраченное время при работы подрядчика не может быть отрицательным')
-            return
+        read_data = self.read_extra_work(current_widget)
+        if read_data is None:
+            read_data
 
         work_list = self.depth_paker_work()
 
         well_data.date_work = self.date_work_line
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
-
-
-
-    @staticmethod
-    def change_string_in_date(date_str):
-        # Преобразуем строку в объект datetime
-
-        formatted_date = date_str.strftime("%d.%m.%Y %H:%M")
-        return formatted_date
 
     def depth_paker_work(self):
         work_list = []
@@ -447,10 +324,10 @@ class WorkOfThirdPaties(QMainWindow):
 
     def work_gis(self):
         work_list = [
-           ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'ГК ЛМ', 'ПЗР работы перед ГФИ', None, None, None, None, None,
-              None, None, None, None, None, None, None, '§307разд.1', None, 'раз', 1, 1.4, 1, '=V347*W347*X347',
-              '=Y347-AA347-AB347-AC347-AD347', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ГИС', 'ГК ЛМ', 'ПЗР работы перед ГФИ', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§307разд.1', None, 'раз', 1, 1.4, 1, '=V347*W347*X347',
+             '=Y347-AA347-AB347-AC347-AD347', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None, None,
              None, None, None, None, None, 'АКТ№', None, None, None, 'Простои', 'Тех. ожидание', 'час',
@@ -461,16 +338,16 @@ class WorkOfThirdPaties(QMainWindow):
 
     def perforation_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'ГК ЛМ', 'ПЗР работы перед ГФИ', None, None, None, None, None,
-              None, None, None, None, None, None, None, '§307разд.1', None, 'раз', 1, 1.4, 1, '=V347*W347*X347',
-              '=Y347-AA347-AB347-AC347-AD347', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'ПВР',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ГИС', 'ГК ЛМ', 'ПЗР работы перед ГФИ', None, None, None, None, None,
+             None, None, None, None, None, None, None, '§307разд.1', None, 'раз', 1, 1.4, 1, '=V347*W347*X347',
+             '=Y347-AA347-AB347-AC347-AD347', None, None, None, None, None],
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ГИС', 'ПВР',
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None, None, None, None, None,
              None, None, 'АКТ№', None, None, None, 'Факт', None, 'час', self.extra_work_time_line, 1, 1,
              '=V350*W350*X350',
              '=Y350-AA350-AB350-AC350-AD350', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
              'Д/ж и м/ж спайдера', None, None, None, None, None, None, None,
              None, None, None, None, None, '§185разд.1', None, 'раз', 1, 0.14, 1, '=X351*W351*V351',
              '=Y351-AA351-AB351-AC351-AD351', None, None, None, None, None]
@@ -479,7 +356,7 @@ class WorkOfThirdPaties(QMainWindow):
 
     def work_grp(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None, None,
              None, None, None, None, None, 'АКТ№', None, None, None, 'Простои', 'Тех. ожидание', 'час',
@@ -487,41 +364,38 @@ class WorkOfThirdPaties(QMainWindow):
              None, None, None, None, None]]
         return work_list
 
-
     def install_zh(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'ГИС', 'Прочие',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ГИС', 'Прочие',
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None, None, None, None, None, None, None, 'АКТ№', 'ЦЕМЕНТ', 'Цемент', 0.2, 'Факт', None, 'час',
              5, 1, 1, '=V353*W353*X353', '=Y353-AA353-AB353-AC353-AD353', None, None, None, None, None]
         ]
-        work_list.extend([['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+        work_list.extend([['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                            'Д/ж и м/ж спайдера', None, None, None, None, None, None, None,
                            None, None, None, None, None, '§185разд.1', None, 'раз', 1, 0.14, 1, '=X351*W351*V351',
                            '=Y351-AA351-AB351-AC351-AD351', None, None, None, None, None]])
         if self.response_text_line != '':
             work_list.extend(
-                [['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОЗЦ',
-                 f'{self.response_text_line} ({self.response_time_begin_date}-{self.response_time_end_date})', None,
-                 None, None, None, None, None,
-                 None, None, None, None, None, None, 'Простои', 'Тех. ожидание', 'час', self.response_time_line, 1, 1,
-                 '=V389*W389*X389',
-                 '=Y389-AA389-AB389-AC389-AD389', None, None, None, None, None]])
-
-
+                [['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОЗЦ',
+                  f'{self.response_text_line} ({self.response_time_begin_date}-{self.response_time_end_date})', None,
+                  None, None, None, None, None,
+                  None, None, None, None, None, None, 'Простои', 'Тех. ожидание', 'час', self.response_time_line, 1, 1,
+                  '=V389*W389*X389',
+                  '=Y389-AA389-AB389-AC389-AD389', None, None, None, None, None]])
 
         if self.pressuar_combo == 'Да':
             pressuar_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None,
                  None,
                  None, None, None, None, None, None, None, None, '§150/152 разд.1 ', None, 'шт', 1, 0.43, 1,
                  '=V394*W394*X394', '=Y394-AA394-AB394-AC394-AD394', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  f'Опрессовка по НКТ на Р={self.pressuar_ek_line}атм {self.rezult_pressuar_combo}', None, None,
                  None,
                  None, None, None, None, None, 'АКТ№', None, None, None, '§151 разд.1', None, 'шт', 1, 0.25, 1,
                  '=V395*W395*X395', '=Y395-AA395-AB395-AC395-AD395', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  'Опрессовка нагнетательной линии ',
                  None, None, None, None, None, None, None, None, None, None, None, None, '§113 разд.1 ', None, 'раз', 1,
                  '=8/60', 1, '=V396*W396*X396', '=Y396-AA396-AB396-AC396-AD396', None, None, None, None, None]]
@@ -534,22 +408,22 @@ class WorkOfThirdPaties(QMainWindow):
         work_list = []
         if self.count_nkt_combo == 'Да':
             work_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  f'Определение кровли на гл. {self.depth_paker_text_edit}м', None, None, None,
                  None, None, None, None, None, 'АКТ№', None, None, None, '§289разд.1', None, 'шт', 1, 0.17, 1,
                  '=V404*W404*X404', '=Y404-AA404-AB404-AC404-AD404', None, None, None, None, None]]
         if self.pressuar_combo == 'Да':
             pressuar_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None,
                  None,
                  None, None, None, None, None, None, None, None, '§150/152 разд.1 ', None, 'шт', 1, 0.43, 1,
                  '=V394*W394*X394', '=Y394-AA394-AB394-AC394-AD394', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  f'Опрессовка по НКТ Р={self.pressuar_ek_line}атм {self.rezult_pressuar_combo}', None, None,
                  None,
                  None, None, None, None, None, 'АКТ№', None, None, None, '§151 разд.1', None, 'шт', 1, 0.25, 1,
                  '=V395*W395*X395', '=Y395-AA395-AB395-AC395-AD395', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
                  'Опрессовка нагнетательной линии',
                  None, None, None, None, None, None, None, None, None, None, None, None, '§113 разд.1 ', None, 'раз', 1,
                  '=8/60', 1, '=V396*W396*X396', '=Y396-AA396-AB396-AC396-AD396', None, None, None, None, None]

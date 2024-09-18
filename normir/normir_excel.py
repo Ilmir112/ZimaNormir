@@ -4985,7 +4985,7 @@ normir_excel_dict = {'data':
      'fill': {'color': 'RGB(00000000)'}, 'borders': {'left': 'medium', 'right': None, 'top': None, 'bottom': None},
      'alignment': {'horizontal': None, 'vertical': None, 'wrap_text': None}}],
         46: [
-    {'value': None, 'font': {'name': 'Calibri', 'size': 11.0, 'bold': False, 'italic': False},
+    {'value': 'Объём работ по основному плану', 'font': {'name': 'Calibri', 'size': 11.0, 'bold': False, 'italic': False},
      'fill': {'color': 'RGB(00000000)'}, 'borders': {'left': None, 'right': None, 'top': None, 'bottom': None},
      'alignment': {'horizontal': None, 'vertical': None, 'wrap_text': None}},
     {'value': None, 'font': {'name': 'Calibri', 'size': 11.0, 'bold': False, 'italic': False},

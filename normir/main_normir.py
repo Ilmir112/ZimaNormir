@@ -187,7 +187,7 @@ class TabPage_normir(QWidget):
                     date_cancel = row[0].split('\n')[0]
                     if '>' in row[1]:
                         time_cancel = row[1].split('>')[0]
-                        date_cancel = date_cancel + ' ' + time_cancel.split('-')[0]
+                        date_cancel = date_cancel + ' ' + time_cancel.split('-')[1]
 
                     value_str = row[1].upper().strip()
                     if 'СУРС-40' in value_str:
@@ -427,7 +427,7 @@ class TabWidget(QTabWidget):
 class NormirWindow(QMainWindow):
 
     def __init__(self, table_widget, work_plan, ws=None, parent=None):
-        super(NormirWindow, self).__init__(parent)
+        super(NormirWindow, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         # self.ins_ind = ins_ind
@@ -694,7 +694,7 @@ class NormirWindow(QMainWindow):
             [None, 'Искусственный забой', None, None, None, well_data.bottomhole_artificial._value, None, None,
              'данные по УА до ремонта', None, None,
              None, None,
-             None, 'данные по УА после ремонта', None, None, None, well_data.bottomhole_artificial, None, None, None,
+             None, 'данные по УА после ремонта', None, None, None, None, None, None, None,
              None, None, None, None, None,
              None, None,
              None, None, None],
@@ -938,6 +938,6 @@ if __name__ == "__main__":
     # app3 = QApplication(sys.argv)
 
     app = QApplication(sys.argv)
-    window = NormirWindow('normir')
+    window = NormirWindow('normir', 2)
     window.show()
     sys.exit(app.exec_())

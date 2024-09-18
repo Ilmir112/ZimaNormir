@@ -366,3 +366,226 @@
 2024-09-06 16:01:12,284 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'solvent_injection_combo', <traceback object at 0x000001FFF705E200>
 2024-09-06 16:01:41,977 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001FFF6BC8F80>
 2024-09-06 16:02:15,997 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'solvent_injection_combo', <traceback object at 0x0000019F8EAE1780>
+2024-09-06 16:18:23,554 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'extra_work_combo', <traceback object at 0x000002957D7D4980>
+2024-09-06 16:36:13,657 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'extra_work_combo', <traceback object at 0x000001328909D0C0>
+2024-09-06 16:39:10,760 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'TemplateWithoutSKM' has no attribute 'descent_nkt_work', <traceback object at 0x000001328909CFC0>
+2024-09-09 10:17:40,896 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Relocation' object has no attribute 'cause_presence_of_downtime_text_line', <traceback object at 0x000002945F044D40>
+2024-09-09 10:57:48,688 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000296C2968680>
+2024-09-09 12:27:46,640 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001E48F098500>
+2024-09-09 13:23:36,467 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'LiftingWindow' is not defined, <traceback object at 0x0000022701FAC380>
+2024-09-09 13:27:35,809 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAD321C40>
+2024-09-09 13:27:38,247 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB14E40>
+2024-09-09 13:27:45,391 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB155C0>
+2024-09-09 13:27:49,327 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB153C0>
+2024-09-09 13:27:49,632 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB15480>
+2024-09-09 13:27:49,919 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB14C00>
+2024-09-09 13:28:04,976 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000029EAEB154C0>
+2024-09-09 13:35:28,540 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000029EACD85D80>
+2024-09-09 13:36:43,767 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'JammingWindow' object has no attribute 'need_well_discharge_after_combo', <traceback object at 0x0000018E3CE39500>
+2024-09-09 13:36:55,868 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'JammingWindow' object has no attribute 'need_well_discharge_after_combo', <traceback object at 0x0000018E3C900780>
+2024-09-09 13:37:41,958 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000018E3C8ED780>
+2024-09-09 15:50:33,156 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.read_nkt_up() missing 1 required positional argument: 'current_widget', <traceback object at 0x000002C8CA601100>
+2024-09-09 15:54:54,419 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001D321D3A400>
+2024-09-09 15:56:38,498 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001D321CDD640>
+2024-09-09 15:58:01,633 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000002C29F90E600>
+2024-09-09 16:01:34,780 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002C29E00D600>
+2024-09-09 16:07:21,037 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000202BCDBA440>
+2024-09-09 16:28:02,043 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingShgnWindow' object has no attribute 'read_complications_when_lifting_combo', <traceback object at 0x00000271EEEEDD80>
+2024-09-09 16:40:17,195 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.read_nkt_up() missing 1 required positional argument: 'current_widget', <traceback object at 0x0000013CCF6B0FC0>
+2024-09-09 16:51:35,701 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingShgnWindow' object has no attribute 'dict_sucker_pod', <traceback object at 0x00000149BD3D2600>
+2024-09-09 16:51:45,412 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingShgnWindow' object has no attribute 'dict_sucker_pod', <traceback object at 0x00000149BD3D1100>
+2024-09-10 08:21:48,605 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'QDateEdit' object has no attribute 'setText', <traceback object at 0x000001FAD39ED5C0>
+2024-09-11 07:55:46,400 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001220874A000>
+2024-09-11 16:11:39,156 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'ActualWork' object has no attribute 'complications_of_failure_time_line', <traceback object at 0x000002B2B44D1CC0>
+2024-09-11 16:14:55,529 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000026F2ED8ABC0>
+2024-09-11 16:16:13,036 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000002A4FA8FFB40>
+2024-09-11 16:18:43,676 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'QComboBox' object has no attribute 'currenText', <traceback object at 0x000002838555BDC0>
+2024-09-11 16:20:28,004 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, invalid literal for int() with base 10: 'fr', <traceback object at 0x0000020CDCEFF240>
+2024-09-11 16:25:18,774 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000026C704201C0>
+2024-09-11 16:25:29,670 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000026C70422140>
+2024-09-11 16:44:43,603 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001FAA443FF40>
+2024-09-11 16:47:27,604 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWithoutSKM.sko_download() missing 1 required positional argument: 'nkt_vn', <traceback object at 0x0000019064D93340>
+2024-09-11 16:56:57,494 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001C710BE0D40>
+2024-09-11 16:57:17,321 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001C710BE1C00>
+2024-09-11 17:02:14,822 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001D290316F80>
+2024-09-12 08:22:15,813 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'RaidWork' object has no attribute 'volume_flush_line', <traceback object at 0x00000261D017E240>
+2024-09-12 08:29:20,837 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000026140333D40>
+2024-09-12 08:30:14,489 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000026BB0ACD380>
+2024-09-12 08:30:19,553 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000026BB0ACE4C0>
+2024-09-12 08:42:06,324 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'pressuar_gno_combo', <traceback object at 0x000001EDF6891D00>
+2024-09-12 08:58:47,346 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'fishing_works_time_line', <traceback object at 0x000001897E170AC0>
+2024-09-12 09:04:52,765 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'complications_during_disassembly_time_label', <traceback object at 0x0000020BB7841F00>
+2024-09-12 09:21:51,244 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'complications_during_disassembly_time_label', <traceback object at 0x0000020BB7AD2A40>
+2024-09-12 09:42:17,272 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'QComboBox' object has no attribute 'currenttext', <traceback object at 0x000001DEB7287A40>
+2024-09-12 09:43:08,910 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'fishing_works_text_line', <traceback object at 0x0000020A6A91CA80>
+2024-09-12 09:43:24,283 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'fishing_works_text_line', <traceback object at 0x0000020A6B163D00>
+2024-09-12 09:44:33,358 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000020A6B162740>
+2024-09-12 09:45:13,952 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'fishing_works_text_line', <traceback object at 0x00000268A8F031C0>
+2024-09-12 09:46:07,243 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000268A5736CC0>
+2024-09-12 09:47:49,838 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001DE7E2FB3C0>
+2024-09-12 09:52:14,124 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001F19E348480>
+2024-09-12 09:53:07,876 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingRodHeadWindow' object has no attribute 'fishing_works_line', <traceback object at 0x0000023E9F9AC740>
+2024-09-12 09:53:14,063 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingRodHeadWindow' object has no attribute 'fishing_works_line', <traceback object at 0x0000023EA1042E40>
+2024-09-12 09:53:35,045 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingRodHeadWindow' object has no attribute 'fishing_works_line', <traceback object at 0x0000023E9F98C380>
+2024-09-12 09:55:08,789 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000023E9FC5C780>
+2024-09-12 10:07:10,077 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001AE1E1807C0>
+2024-09-12 10:12:51,859 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SimpleWork' object has no attribute 'cause_presence_of_downtime_combo', <traceback object at 0x000001D56F542140>
+2024-09-12 10:12:55,406 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SimpleWork' object has no attribute 'cause_presence_of_downtime_combo', <traceback object at 0x000001D56F542200>
+2024-09-12 10:15:56,456 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001ADCFA202C0>
+2024-09-12 10:18:11,029 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001ADCE7A0E00>
+2024-09-12 10:20:01,906 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002BE1E143280>
+2024-09-12 10:21:39,313 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001E505281840>
+2024-09-12 10:21:41,104 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001E5052785C0>
+2024-09-12 10:21:41,600 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001E5056E7A00>
+2024-09-12 10:21:41,872 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001E505722D40>
+2024-09-12 10:21:42,136 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000001E50528A640>
+2024-09-12 10:23:03,769 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'pressuar_ek_combo', <traceback object at 0x0000020AB1A27B40>
+2024-09-12 10:24:27,634 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'read_pressuar_ek_combo', <traceback object at 0x00000275EAD987C0>
+2024-09-12 10:25:35,658 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'rezult_pressuar_combo', <traceback object at 0x0000022CF3C50980>
+2024-09-12 10:27:52,266 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, invalid literal for int() with base 10: 'ded', <traceback object at 0x0000023FEFA14900>
+2024-09-12 10:29:19,818 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'depth_zumpf_paker_combo', <traceback object at 0x0000023FEFA154C0>
+2024-09-12 10:31:52,023 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000023FEF743040>
+2024-09-12 10:34:08,864 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'determination_of_pickup_combo', <traceback object at 0x000001A8F7F4BCC0>
+2024-09-12 10:34:35,810 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'determination_of_pickup_combo', <traceback object at 0x000001A8F85F4380>
+2024-09-12 10:35:20,444 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001A8F81A2840>
+2024-09-12 10:52:49,768 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work_text_line', <traceback object at 0x0000012B330EFC80>
+2024-09-12 10:54:07,328 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work_text_line', <traceback object at 0x00000174A33CB9C0>
+2024-09-12 11:08:07,892 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x000001A7F078B780>
+2024-09-12 11:22:25,809 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000002545B624500>
+2024-09-12 11:25:44,785 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001E4B9138C00>
+2024-09-12 11:28:34,324 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'pressuar_ek_combo', <traceback object at 0x00000189B045F3C0>
+2024-09-12 11:30:26,503 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'pressuar_ek_combo', <traceback object at 0x000002BBFDF2CF80>
+2024-09-12 11:30:53,407 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002BBFE017780>
+2024-09-12 12:01:49,542 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'depth_zumpf_paker_combo', <traceback object at 0x000001E3A037E200>
+2024-09-12 12:21:02,365 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TabPage.extra_work() missing 1 required positional argument: 'index', <traceback object at 0x000002404FF51C40>
+2024-09-12 12:21:56,254 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, argument 1 has unexpected type 'NoneType', <traceback object at 0x00000261ABD837C0>
+2024-09-12 12:22:58,246 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, argument 1 has unexpected type 'NoneType', <traceback object at 0x00000292E3F73DC0>
+2024-09-12 12:23:13,005 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, argument 1 has unexpected type 'NoneType', <traceback object at 0x00000292E3F64E80>
+2024-09-12 12:23:14,077 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, argument 1 has unexpected type 'NoneType', <traceback object at 0x00000292E3F64F40>
+2024-09-12 12:23:25,589 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, argument 1 has unexpected type 'NoneType', <traceback object at 0x00000292E3F64FC0>
+2024-09-12 12:27:55,942 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'responce_rename', <traceback object at 0x00000181C7861540>
+2024-09-12 12:36:40,578 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'depth_paker_text_edit', <traceback object at 0x00000276CD99BB40>
+2024-09-12 12:50:59,557 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'count_nkt_combo', <traceback object at 0x000001AEF1F84C80>
+2024-09-12 12:53:02,236 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001AEF1F4F680>
+2024-09-12 13:22:26,236 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000019F34B4A540>
+2024-09-12 13:41:44,255 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'skv_combo', <traceback object at 0x00000211FC32CB00>
+2024-09-12 13:42:06,332 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'skv_combo', <traceback object at 0x00000211FAEEA2C0>
+2024-09-12 13:54:23,469 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000298A5C53700>
+2024-09-12 13:58:38,222 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000027B4C576EC0>
+2024-09-12 14:12:19,326 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000249B08D4A00>
+2024-09-12 14:23:13,412 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute '_add_krezol_widgets', <traceback object at 0x0000021F070110C0>
+2024-09-12 14:23:14,795 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute '_add_swab_widgets', <traceback object at 0x0000021F07011CC0>
+2024-09-12 14:30:30,267 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000182281E3040>
+2024-09-12 14:39:16,307 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x00000281172FAFC0>
+2024-09-12 14:40:45,838 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000281175BE780>
+2024-09-12 14:53:45,022 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002C31DF45E00>
+2024-09-12 15:02:49,768 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work', <traceback object at 0x000001AF8681A600>
+2024-09-12 15:04:41,734 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'date_work_label', <traceback object at 0x0000021168501E80>
+2024-09-12 15:04:57,306 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'nkt_label', <traceback object at 0x000002A041D4A380>
+2024-09-12 15:05:12,494 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'update_pressuar_ek_combo', <traceback object at 0x000002889F34A340>
+2024-09-12 15:05:55,009 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'date_work_str', <traceback object at 0x000001ED472AF740>
+2024-09-12 15:06:24,619 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'validator_float', <traceback object at 0x000001DA35AEF740>
+2024-09-12 15:06:45,116 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work_text_label', <traceback object at 0x0000029E3CC77800>
+2024-09-12 15:07:27,388 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'update_date_technological_crap', <traceback object at 0x0000018E5CCDBE80>
+2024-09-12 15:08:48,237 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001A2BD494500>
+2024-09-12 15:09:07,051 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001A2BB3D75C0>
+2024-09-12 15:19:31,974 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'select_work_of_third_parties', <traceback object at 0x00000170FA6B5700>
+2024-09-12 15:21:29,143 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'select_work_of_third_parties', <traceback object at 0x00000216F94F5A80>
+2024-09-12 15:22:40,560 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'combo_nkt_true', <traceback object at 0x00000209649B8EC0>
+2024-09-12 15:24:05,104 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x000002287EAA9000>
+2024-09-12 15:25:48,529 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x00000166969E6480>
+2024-09-12 15:25:50,465 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x00000166969E6A00>
+2024-09-12 15:30:14,666 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x000001C4FA144E40>
+2024-09-12 15:39:52,688 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'type_equipment_combo', <traceback object at 0x0000024AA20CEDC0>
+2024-09-12 15:40:11,206 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000024AA20CFD40>
+2024-09-12 15:40:50,391 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001D67B9C5BC0>
+2024-09-12 15:46:09,224 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo', <traceback object at 0x00000289827AFCC0>
+2024-09-12 15:46:09,226 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'response_text_line', <traceback object at 0x00000289827BC800>
+2024-09-12 15:48:16,129 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_flush_line_sko_line', <traceback object at 0x0000020B71E43400>
+2024-09-12 15:50:37,964 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001C1A1FA7580>
+2024-09-12 15:54:10,402 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'count_nkt_combo', <traceback object at 0x000002BA43458A40>
+2024-09-12 15:54:26,683 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'count_nkt_combo', <traceback object at 0x000002BA42EEBB80>
+2024-09-12 15:55:15,912 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002BA3FA2E440>
+2024-09-12 16:04:01,405 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'volume_swabing_edit', <traceback object at 0x00000213F9DB2E00>
+2024-09-12 16:07:11,654 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000213F9CB92C0>
+2024-09-12 16:10:54,247 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'volume_after_sko_work_2', <traceback object at 0x00000288C73C25C0>
+2024-09-12 16:15:26,071 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'response_text_line', <traceback object at 0x000002C28C9F7340>
+2024-09-12 16:16:05,232 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work_text_line', <traceback object at 0x000001E27675EF40>
+2024-09-12 16:16:30,702 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_flush_line_sko_line', <traceback object at 0x000001BB581180C0>
+2024-09-12 16:25:12,909 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_swabing_edit', <traceback object at 0x000001C1D1051400>
+2024-09-12 16:26:25,878 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'WorkOfThirdPaties' object has no attribute 'volume_flush_line_combo', <traceback object at 0x000002413306E040>
+2024-09-12 16:30:42,976 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'response_text_line', <traceback object at 0x0000020B6F35A200>
+2024-09-12 16:31:29,512 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000020B6DFE6B40>
+2024-09-12 17:00:01,299 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000022C7313E300>
+2024-09-12 17:07:43,628 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_nkt_combo_label', <traceback object at 0x0000013D82A3B940>
+2024-09-12 17:09:24,856 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'definition_q_label', <traceback object at 0x0000022119524B00>
+2024-09-12 17:12:42,554 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'update_definition_q_combo', <traceback object at 0x0000012EF57CDA00>
+2024-09-12 17:19:48,275 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'count_nkt_combo', <traceback object at 0x0000021D7FB6A880>
+2024-09-12 17:19:58,478 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'count_nkt_combo', <traceback object at 0x0000021D7E408D00>
+2024-09-13 07:58:57,431 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'combo_nkt_true', <traceback object at 0x0000020DECA3E380>
+2024-09-13 08:02:36,491 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000014298550980>
+2024-09-13 08:29:09,381 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000019ACBD80980>
+2024-09-13 08:30:48,062 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000216EFC47540>
+2024-09-13 08:34:30,619 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000018367E8C640>
+2024-09-13 08:35:46,371 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, arguments did not match any overloaded call:
+  QDateTimeEdit(parent: Optional[QWidget] = None): argument 1 has unexpected type 'int'
+  QDateTimeEdit(datetime: Union[QDateTime, datetime.datetime], parent: Optional[QWidget] = None): argument 1 has unexpected type 'int'
+  QDateTimeEdit(date: Union[QDate, datetime.date], parent: Optional[QWidget] = None): argument 1 has unexpected type 'int'
+  QDateTimeEdit(time: Union[QTime, datetime.time], parent: Optional[QWidget] = None): argument 1 has unexpected type 'int', <traceback object at 0x000001DD852F7280>
+2024-09-13 08:43:42,938 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000261DBEC6AC0>
+2024-09-13 08:44:02,450 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000261DBEDD840>
+2024-09-13 08:44:14,164 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000261DBEDCB80>
+2024-09-13 08:44:50,071 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000261DBEDFC40>
+2024-09-13 08:45:31,625 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000261D8E5ADC0>
+2024-09-13 08:51:12,754 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x000002734C8DEF80>
+2024-09-13 08:51:26,903 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, type object 'typing.re' has no attribute 'search', <traceback object at 0x00000273FE6F6380>
+2024-09-13 08:52:00,593 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000273FD926280>
+2024-09-13 10:56:39,723 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000029076D3AA00>
+2024-09-13 10:57:23,546 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, 'method' object is not iterable, <traceback object at 0x00000192B28150C0>
+2024-09-13 10:58:44,250 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.work_pzr() missing 1 required positional argument: 'descent_layout_line', <traceback object at 0x0000029557311C00>
+2024-09-13 10:58:55,784 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.work_pzr() missing 1 required positional argument: 'descent_layout_line', <traceback object at 0x00000295572FB340>
+2024-09-13 10:59:30,791 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x00000295572F7A40>
+2024-09-13 11:20:44,873 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'select_paker_combo', <traceback object at 0x0000014A80D4AC40>
+2024-09-13 11:23:52,252 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_combo_label', <traceback object at 0x000001CAFFB73400>
+2024-09-13 11:24:38,107 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_combo_label', <traceback object at 0x000001CAFFB952C0>
+2024-09-13 11:25:17,128 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000019EE52C4BC0>
+2024-09-13 11:25:26,963 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_combo_label', <traceback object at 0x000001EA7E63FC00>
+2024-09-13 11:26:16,932 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'pressuar_tnkt_label', <traceback object at 0x0000012B5F20BEC0>
+2024-09-13 11:38:38,009 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_label', <traceback object at 0x000001F5C4B7C7C0>
+2024-09-13 11:38:43,280 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_label', <traceback object at 0x000001F5C4B7D380>
+2024-09-13 12:18:49,469 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, currentIndex(self): too many arguments, <traceback object at 0x0000025F291522C0>
+2024-09-13 12:30:46,938 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'saturation_volume_label', <traceback object at 0x00000299D7F7D940>
+2024-09-13 12:30:54,961 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'saturation_volume_label', <traceback object at 0x00000299D7F7DD00>
+2024-09-13 12:55:08,301 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_zumpf_paker_label', <traceback object at 0x0000020A2F8AEE80>
+2024-09-13 12:59:14,542 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'saturation_volume_zumpf_label', <traceback object at 0x000002372AE26DC0>
+2024-09-13 14:50:28,069 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'determination_of_pickup_sko_combo', <traceback object at 0x000002563F752E00>
+2024-09-13 14:50:44,057 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'SpoPakerAction' object has no attribute 'determination_of_pickup_sko_combo', <traceback object at 0x000002563F752700>
+2024-09-16 11:01:55,542 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'update_ovtr_work_combo', <traceback object at 0x000001CAEA5ACD00>
+2024-09-16 11:01:55,545 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'extra_work_question_combo', <traceback object at 0x000001CAEA5AD400>
+2024-09-16 11:02:36,501 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'update_ovtr_work_combo', <traceback object at 0x000001E85245B800>
+2024-09-16 11:02:36,501 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'extra_work_question_combo', <traceback object at 0x000001E852468B80>
+2024-09-16 11:11:03,843 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'ovtr_work_text_label', <traceback object at 0x00000177CC855C40>
+2024-09-16 11:11:04,527 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'ovtr_work_text_label', <traceback object at 0x00000177CC856940>
+2024-09-16 11:11:05,353 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'ovtr_work_text_label', <traceback object at 0x00000177CC855CC0>
+2024-09-16 11:12:12,564 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'ovtr_work_time_begin_label', <traceback object at 0x000002C3A728AF00>
+2024-09-16 11:52:40,528 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'rir_with_pero_text_label', <traceback object at 0x0000022CA6146C40>
+2024-09-16 11:54:00,157 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'rir_with_pero_text_edit', <traceback object at 0x000002A2C5101E00>
+2024-09-16 11:54:30,976 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'extra_work_question_combo', <traceback object at 0x0000018B3BDAB680>
+2024-09-16 11:55:09,575 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'type_combo_work', <traceback object at 0x0000026CA09EE4C0>
+2024-09-16 12:03:03,965 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'update_date_ovtr_work', <traceback object at 0x000001CD822D7500>
+2024-09-16 12:07:02,757 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'pressuar_ek_combo_label', <traceback object at 0x00000288F18E8100>
+2024-09-16 12:07:54,543 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'normalization_question_combo', <traceback object at 0x000001DDEF02E500>
+2024-09-16 12:08:29,518 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'update_date_ovtr_work', <traceback object at 0x0000024BD6C9FC00>
+2024-09-16 12:12:29,462 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001A424B3B000>
+2024-09-16 12:12:48,415 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000020DED311A40>
+2024-09-16 12:15:06,404 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'ovtr_work_text_line', <traceback object at 0x0000026E97897DC0>
+2024-09-16 12:15:47,012 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'ovtr_work_time_end_date_label', <traceback object at 0x000002D1ACCAA980>
+2024-09-16 12:17:08,040 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'ovtr_work_text_line', <traceback object at 0x000002827EECB640>
+2024-09-16 12:27:48,864 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setCurrentText(self, text: Optional[str]): argument 1 has unexpected type 'int', <traceback object at 0x000001FB63C6E3C0>
+2024-09-16 13:57:24,668 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001EA3A8B3AC0>
+2024-09-16 14:14:58,132 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.read_ovtr_work_combo() missing 1 required positional argument: 'current_widget', <traceback object at 0x000001F2675D0540>
+2024-09-16 14:21:04,670 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TemplateWork.read_pressuar_combo() missing 1 required positional argument: 'current_widget', <traceback object at 0x000001E54B0D44C0>
+2024-09-16 14:41:57,319 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000001B1EB103000>
+2024-09-16 14:53:37,304 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002400C787380>
+2024-09-16 15:00:09,580 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000015112DC1100>
+2024-09-16 15:09:05,202 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000026979512FC0>

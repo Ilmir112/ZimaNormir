@@ -12,9 +12,9 @@ from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, 
 from PyQt5.QtCore import Qt
 
 from normir.relocation_brigade import TextEditTableWidgetItem
+from normir.TabPageAll import TabPage, TemplateWork
 
-
-class TabPage_SO_Lifting_gno(QWidget):
+class TabPage_SO_Lifting_gno(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
@@ -25,11 +25,7 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.gno_combo = QComboBox(self)
         self.gno_combo.addItems(['', 'ЗО', 'Фондовый пакер', 'Воронка', 'ЭЦН'])
 
-        self.date_work_label = QLabel('Дата работы')
-        self.date_work_line = QLineEdit(self)
-        self.date_work_line.setText(f'{well_data.date_work}')
 
-        self.date_work_str = datetime.strptime(self.date_work_line.text(), '%d.%m.%Y')
 
         self.grid = QGridLayout(self)
 
@@ -38,12 +34,12 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.grid.addWidget(self.date_work_label, 4, 2)
         self.grid.addWidget(self.date_work_line, 5, 2)
 
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
 
         self.gno_combo.currentTextChanged.connect(self.update_gno)
 
+
     def update_gno(self, index):
+        self.nkt_label()
 
         self.complications_of_failure_armatura_label = QLabel('осложнения при демонтаже арматуры')
         self.complications_of_failure_armatura_combo = QComboBox(self)
@@ -64,14 +60,14 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.grid.addWidget(self.complications_of_failure_armatura_label, 6, 1)
         self.grid.addWidget(self.complications_of_failure_armatura_combo, 7, 1)
 
-        self.grid.addWidget(self.complications_of_failure_label, 8, 1)
-        self.grid.addWidget(self.complications_of_failure_combo, 9, 1)
+        self.grid.addWidget(self.complications_of_failure_label, 28, 1)
+        self.grid.addWidget(self.complications_of_failure_combo, 29, 1)
 
         # self.grid.addWidget(self.complications_of_failure_label, 10, 1)
         # self.grid.addWidget(self.complications_of_failure_combo, 11, 1)
 
-        self.grid.addWidget(self.complications_during_disassembly_label, 20, 1)
-        self.grid.addWidget(self.complications_during_disassembly_combo, 21, 1)
+        self.grid.addWidget(self.complications_during_disassembly_label, 48, 1)
+        self.grid.addWidget(self.complications_during_disassembly_combo, 49, 1)
 
         self.scheme_bop_installation_label = QLabel('Монтаж превентора')
         self.scheme_bop_installation_combo = QComboBox(self)
@@ -94,64 +90,8 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.grid.addWidget(self.lowering_for_pressure_testing_label, 10, 2)
         self.grid.addWidget(self.lowering_for_pressure_testing_combo, 11, 2)
 
-        self.nkt_48_lenght_label = QLabel('Длина НКТ48')
-        self.nkt_48_lenght_edit = QLineEdit(self)
-        self.nkt_48_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_48_count_label = QLabel('Кол-во НКТ48')
-        self.nkt_48_count_edit = QLineEdit(self)
-        self.nkt_48_count_edit.setValidator(self.validator_int)
-
-        self.nkt_60_lenght_label = QLabel('Длина НКТ60')
-        self.nkt_60_lenght_edit = QLineEdit(self)
-        self.nkt_60_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_60_count_label = QLabel('Кол-во НКТ60')
-        self.nkt_60_count_edit = QLineEdit(self)
-        self.nkt_60_count_edit.setValidator(self.validator_int)
-
-        self.nkt_73_lenght_label = QLabel('Длина НКТ73')
-        self.nkt_73_lenght_edit = QLineEdit(self)
-        self.nkt_73_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_73_count_label = QLabel('Кол-во НКТ73')
-        self.nkt_73_count_edit = QLineEdit(self)
-        self.nkt_73_count_edit.setValidator(self.validator_int)
-
-        self.nkt_89_lenght_label = QLabel('Длина НКТ89-102')
-        self.nkt_89_lenght_edit = QLineEdit(self)
-        self.nkt_89_lenght_edit.setValidator(self.validator_int)
-
-        self.nkt_89_count_label = QLabel('Кол-во НКТ89-102')
-        self.nkt_89_count_edit = QLineEdit(self)
-        self.nkt_89_count_edit.setValidator(self.validator_int)
-
-        self.grid.addWidget(self.nkt_48_lenght_label, 22, 1)
-        self.grid.addWidget(self.nkt_48_lenght_edit, 23, 1)
-
-        self.grid.addWidget(self.nkt_48_count_label, 24, 1)
-        self.grid.addWidget(self.nkt_48_count_edit, 25, 1)
-
-        self.grid.addWidget(self.nkt_60_lenght_label, 22, 2)
-        self.grid.addWidget(self.nkt_60_lenght_edit, 23, 2)
-
-        self.grid.addWidget(self.nkt_60_count_label, 24, 2)
-        self.grid.addWidget(self.nkt_60_count_edit, 25, 2)
-
-        self.grid.addWidget(self.nkt_73_lenght_label, 22, 3)
-        self.grid.addWidget(self.nkt_73_lenght_edit, 23, 3)
-
-        self.grid.addWidget(self.nkt_73_count_label, 24, 3)
-        self.grid.addWidget(self.nkt_73_count_edit, 25, 3)
-
-        self.grid.addWidget(self.nkt_89_lenght_label, 22, 4)
-        self.grid.addWidget(self.nkt_89_lenght_edit, 23, 4)
-
-        self.grid.addWidget(self.nkt_89_count_label, 24, 4)
-        self.grid.addWidget(self.nkt_89_count_edit, 25, 4)
-
-        self.grid.addWidget(self.complications_when_lifting_label, 36, 1)
-        self.grid.addWidget(self.complications_when_lifting_combo, 37, 1)
+        self.grid.addWidget(self.complications_when_lifting_label, 46, 1)
+        self.grid.addWidget(self.complications_when_lifting_combo, 47, 1)
 
         self.lowering_for_pressure_testing_combo.currentTextChanged.connect(
             self.update_lowering_for_pressure_testing)
@@ -167,38 +107,46 @@ class TabPage_SO_Lifting_gno(QWidget):
         self.complications_of_failure_armatura_combo.currentTextChanged.connect(
             self.update_complications_of_failure_armatura)
 
+        self.count_sections_esp_label = QLabel('Кол-во секций ЭЦН')
+        self.count_sections_esp_combo = QComboBox(self)
+        self.count_sections_esp_combo.addItems(['1', '2', '3', '4', '5', '6', '7', '8'])
+
+        self.count_sections_ped_label = QLabel('Кол-во секций ПЭД')
+        self.count_sections_ped_combo = QComboBox(self)
+        self.count_sections_ped_combo.addItems(['1', '2', '3', '4', '5', '6', '7', '8'])
+
+        self.esp_dismantling_text_line = QLabel('Демонтаж ЭЦН')
+        self.esp_dismantling_text_line = QLineEdit(self)
+
+        self.esp_dismantling_time_begin_label = QLabel('начало демонтажа')
+        self.esp_dismantling_time_begin_date = QDateTimeEdit(self)
+        self.esp_dismantling_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+        self.esp_dismantling_time_begin_date.setDateTime(self.date_work_str)
+
+        self.esp_dismantling_time_end_label = QLabel('Окончание демонтажа')
+        self.esp_dismantling_time_end_date = QDateTimeEdit(self)
+        self.esp_dismantling_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
+        self.esp_dismantling_time_end_date.setDateTime(self.date_work_str)
+
+        self.esp_dismantling_time_label = QLabel('затраченное время')
+        self.esp_dismantling_time_line = QLineEdit(self)
+        self.esp_dismantling_time_line.setValidator(self.validator_float)
+
+        self.esp_dismantling_time_begin_date.dateTimeChanged.connect(
+            self.update_esp_dismantling_time)
+        self.esp_dismantling_time_end_date.dateTimeChanged.connect(
+            self.update_esp_dismantling_time)
+
+        self.equipment_audit_label = QLabel('Была ли ревизия')
+        self.equipment_audit_combo = QComboBox(self)
+        self.equipment_audit_combo.addItems(['Нет', 'Да'])
+
+        self.grid.addWidget(self.equipment_audit_label, 94, 1)
+        self.grid.addWidget(self.equipment_audit_combo, 95, 1)
+
+        self.equipment_audit_combo.currentTextChanged.connect(self.update_equipment_audit_combo)
+
         if index in 'ЭЦН':
-
-            self.count_sections_esp_label = QLabel('Кол-во секций ЭЦН')
-            self.count_sections_esp_combo = QComboBox(self)
-            self.count_sections_esp_combo.addItems(['1', '2', '3', '4', '5', '6', '7', '8'])
-
-            self.count_sections_ped_label = QLabel('Кол-во секций ПЭД')
-            self.count_sections_ped_combo = QComboBox(self)
-            self.count_sections_ped_combo.addItems(['1', '2', '3', '4', '5', '6', '7', '8'])
-
-            self.esp_dismantling_text_line = QLabel('Демонтаж ЭЦН')
-            self.esp_dismantling_text_line = QLineEdit(self)
-
-
-            self.esp_dismantling_time_begin_label = QLabel('начало демонтажа')
-            self.esp_dismantling_time_begin_date = QDateTimeEdit(self)
-            self.esp_dismantling_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.esp_dismantling_time_begin_date.setDateTime(self.date_work_str)
-
-            self.esp_dismantling_time_end_label = QLabel('Окончание демонтажа')
-            self.esp_dismantling_time_end_date = QDateTimeEdit(self)
-            self.esp_dismantling_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.esp_dismantling_time_end_date.setDateTime(self.date_work_str)
-
-            self.esp_dismantling_time_label = QLabel('затраченное время')
-            self.esp_dismantling_time_line = QLineEdit(self)
-            self.esp_dismantling_time_line.setValidator(self.validator_float)
-
-            self.esp_dismantling_time_begin_date.dateTimeChanged.connect(
-                self.update_esp_dismantling_time)
-            self.esp_dismantling_time_end_date.dateTimeChanged.connect(
-                self.update_esp_dismantling_time)
 
             self.grid.addWidget(self.count_sections_esp_label, 40, 1)
             self.grid.addWidget(self.count_sections_esp_combo, 41, 1)
@@ -210,7 +158,6 @@ class TabPage_SO_Lifting_gno(QWidget):
             self.grid.addWidget(self.esp_dismantling_time_end_date, 41, 4)
             self.grid.addWidget(self.esp_dismantling_time_label, 40, 5)
             self.grid.addWidget(self.esp_dismantling_time_line, 41, 5)
-
 
         else:
             self.count_sections_esp_label.setParent(None)
@@ -227,6 +174,16 @@ class TabPage_SO_Lifting_gno(QWidget):
 
             self.esp_dismantling_time_label.setParent(None)
             self.esp_dismantling_time_line.setParent(None)
+
+        if index in ['Фондовый пакер', 'пакер ГРП']:
+            self.depth_paker_text_combo_label = QLabel('Была ли опрессовка перед срывом')
+            self.depth_paker_text_combo = QComboBox(self)
+            self.depth_paker_text_combo.addItems(['Нет', 'Да'])
+
+            self.grid.addWidget(self.depth_paker_text_combo_label, 30, 0)
+            self.grid.addWidget(self.depth_paker_text_combo, 31, 0)
+
+            self.depth_paker_text_combo.currentTextChanged.connect(self.update_pressuar_combo)
 
     def update_scheme_bop_installation_combo(self, index):
         if index == 'Первая':
@@ -298,7 +255,7 @@ class TabPage_SO_Lifting_gno(QWidget):
             self.count_nkt_line.setText('3')
             self.pressuar_bop_text_label = QLabel('Текст опрессовки ПВО')
             self.pressuar_bop_text_line = QLineEdit(self)
-            self.pressuar_bop_text_line.setText(f'Опрессовка ПВО {well_data.max_admissible_pressure._value}(+)')
+            # self.pressuar_bop_text_line.setText(f'Опрессовка ПВО {well_data.max_admissible_pressure._value}(+)')
             self.grid.addWidget(self.count_nkt_label, 10, 3)
             self.grid.addWidget(self.count_nkt_line, 11, 3)
             self.grid.addWidget(self.pressuar_bop_text_label, 10, 4)
@@ -314,87 +271,7 @@ class TabPage_SO_Lifting_gno(QWidget):
             self.grid.addWidget(self.pressuar_gno_text_label, 6, 2)
             self.grid.addWidget(self.pressuar_gno_text_line, 7, 2)
 
-    def update_complications_of_failure(self, index):
 
-        if index == 'Нет':
-            self.complications_of_failure_text_label.setParent(None)
-            self.complications_of_failure_text_line.setParent(None)
-            self.complications_of_failure_time_label.setParent(None)
-            self.complications_of_failure_time_line.setParent(None)
-            self.complications_of_failure_time_end_label.setParent(None)
-            self.complications_of_failure_time_end_date.setParent(None)
-            self.complications_of_failure_time_begin_label.setParent(None)
-            self.complications_of_failure_time_begin_date.setParent(None)
-        else:
-            self.complications_of_failure_text_label = QLabel('Текст осложнения')
-            self.complications_of_failure_text_line = QLineEdit(self)
-
-            self.complications_of_failure_time_begin_label = QLabel('начало осложнения')
-            self.complications_of_failure_time_begin_date = QDateTimeEdit(self)
-            self.complications_of_failure_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_of_failure_time_begin_date.setDateTime(self.date_work_str)
-
-            self.complications_of_failure_time_end_label = QLabel('Окончание осложнения')
-            self.complications_of_failure_time_end_date = QDateTimeEdit(self)
-            self.complications_of_failure_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_of_failure_time_end_date.setDateTime(self.date_work_str)
-
-            self.complications_of_failure_time_label = QLabel('затраченное время')
-            self.complications_of_failure_time_line = QLineEdit(self)
-            self.complications_of_failure_time_line.setValidator(self.validator_float)
-
-            self.grid.addWidget(self.complications_of_failure_text_label, 8, 2)
-            self.grid.addWidget(self.complications_of_failure_text_line, 9, 2)
-            self.grid.addWidget(self.complications_of_failure_time_begin_label, 8, 3)
-            self.grid.addWidget(self.complications_of_failure_time_begin_date, 9, 3)
-            self.grid.addWidget(self.complications_of_failure_time_end_label, 8, 4)
-            self.grid.addWidget(self.complications_of_failure_time_end_date, 9, 4)
-            self.grid.addWidget(self.complications_of_failure_time_label, 8, 5)
-            self.grid.addWidget(self.complications_of_failure_time_line, 9, 5)
-
-            self.complications_of_failure_time_end_date.dateTimeChanged.connect(self.update_date_of_failure)
-            self.complications_of_failure_time_begin_date.dateTimeChanged.connect(self.update_date_of_failure)
-
-    def update_complications_of_failure_armatura(self, index):
-
-        if index == 'Нет':
-            self.complications_of_failure_armatura_text_label.setParent(None)
-            self.complications_of_failure_armatura_text_line.setParent(None)
-            self.complications_of_failure_armatura_time_label.setParent(None)
-            self.complications_of_failure_armatura_time_line.setParent(None)
-            self.complications_of_failure_armatura_time_end_label.setParent(None)
-            self.complications_of_failure_armatura_time_end_date.setParent(None)
-            self.complications_of_failure_armatura_time_begin_label.setParent(None)
-            self.complications_of_failure_armatura_time_begin_date.setParent(None)
-        else:
-            self.complications_of_failure_armatura_text_label = QLabel('Текст осложнения')
-            self.complications_of_failure_armatura_text_line = QLineEdit(self)
-
-            self.complications_of_failure_armatura_time_begin_label = QLabel('начало осложнения')
-            self.complications_of_failure_armatura_time_begin_date = QDateTimeEdit(self)
-            self.complications_of_failure_armatura_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_of_failure_armatura_time_begin_date.setDateTime(self.date_work_str)
-
-            self.complications_of_failure_armatura_time_end_label = QLabel('Окончание осложнения')
-            self.complications_of_failure_armatura_time_end_date = QDateTimeEdit(self)
-            self.complications_of_failure_armatura_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_of_failure_armatura_time_end_date.setDateTime(self.date_work_str)
-
-            self.complications_of_failure_armatura_time_label = QLabel('затраченное время')
-            self.complications_of_failure_armatura_time_line = QLineEdit(self)
-            self.complications_of_failure_armatura_time_line.setValidator(self.validator_float)
-
-            self.grid.addWidget(self.complications_of_failure_armatura_text_label, 6, 2)
-            self.grid.addWidget(self.complications_of_failure_armatura_text_line, 7, 2)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_begin_label, 6, 3)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_begin_date, 7, 3)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_end_label, 6, 4)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_end_date, 7, 4)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_label, 6, 5)
-            self.grid.addWidget(self.complications_of_failure_armatura_time_line, 7, 5)
-
-            self.complications_of_failure_armatura_time_end_date.dateTimeChanged.connect(self.update_date_of_armatura)
-            self.complications_of_failure_armatura_time_begin_date.dateTimeChanged.connect(self.update_date_of_armatura)
 
     def update_date_when_lifting(self):
         time_begin = self.complications_when_lifting_time_begin_date.dateTime()
@@ -446,96 +323,6 @@ class TabPage_SO_Lifting_gno(QWidget):
         difference_in_hours = round(difference_in_seconds / 3600, 1)
         return difference_in_hours
 
-    def update_complications_when_lifting(self, index):
-        if index == 'Нет':
-            self.complications_when_lifting_text_label.setParent(None)
-            self.complications_when_lifting_text_line.setParent(None)
-            self.complications_when_lifting_time_label.setParent(None)
-            self.complications_when_lifting_time_line.setParent(None)
-            self.complications_when_lifting_time_begin_label.setParent(None)
-            self.complications_when_lifting_time_begin_date.setParent(None)
-            self.complications_when_lifting_time_end_label.setParent(None)
-            self.complications_when_lifting_time_end_date.setParent(None)
-        else:
-            self.complications_when_lifting_text_label = QLabel('Текст осложнения')
-            self.complications_when_lifting_text_line = QLineEdit(self)
-
-            self.complications_when_lifting_time_begin_label = QLabel('начало осложнения')
-            self.complications_when_lifting_time_begin_date = QDateTimeEdit(self)
-            self.complications_when_lifting_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_when_lifting_time_begin_date.setDateTime(self.date_work_str)
-
-            self.complications_when_lifting_time_end_label = QLabel('Окончание осложнения')
-            self.complications_when_lifting_time_end_date = QDateTimeEdit(self)
-            self.complications_when_lifting_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_when_lifting_time_end_date.setDateTime(self.date_work_str)
-
-            self.complications_when_lifting_time_label = QLabel('затраченное время О')
-            self.complications_when_lifting_time_line = QLineEdit(self)
-
-            self.complications_when_lifting_time_line.setValidator(self.validator_float)
-            self.grid.addWidget(self.complications_when_lifting_text_label, 36, 2)
-            self.grid.addWidget(self.complications_when_lifting_text_line, 37, 2)
-
-            self.grid.addWidget(self.complications_when_lifting_time_begin_label, 36, 3)
-            self.grid.addWidget(self.complications_when_lifting_time_begin_date, 37, 3)
-
-            self.grid.addWidget(self.complications_when_lifting_time_end_label, 36, 4)
-            self.grid.addWidget(self.complications_when_lifting_time_end_date, 37, 4)
-
-            self.grid.addWidget(self.complications_when_lifting_time_label, 36, 5)
-            self.grid.addWidget(self.complications_when_lifting_time_line, 37, 5)
-
-            self.complications_when_lifting_time_end_date.dateTimeChanged.connect(self.update_date_when_lifting)
-            self.complications_when_lifting_time_begin_date.dateTimeChanged.connect(self.update_date_when_lifting)
-
-    def update_complications_during_disassembly(self, index):
-        if index == 'Нет':
-            self.complications_during_disassembly_q_label.setParent(None)
-            self.complications_during_disassembly_q_line.setParent(None)
-            self.complications_during_disassembly_time_label.setParent(None)
-            self.complications_during_disassembly_time_line.setParent(None)
-            self.complications_during_disassembly_q_time_begin_label.setParent(None)
-            self.complications_during_disassembly_q_time_begin_date.setParent(None)
-            self.complications_during_disassembly_q_time_end_label.setParent(None)
-            self.complications_during_disassembly_q_time_end_date.setParent(None)
-
-
-        else:
-            self.complications_during_disassembly_q_label = QLabel('Текст осложнения')
-            self.complications_during_disassembly_q_line = QLineEdit(self)
-
-            self.complications_during_disassembly_q_time_begin_label = QLabel('начало осложнения')
-            self.complications_during_disassembly_q_time_begin_date = QDateTimeEdit(self)
-            self.complications_during_disassembly_q_time_begin_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_during_disassembly_q_time_begin_date.setDateTime(self.date_work_str)
-
-            self.complications_during_disassembly_q_time_end_label = QLabel('Окончание осложнения')
-            self.complications_during_disassembly_q_time_end_date = QDateTimeEdit(self)
-            self.complications_during_disassembly_q_time_end_date.setDisplayFormat("dd.MM.yyyy HH:mm")
-            self.complications_during_disassembly_q_time_end_date.setDateTime(self.date_work_str)
-
-            self.complications_during_disassembly_time_label = QLabel('затраченное время')
-            self.complications_during_disassembly_time_line = QLineEdit(self)
-
-            self.complications_during_disassembly_time_line.setValidator(self.validator_float)
-            self.grid.addWidget(self.complications_during_disassembly_q_label, 20, 2)
-            self.grid.addWidget(self.complications_during_disassembly_q_line, 21, 2)
-
-            self.grid.addWidget(self.complications_during_disassembly_q_time_begin_label, 20, 3)
-            self.grid.addWidget(self.complications_during_disassembly_q_time_begin_date, 21, 3)
-
-            self.grid.addWidget(self.complications_during_disassembly_q_time_begin_label, 20, 4)
-            self.grid.addWidget(self.complications_during_disassembly_q_time_end_date, 21, 4)
-
-            self.grid.addWidget(self.complications_during_disassembly_time_label, 20, 5)
-            self.grid.addWidget(self.complications_during_disassembly_time_line, 21, 5)
-
-            self.complications_during_disassembly_q_time_end_date.dateTimeChanged.connect(
-                self.update_date_during_disassembly_q)
-            self.complications_during_disassembly_q_time_begin_date.dateTimeChanged.connect(
-                self.update_date_during_disassembly_q)
-
 
 class TabWidget(QTabWidget):
     def __init__(self):
@@ -543,9 +330,9 @@ class TabWidget(QTabWidget):
         self.addTab(TabPage_SO_Lifting_gno(self), 'Подьем ГНО')
 
 
-class LiftingWindow(QMainWindow):
+class LiftingWindow(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(TemplateWork, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -559,23 +346,7 @@ class LiftingWindow(QMainWindow):
         for i in range(1):
             self.tableWidget.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
 
-        # Заполнение QTableWidget данными из списка
-        for datа in well_data.work_list_in_ois:
-            row_position = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(row_position)
-            self.tableWidget.setItem(row_position, 0, QTableWidgetItem(datа[0]))
-
-            # Создание QTextEdit для переноса текста в ячейке
-            text_edit = QTextEdit()
-            text_edit.setText(datа[1])
-            text_edit.setReadOnly(True)  # Сделаем текст редактируемым только для чтения
-
-            self.tableWidget.setCellWidget(row_position, 1, text_edit)
-
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, text_edit.toPlainText())
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, datа[1])
+        self.update_data_in_ois()
         self.tableWidget.resizeColumnsToContents()
 
         self.tableWidget.setWordWrap(False)
@@ -643,16 +414,7 @@ class LiftingWindow(QMainWindow):
         self.scheme_bop_installation_time_line = None
         self.gno_combo = None
 
-    def adjustRowHeight(self, row, text):
-        font_metrics = self.tableWidget.fontMetrics()  # Получаем метрики шрифта
-        text_height = font_metrics.height()  # Высота строки на основе шрифта
-        text_length = len(text)
 
-        # Предположим, что мы используем фиксированную ширину для текстовой ячейки
-        width = self.tableWidget.columnWidth(1)
-        # Оцениваем количество необходимых строк для текста
-        number_of_lines = (text_length // (width // font_metrics.averageCharWidth())) + 1
-        self.tableWidget.setRowHeight(row, int((text_height * number_of_lines) / 2))  # Устанавливаем высоту
 
     def add_work(self):
         from main import MyWindow
@@ -664,6 +426,11 @@ class LiftingWindow(QMainWindow):
 
         if self.gno_combo in ['Фондовый пакер']:
             self.coefficient_lifting = 1.2
+            self.depth_paker_text_combo = current_widget.depth_paker_text_combo.currentText()
+            if self.depth_paker_text_combo == 'Да':
+                self.read_pressuar_combo(current_widget)
+
+
         elif self.gno_combo in ['ЭЦН']:
             self.coefficient_lifting = 1
             self.count_sections_esp_combo = int(current_widget.count_sections_esp_combo.currentText())
@@ -702,30 +469,8 @@ class LiftingWindow(QMainWindow):
         else:
             self.coefficient_lifting = 1
 
-        try:
-            self.nkt_48_lenght_edit = current_widget.nkt_48_lenght_edit.text()
-            self.nkt_48_count_edit = current_widget.nkt_48_count_edit.text()
-            self.nkt_60_lenght_edit = current_widget.nkt_60_lenght_edit.text()
-            self.nkt_60_count_edit = current_widget.nkt_60_count_edit.text()
-            self.nkt_73_lenght_edit = current_widget.nkt_73_lenght_edit.text()
-            self.nkt_73_count_edit = current_widget.nkt_73_count_edit.text()
-            self.nkt_89_lenght_edit = current_widget.nkt_89_lenght_edit.text()
-            self.nkt_89_count_edit = current_widget.nkt_89_count_edit.text()
-
-            if self.nkt_48_lenght_edit != '' and self.nkt_48_count_edit != '':
-                self.dict_nkt.setdefault('48мм',
-                                         (int(float(self.nkt_48_lenght_edit)), int(float(self.nkt_48_count_edit))))
-            if self.nkt_60_lenght_edit != '' and self.nkt_60_count_edit != '':
-                self.dict_nkt.setdefault('60мм',
-                                         (int(float(self.nkt_60_lenght_edit)), int(float(self.nkt_60_count_edit))))
-            if self.nkt_73_lenght_edit != '' and self.nkt_73_count_edit != '':
-                self.dict_nkt.setdefault('73мм',
-                                         (int(float(self.nkt_73_lenght_edit)), int(float(self.nkt_73_count_edit))))
-            if self.nkt_89_lenght_edit != '' and self.nkt_89_count_edit != '':
-                self.dict_nkt.setdefault('89мм',
-                                         (int(float(self.nkt_89_lenght_edit)), int(float(self.nkt_89_count_edit))))
-        except Exception as e:
-            QMessageBox.warning(self, 'Ошибка', f'Введены не все значения {e}')
+        read_data = self.read_nkt_up(current_widget)
+        if read_data is None:
             return
 
         self.complications_of_failure_combo = current_widget.complications_of_failure_combo.currentText()
@@ -736,6 +481,11 @@ class LiftingWindow(QMainWindow):
         # self.pressuar_gno_combo = current_widget.pressuar_gno_combo.currentText()
         self.lowering_for_pressure_testing_combo = current_widget.lowering_for_pressure_testing_combo.currentText()
         self.scheme_bop_installation_combo = current_widget.scheme_bop_installation_combo.currentText()
+        self.equipment_audit_combo = current_widget.equipment_audit_combo.currentText()
+
+        if self.equipment_audit_combo == 'Да':
+            self.equipment_audit_text_line = current_widget.equipment_audit_text_line.text()
+
         if self.scheme_bop_installation_combo == 'Первая':
             self.line_lenght_bop_line = current_widget.line_lenght_bop_line.text()
             if self.line_lenght_bop_line != '':
@@ -753,35 +503,8 @@ class LiftingWindow(QMainWindow):
         #         return
 
         if self.complications_of_failure_combo == 'Да':
-            self.complications_of_failure_text_line = current_widget.complications_of_failure_text_line.text()
-            self.complications_of_failure_time_begin_date = \
-                current_widget.complications_of_failure_time_begin_date.dateTime().toPyDateTime()
-            self.complications_of_failure_time_begin_date = \
-                self.change_string_in_date(self.complications_of_failure_time_begin_date)
-
-            self.complications_of_failure_time_end_date = \
-                current_widget.complications_of_failure_time_end_date.dateTime().toPyDateTime()
-            self.complications_of_failure_time_end_date = \
-                self.change_string_in_date(self.complications_of_failure_time_end_date)
-
-            if current_widget.complications_of_failure_text_line.text() == self.complications_of_failure_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.complications_of_failure_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
-                return
-
-            self.complications_of_failure_time_line = current_widget.complications_of_failure_time_line.text()
-            if self.complications_of_failure_time_line != '':
-                self.complications_of_failure_time_line = round(float(self.complications_of_failure_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
-                return
-
-            if self.complications_of_failure_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
+            read_data = self.read_complications_of_failure(current_widget)
+            if read_data is None:
                 return
 
         if self.scheme_bop_installation_problem_combo == 'Да':
@@ -817,109 +540,19 @@ class LiftingWindow(QMainWindow):
                 return
             ass = self.scheme_bop_installation_time_line,
         if self.complications_of_failure_armatura_combo == 'Да':
-            self.complications_of_failure_armatura_text_line = current_widget.complications_of_failure_armatura_text_line.text()
-            self.complications_of_failure_armatura_time_begin_date = \
-                current_widget.complications_of_failure_armatura_time_begin_date.dateTime().toPyDateTime()
-            self.complications_of_failure_armatura_time_begin_date = \
-                self.change_string_in_date(self.complications_of_failure_armatura_time_begin_date)
-
-            self.complications_of_failure_armatura_time_end_date = \
-                current_widget.complications_of_failure_armatura_time_end_date.dateTime().toPyDateTime()
-            self.complications_of_failure_armatura_time_end_date = \
-                self.change_string_in_date(self.complications_of_failure_armatura_time_end_date)
-
-            if current_widget.complications_of_failure_armatura_text_line.text() == self.complications_of_failure_armatura_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.complications_of_failure_armatura_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения демонтаже арматуры')
-                return
-
-            self.complications_of_failure_armatura_time_line = current_widget.complications_of_failure_armatura_time_line.text()
-            if self.complications_of_failure_armatura_time_line != '':
-                self.complications_of_failure_armatura_time_line = round(
-                    float(self.complications_of_failure_armatura_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при демонтаже арматуры')
-                return
-
-            if self.complications_of_failure_armatura_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка',
-                                    f'Затраченное время при срыве демонтаже арматуры не может быть отрицательным')
+            read_data = self.read_complications_of_failure_armatura(current_widget)
+            if read_data is None:
                 return
 
         if self.complications_when_lifting_combo == 'Да':
-            try:
-                self.complications_when_lifting_text_line = current_widget.complications_when_lifting_text_line.text()
-
-                self.complications_when_lifting_time_begin_date = \
-                    current_widget.complications_when_lifting_time_begin_date.dateTime().toPyDateTime()
-                self.complications_when_lifting_time_begin_date = \
-                    self.change_string_in_date(self.complications_when_lifting_time_begin_date)
-
-                self.complications_when_lifting_time_end_date = \
-                    current_widget.complications_when_lifting_time_end_date.dateTime().toPyDateTime()
-                self.complications_when_lifting_time_end_date = \
-                    self.change_string_in_date(self.complications_when_lifting_time_end_date)
-
-                self.complications_when_lifting_time_line = current_widget.complications_when_lifting_time_line.text()
-
-                if self.complications_when_lifting_time_end_date == self.complications_when_lifting_time_begin_date:
-                    QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                    return
-
-                if self.complications_when_lifting_text_line == '':
-                    QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при подьеме НКТ')
-                    return
-                else:
-                    aaaaa = self.complications_when_lifting_time_line
-                    self.complications_when_lifting_time_line = round(float(self.complications_when_lifting_time_line),
-                                                                      1)
-
-                if self.complications_when_lifting_time_line <= 0:
-                    QMessageBox.warning(self, 'Ошибка',
-                                        f'Затраченное время при подьеме штанг не может быть отрицательным')
-                    return
-
-            except Exception as e:
-                QMessageBox.warning(self, 'Ошибка', f'ВВедены не все значения {e}')
+            read_data = self.read_complications_when_lifting_combo(current_widget)
+            if read_data is None:
                 return
+
 
         if self.complications_during_disassembly_combo == 'Да':
-            self.complications_during_disassembly_q_line = current_widget.complications_during_disassembly_q_line.text()
-
-            self.complications_during_disassembly_q_time_begin_date = \
-                current_widget.complications_during_disassembly_q_time_begin_date.dateTime().toPyDateTime()
-            self.complications_during_disassembly_q_time_begin_date = \
-                self.change_string_in_date(self.complications_during_disassembly_q_time_begin_date)
-
-            self.complications_during_disassembly_q_time_end_date = \
-                current_widget.complications_during_disassembly_q_time_end_date.dateTime().toPyDateTime()
-            self.complications_during_disassembly_q_time_end_date = \
-                self.change_string_in_date(self.complications_during_disassembly_q_time_end_date)
-
-            if self.complications_during_disassembly_q_time_end_date == \
-                    self.complications_during_disassembly_q_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.complications_during_disassembly_q_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при демонтаже ПШ ')
-                return
-
-            self.complications_during_disassembly_time_line = \
-                current_widget.complications_during_disassembly_time_line.text()
-
-            if self.complications_during_disassembly_time_line != '':
-                self.complications_during_disassembly_time_line = round(
-                    float(self.complications_during_disassembly_time_line), 1)
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время при демонтаже ПШ ')
-
-            if self.complications_during_disassembly_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при демонтаже ПШ не может быть отрицательным')
+            read_data = self.read_complications_during_disassembly_combo(current_widget)
+            if read_data is None:
                 return
 
         if len(self.dict_nkt) == 0:
@@ -927,11 +560,12 @@ class LiftingWindow(QMainWindow):
             if question == QMessageBox.StandardButton.No:
                 return
 
+
         work_list = self.lifting_paker_def()
 
         well_data.date_work = self.date_work_line
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
     @staticmethod
@@ -961,6 +595,10 @@ class LiftingWindow(QMainWindow):
             elif 11.6 <= middle_nkt_value <= 12.5:
                 middle_nkt = '11.6-12.5'
 
+            if middle_nkt == '':
+                QMessageBox.warning(self, 'Средняя длина', 'Средняя длина НКТ не корректна')
+                break
+
             max_count_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III'][middle_nkt][1]
             koef_norm_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III'][middle_nkt][0]
             razdel_3 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['III']['раздел']
@@ -987,6 +625,8 @@ class LiftingWindow(QMainWindow):
             work_list.append(podien_3_list)
 
             nkt_count -= max_count_3
+
+            nkt_sum = sum(list(map(lambda x: x[1], self.dict_nkt.values())))
 
             if nkt_count > 0:
                 max_count_2 = LIFTING_NORM_NKT[well_data.lifting_unit_combo][nkt_key]['II'][middle_nkt][1]
@@ -1022,7 +662,7 @@ class LiftingWindow(QMainWindow):
                 nkt_count -= max_count_1
                 work_list.insert(1, podiem_list_1)
 
-                nkt_sum = sum(list(map(lambda x: x[1], self.dict_nkt.values())))
+
             work_list.extend([
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment, 'Долив скважины', None, None,
                  None, None,
@@ -1045,9 +685,8 @@ class LiftingWindow(QMainWindow):
                  None, None, None, None,
                  None, None, None, None, 'АКТ№', None, None, None, 'факт', None, 'шт', 1, 0.67, 1, '=V209*W209*X209',
                  '=Y209-AA209-AB209-AC209-AD209', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Ревизия ГНО ', None, None, None,
-                 None, None,
-                 None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, self.equipment_audit_text_line,
+                 None, None, None, None, None, None,
                  None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V210*W210*X210',
                  '=Y210-AA210-AB210-AC210-AD210', None, None, None, None, None]])
 
@@ -1074,6 +713,10 @@ class LiftingWindow(QMainWindow):
         complications_of_failure_list = []
         complications_during_disassembly_list = []
         work_list = []
+
+        if self.depth_paker_text_combo == 'Да':
+            work_list.extend(self.pressuar_work())
+
 
         if self.complications_of_failure_armatura_combo == 'Да':
             complications_of_failure_armatura_list = [
@@ -1131,7 +774,7 @@ class LiftingWindow(QMainWindow):
             self.date_work_line = self.complications_during_disassembly_q_time_end_date.split(' ')[0]
 
         if self.gno_combo == 'ЭЦН':
-            work_list.append(['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ЭЦН',
+            work_list.append(['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ЭЦН',
                               'Разборка кабельного ввода на планшайбе', None, None,
                               None, None, None, None, None, None, None, None, None, None, '§198разд.', None, 'час', 1,
                               0.17, 1, '=V226*W226*X226', '=Y226-AA226-AB226-AC226', None, None, None, None, None])
@@ -1176,11 +819,34 @@ class LiftingWindow(QMainWindow):
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'первая.категория', '30м',
                  'Монтаж линии дросселирования и глушения.Опрессовка линии 1 схема', None, None, None, None,
                  None, None, None, None, None, None, None, None, '§23аразд.1', None, 'шт', 1, 2.43, 1,
-                 '=V304*W304*X304', '=Y304-AA304-AB304-AC304-AD304', None, None, None, None, None]
+                 '=V304*W304*X304', '=Y304-AA304-AB304-AC304-AD304', None, None, None, None, None],
+                ['=ROW()-ROW($A$46)', '1кат', None, 'Тех.операции', None,
+                  'Монтаж временного основания и станции (блока) управления превентором с гидравлическим приводом (СУП)',
+                  None, None, None, None, None, None, None, None, None, None, None, None, '§127разд.1', None, 'шт', 1,
+                  0.38, 1, '=V88*W88*X88', '=Y88-AA88-AB88-AC88-AD88', None, None, None, None, None],
+                 ['=ROW()-ROW($A$46)', '1кат', None, 'Тех.операции', None,
+                  'Демонтаж временного основания и станции (блока) управления превентором с '
+                  'гидравлическим приводом (СУП) (монтируется отдельным блоком)',
+                  None, None, None, None, None, None, None, None, None, None, None, None, '§132разд.1', None, 'шт', 1,
+                  0.33, 1, '=V89*W89*X89', '=Y89-AA89-AB89-AC89-AD89', None, None, None, None, None],
+                 ['=ROW()-ROW($A$46)', self.date_work_line, None, None, None, None, None, None, None, None, None, None, None, None,
+                  None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None],
+                 ['=ROW()-ROW($A$46)', '1кат', None, 'Тех.операции', None,
+                  'Монтаж превентора плашечного гидравлического двойного действия типа ППСГ-СТЦ-2ФТ-156х21, '
+                  'ПП2Г-2Ф-180х35 со станцией управления и системой обогрева превентора',
+                  None, None, None, None, None, None, None, None, None, None, None, None, '§125разд.1', None, 'шт', 1,
+                  1.13, 1, '=V92*W92*X92', '=Y92-AA92-AB92-AC92-AD92', None, None, None, None, None],
+                 ['=ROW()-ROW($A$46)', '1кат', None, 'Тех.операции', None,
+                  'Демонтаж превентора плашечного гидравлического двойного действия типа ППСГ- СТЦ-2ФТ-156х21, '
+                  'ПП2Г-2Ф-180х35 со станцией управления и системой обогрева превентора',
+                  None, None, None, None, None, None, None, None, None, None, None, None, '§130разд.1', None, 'шт', 1,
+                  0.83, 1, '=V93*W93*X93', '=Y93-AA93-AB93-AC93-AD93', None, None, None, None, None]
             ]
 
 
             work_list.extend(bop_list)
+
+
         if self.scheme_bop_installation_problem_combo == 'Да':
 
             work_list.append(['=ROW()-ROW($A$46)', self.date_work_line, None, 'первая.категория', '30м',
@@ -1317,7 +983,7 @@ class LiftingWindow(QMainWindow):
              None, None,
              None, None, None, None, None, None, None, None, None, '§299разд.1', None, 'раз', 1, 0.05, 1,
              '=V273*W273*X273', '=Y273-AA273-AB273-AC273', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Ревизия ГНО ', None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, self.equipment_audit_text_line, None, None, None,
              None, None, None,
              None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V274*W274*X274',
              '=Y274-AA274-AB274-AC274-AD274', None, None, None, None, None],

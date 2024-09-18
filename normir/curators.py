@@ -29,7 +29,7 @@ class TabWidget(QTabWidget):
 class SelectCurator(MyWindow):
 
     def __init__(self, parent=None):
-        super(MyWindow, self).__init__(parent)
+        super(MyWindow, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
 

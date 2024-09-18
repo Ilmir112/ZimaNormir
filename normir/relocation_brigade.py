@@ -1,3 +1,4 @@
+import re
 import sys
 from collections import namedtuple
 from normir.files_with_list import cause_presence_of_downtime_list, cause_presence_of_downtime_classifocations_list, \
@@ -5,10 +6,11 @@ from normir.files_with_list import cause_presence_of_downtime_list, cause_presen
 
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, QTabWidget, QMainWindow, QPushButton, \
-    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit
-from PyQt5.QtCore import Qt
+    QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateTimeEdit
+from PyQt5.QtCore import Qt, QDate
 
 import well_data
+from normir.TabPageAll import TemplateWork, TabPage
 
 
 class TextEditTableWidgetItem(QTableWidgetItem):
@@ -20,12 +22,11 @@ class TextEditTableWidgetItem(QTableWidgetItem):
         self.setFlags(Qt.ItemIsEnabled)
 
 
-class TabPage_SO_Relocation(QWidget):
+class TabPage_SO_Relocation(TabPage):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.validator_int = QIntValidator(0, 600)
-        self.validator_float = QDoubleValidator(0, 5000, 1)
+
 
         self.old_well_label = QLabel('Старая скважина')
         self.old_well_line = QLineEdit(self)
@@ -41,6 +42,7 @@ class TabPage_SO_Relocation(QWidget):
         self.satisfactory_road_label = QLabel('Переезд по удовлетворительной дороге, км')
         self.satisfactory_road_line = QLineEdit(self)
         self.satisfactory_road_line.setValidator(self.validator_float)
+        self.satisfactory_road_line.textChanged.connect(self.update_satisfactory_road_true)
 
         self.unsatisfactory_road_true_label = QLabel('Наличие неудовлетворительной дороги')
         self.unsatisfactory_road_true_combo = QComboBox(self)
@@ -49,6 +51,11 @@ class TabPage_SO_Relocation(QWidget):
         self.unsatisfactory_road_label = QLabel('Переезд по неудовлетворительной дороге, км')
         self.unsatisfactory_road_line = QLineEdit(self)
         self.unsatisfactory_road_line.setValidator(self.validator_float)
+        self.unsatisfactory_road_line.textChanged.connect(self.update_unsatisfactory_road_line)
+
+        self.count_tnkt_label = QLabel('Кол-во тНКТ разрузки')
+        self.count_tnkt_line = QLineEdit(self)
+        self.count_tnkt_line.setValidator(self.validator_int)
 
         self.count_of_equipment_label = QLabel('Кол-во техники, и рейсов')
         self.count_of_equipment_line = QLineEdit(self)
@@ -61,21 +68,26 @@ class TabPage_SO_Relocation(QWidget):
         self.usage_k_road_line = QLineEdit(self)
         self.usage_k_road_line.setValidator(self.validator_float)
 
+        self.usage_k_road_line.textChanged.connect(self.update_usage_k_road_line)
+
         self.usage_two_road_true_label = QLabel('Переезд (буксировка двойной тягой)')
         self.usage_two_road_true_combo = QComboBox(self)
         self.usage_two_road_true_combo.addItems(['Нет', 'Да'])
 
-        self.usage_two_road_label = QLabel('фактическое время')
+        self.usage_two_road_label = QLabel('фактическое время, ч')
         self.usage_two_road_line = QLineEdit(self)
         self.usage_two_road_line.setValidator(self.validator_float)
+
+        self.usage_two_road_line.textChanged.connect(self.update_usage_two_road_line)
 
         self.usage_buildozer_true_label = QLabel('Переезд (с помощью бульдозера)')
         self.usage_buildozer_true_combo = QComboBox(self)
         self.usage_buildozer_true_combo.addItems(['Нет', 'Да'])
 
-        self.usage_buildozer_label = QLabel('фактическое время')
+        self.usage_buildozer_label = QLabel('фактическое время, ч')
         self.usage_buildozer_line = QLineEdit(self)
         self.usage_buildozer_line.setValidator(self.validator_float)
+        self.usage_buildozer_line.textChanged.connect(self.update_usage_buildozer_line)
 
         self.lift_installation_label = QLabel('Монтаж Подьемника')
         self.lift_installation_combo = QComboBox(self)
@@ -99,12 +111,6 @@ class TabPage_SO_Relocation(QWidget):
         self.presence_of_downtime_combo.addItems(['Нет', 'Да'])
 
         self.grid = QGridLayout(self)
-
-        self.date_work_label = QLabel('Дата работы')
-        self.date_work_line = QLineEdit(self)
-
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
 
         self.grid.addWidget(self.date_work_label, 4, 2)
         self.grid.addWidget(self.date_work_line, 5, 2)
@@ -136,6 +142,9 @@ class TabPage_SO_Relocation(QWidget):
         self.grid.addWidget(self.usage_k_road_label, 8, 3)
         self.grid.addWidget(self.usage_k_road_line, 9, 3)
 
+        self.grid.addWidget(self.count_tnkt_label, 10, 8)
+        self.grid.addWidget(self.count_tnkt_line, 11, 8)
+
         self.grid.addWidget(self.usage_two_road_true_label, 10, 2)
         self.grid.addWidget(self.usage_two_road_true_combo, 11, 2)
 
@@ -162,65 +171,87 @@ class TabPage_SO_Relocation(QWidget):
 
         self.presence_of_downtime_combo.currentTextChanged.connect(self.update_presence_of_downtime_combo)
 
-    def update_presence_of_downtime_combo(self, index):
-        if index == 'Да':
-            self.cause_presence_of_downtime_label = QLabel('Предварительная причина простоя')
-            self.cause_presence_of_downtime_combo = QComboBox(self)
+        self.insert_date_in_ois()
 
-            self.cause_presence_of_downtime_combo.addItems(cause_presence_of_downtime_list)
-            self.cause_presence_of_downtime_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
-
-            self.cause_presence_of_downtime_text_label = QLabel('текст простоя')
-            self.cause_presence_of_downtime_text_line = QLineEdit(self)
-
-            self.cause_presence_of_downtime_classification_label = QLabel('Классификация простоя')
-            self.cause_presence_of_downtime_classification_combo = QComboBox(self)
-
-            self.cause_presence_of_downtime_classification_combo.addItems(
-                cause_presence_of_downtime_classifocations_list)
-            self.cause_presence_of_downtime_classification_combo.setSizeAdjustPolicy(
-                QComboBox.SizeAdjustPolicy.AdjustToContents)
-
-            self.tehnological_operation_label = QLabel('Тип простоя')
-            self.tehnological_operation_combo = QComboBox(self)
-            self.tehnological_operation_combo.addItems(operations_of_downtimes_list)
-
-            self.time_presence_of_downtime_label = QLabel('Время простоя')
-            self.time_presence_of_downtime_line = QLineEdit(self)
-            self.time_presence_of_downtime_line.setValidator(self.validator_float)
-
-            self.grid.addWidget(self.presence_of_downtime_label, 14, 2)
-            self.grid.addWidget(self.presence_of_downtime_combo, 15, 2)
-            self.grid.addWidget(self.cause_presence_of_downtime_label, 14, 3)
-            self.grid.addWidget(self.cause_presence_of_downtime_combo, 15, 3)
-            self.grid.addWidget(self.cause_presence_of_downtime_text_label, 14, 4)
-            self.grid.addWidget(self.cause_presence_of_downtime_text_line, 15, 4)
-            self.grid.addWidget(self.cause_presence_of_downtime_classification_label, 14, 5)
-            self.grid.addWidget(self.cause_presence_of_downtime_classification_combo, 15, 5)
-            self.grid.addWidget(self.tehnological_operation_label, 14, 6)
-            self.grid.addWidget(self.tehnological_operation_combo, 15, 6)
-            self.grid.addWidget(self.time_presence_of_downtime_label, 14, 7)
-            self.grid.addWidget(self.time_presence_of_downtime_line, 15, 7)
+    def update_usage_buildozer_line(self, text):
+        if text == '':
+            self.usage_buildozer_line.setCurrentIndex(0)
         else:
-            self.tehnological_operation_label.setParent(None)
-            self.tehnological_operation_combo.setParent(None)
-            self.cause_presence_of_downtime_label.setParent(None)
-            self.cause_presence_of_downtime_combo.setParent(None)
-            self.cause_presence_of_downtime_text_label.setParent(None)
-            self.cause_presence_of_downtime_text_line.setParent(None)
-            self.cause_presence_of_downtime_classification_label.setParent(None)
-            self.cause_presence_of_downtime_classification_combo.setParent(None)
-            self.cause_presence_of_downtime_classification_combo.setParent(None)
-            self.tehnological_operation_label.setParent(None)
-            self.tehnological_operation_combo.setParent(None)
-            self.time_presence_of_downtime_label.setParent(None)
-            self.time_presence_of_downtime_line.setParent(None)
+            self.usage_buildozer_line.setCurrentIndex(1)
 
-        self.lift_installation_combo.currentTextChanged.connect(self.update_lifting)
+    def update_usage_two_road_line(self, text):
+        if text == '':
+            self.usage_two_road_true_combo.setCurrentIndex(0)
+        else:
+            self.usage_two_road_true_combo.setCurrentIndex(1)
+
+    def update_usage_k_road_line(self, text):
+        if text == '':
+            self.usage_k_combo.setCurrentIndex(0)
+        else:
+            self.usage_k_road_line.setCurrentIndex(1)
+
+    def update_satisfactory_road_true(self, text):
+        if text == '':
+            self.satisfactory_road_true_combo.setCurrentIndex(0)
+        else:
+            self.satisfactory_road_true_combo.setCurrentIndex(1)
+
+    def update_unsatisfactory_road_line(self, text):
+        if text == '':
+            self.unsatisfactory_road_true_combo.setCurrentIndex(0)
+        else:
+            self.unsatisfactory_road_true_combo.setCurrentIndex(1)
+
+
+
+    def update_date_presence_of_downtime(self):
+        time_begin = self.presence_of_downtime_time_begin_date.dateTime()
+        time_end = self.presence_of_downtime_time_end_date.dateTime()
+
+        time_difference = self.calculate_date(time_begin, time_end)
+        self.presence_of_downtime_time_line.setText(str(time_difference))
 
     def update_lifting(self, index):
         if 'АПР60' in index or 'УПА-60' in index or 'БАРС 60/80' in index or 'А-50':
             self.anchor_lifts_combo.setCurrentIndex(1)
+
+    def insert_date_in_ois(self):
+        for datа_day, data_work, _, _ in well_data.work_list_in_ois[1:]:
+
+            day,  month, year = list(map(int, datа_day.split('\n')[0].split('.')))
+            day1,  month1, year1 = list(map(int, well_data.date_work.split('.')))
+            input_date = QDate(year1, month1, day1 + 3)
+            comparison_date = QDate(year, month, day)
+            if input_date >= comparison_date:
+                if 'переезд бригады' in data_work.lower():
+                    match = re.search(r'со (скв №\d+ [\w\s-]+)', data_work)
+                    if match:
+                        skv_info = match.group(1)  # Получаем найденную подстроку
+                        self.old_well_line.setText(skv_info[:-7])
+                    # Извлечение расстояния
+                    distance_match = re.search(r'\((\d+км)\)', data_work)
+                    # Извлечение количества техники
+                    tech_count_match = re.search(r'(\d+ единиц спец\.техники \(\w+\s\w+\))', data_work)
+
+                    if distance_match:
+                        distance = distance_match.group(1)
+                        self.satisfactory_road_line.setText(distance[:-2])
+
+                    if tech_count_match:
+                        tech_count = tech_count_match.group(1)
+                        self.count_of_equipment_line.setText(tech_count)
+                # if 'тНКТ =' in data_work.lower():
+                #     match = re.search(r'со (скв №\d+ [\w\s-]+)', data_work)
+
+                if 'неудовлетв' in data_work.lower():
+                    self.unsatisfactory_road_true_combo.setCurrentIndex(1)
+                if 'к-700' in data_work.lower():
+                    self.usage_k_combo.setCurrentIndex(1)
+                if 'двойной' in data_work.lower():
+                    self.usage_two_road_true_combo.setCurrentIndex(1)
+                if 'бульдозер' in data_work.lower():
+                    self.usage_buildozer_true_combo.setCurrentIndex(1)
 
 
 class TabWidget(QTabWidget):
@@ -229,9 +260,9 @@ class TabWidget(QTabWidget):
         self.addTab(TabPage_SO_Relocation(self), 'Переезд')
 
 
-class Relocation_Window(QMainWindow):
+class Relocation_Window(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(TemplateWork, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -245,25 +276,8 @@ class Relocation_Window(QMainWindow):
         for i in range(1):
             self.tableWidget.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
 
-        a = well_data.work_list_in_ois
+        self.update_data_in_ois()
 
-        # Заполнение QTableWidget данными из списка
-        for datа in well_data.work_list_in_ois:
-            row_position = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(row_position)
-            self.tableWidget.setItem(row_position, 0, QTableWidgetItem(datа[0]))
-
-            # Создание QTextEdit для переноса текста в ячейке
-            text_edit = QTextEdit()
-            text_edit.setText(datа[1])
-            text_edit.setReadOnly(True)  # Сделаем текст редактируемым только для чтения
-
-            self.tableWidget.setCellWidget(row_position, 1, text_edit)
-
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, text_edit.toPlainText())
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, datа[1])
         self.tableWidget.resizeColumnsToContents()
 
         self.tableWidget.setWordWrap(False)
@@ -304,19 +318,9 @@ class Relocation_Window(QMainWindow):
 
         self.tehnological_operation_combo = None
 
-    def adjustRowHeight(self, row, text):
-        font_metrics = self.tableWidget.fontMetrics()  # Получаем метрики шрифта
-        text_height = font_metrics.height()  # Высота строки на основе шрифта
-        text_length = len(text)
 
-        # Предположим, что мы используем фиксированную ширину для текстовой ячейки
-        width = self.tableWidget.columnWidth(1)
-        # Оцениваем количество необходимых строк для текста
-        number_of_lines = (text_length // (width // font_metrics.averageCharWidth())) + 1
-        self.tableWidget.setRowHeight(row, int((text_height * number_of_lines) / 2))  # Устанавливаем высоту
 
     def add_work(self):
-        from main import MyWindow
 
         current_widget = self.tabWidget.currentWidget()
         self.presence_of_downtime_combo = current_widget.presence_of_downtime_combo.currentText()
@@ -337,8 +341,10 @@ class Relocation_Window(QMainWindow):
         self.usage_buildozer_line = current_widget.usage_buildozer_line.text()
         self.lift_installation_combo = current_widget.lift_installation_combo.currentText()
         self.anchor_lifts_combo = current_widget.anchor_lifts_combo.currentText()
+        self.count_tnkt_line = current_widget.count_tnkt_line.text()
 
-        if '' in [self.date_work_line, self.old_well_line, self.new_well_line, self.count_of_equipment_line]:
+        if '' in [self.date_work_line, self.old_well_line, self.new_well_line,
+                  self.count_of_equipment_line, self.count_tnkt_line ]:
             QMessageBox.warning(self, 'Ошибка', 'ВВедены не все значения')
             return
         if self.unsatisfactory_road_true_combo == 'Да':
@@ -362,6 +368,11 @@ class Relocation_Window(QMainWindow):
                 QMessageBox.warning(self, 'Ошибка', 'Не указано время при двойной тяге')
                 return
 
+        if self.presence_of_downtime_combo == 'Да':
+            self.read_presence_of_downtime(current_widget)
+
+
+
         work_list = self.relocation_def()
         if len(work_list) == 0:
             QMessageBox.warning(self, 'Ошибка', 'Нет данных')
@@ -371,27 +382,13 @@ class Relocation_Window(QMainWindow):
 
         work_list.extend(self.preparatory_work())
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+
+
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
 
-    def presence_of_downtime_def(self):
-        current_widget = self.tabWidget.currentWidget()
 
-        self.cause_presence_of_downtime_text_line = current_widget.cause_presence_of_downtime_text_line.text()
-        self.cause_presence_of_downtime_classification_combo = current_widget.cause_presence_of_downtime_classification_combo.currentText()
-        self.tehnological_operation_combo = current_widget.tehnological_operation_combo.currentText()
-        self.time_presence_of_downtime_line = current_widget.time_presence_of_downtime_line.text()
-
-        technological_downtime_list = [[
-            '=ROW()-ROW($A$46)', self.date_work_line, None, 'простои', self.cause_presence_of_downtime_text_line,
-            'По отсутствию подъездных путей',
-            None, None,
-            None, None, 'классификация простоя', None, self.cause_presence_of_downtime_classification_combo,
-            None, None, None, None, None, 'Простои', self.tehnological_operation_combo, 'час',
-            self.time_presence_of_downtime_line, 1, 1, '=V66*W66*X66',
-            '=Y66-AA66-AB66-AC66-AD66', None, None, None, None, None]]
-        return technological_downtime_list
 
     def relocation_def(self):
 
@@ -568,7 +565,7 @@ class Relocation_Window(QMainWindow):
                  None,
                  None, None, None, None, "'АКТ №1'!A1", None, None, None, '§29,30раз.1', None, 'шт', 4, 0.48, 1,
                  '=V111*W111*X111', '=Y111-AA111-AB111-AC111-AD111', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Оттяжки', None, 'Установка и испытание якорей', None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Оттяжки', None, 'Установка и испытание якорей', None, None, None,
                  None,
                  None, None, None, None, "'АКТ №1'!A1", None, None, None, '§29,30раз.1', None, 'шт', 4, 0.48, 1,
                  '=V111*W111*X111', '=Y111-AA111-AB111-AC111-AD111', None, None, None, None, None]
@@ -661,7 +658,7 @@ class Relocation_Window(QMainWindow):
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
              'Разгрузка и раскатка труб на мостках ', None,
              None, None, None, None, None, None, None, None, None, None, None, '§39разд.1', None,
-             'шт', 160, 0.008, 1,
+             'шт', self.count_tnkt_line, 0.008, 1,
              '=V82*W82*X82', '=Y82-AA82-AB82-AC82-AD82', None, None, None, None, None],
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
              'Монтаж  дополнительных стеллажей для труб (облегченная конструкция)', None, None,

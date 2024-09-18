@@ -1,28 +1,20 @@
 import sys
 from datetime import datetime, timedelta
+import re
+
+from PyQt5.QtCore import QDate
 
 import well_data
 
-from collections import namedtuple
-from normir.files_with_list import cause_presence_of_jamming
-from normir.norms import LIFTING_NORM_NKT, DESCENT_NORM_NKT
-from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QLineEdit, QGridLayout, QTabWidget, QMainWindow, QPushButton, \
     QMessageBox, QApplication, QHeaderView, QTableWidget, QTableWidgetItem, QTextEdit, QDateEdit, QDateTimeEdit
 
-from normir.TabPageAll import TabPage,TemplateWork
-
-from PyQt5.QtCore import Qt
-
-from normir.relocation_brigade import TextEditTableWidgetItem
+from normir.TabPageAll import TabPage, TemplateWork
 
 
 class TabPage_SO_Timplate(TabPage):
     def __init__(self, parent=None):
         super().__init__()
-
-        self.validator_int = QIntValidator(0, 6000)
-        self.validator_float = QDoubleValidator(0, 6000, 1)
 
         self.select_paker_combo_label = QLabel('Выбор компоновки спуска')
         self.select_paker_combo = QComboBox(self)
@@ -33,13 +25,18 @@ class TabPage_SO_Timplate(TabPage):
         self.grid.addWidget(self.date_work_label, 4, 2)
         self.grid.addWidget(self.date_work_line, 5, 2)
 
+        self.date_work_line.dateTimeChanged.connect(self.insert_date_in_ois)
+
         self.grid.addWidget(self.select_paker_combo_label, 4, 3)
         self.grid.addWidget(self.select_paker_combo, 5, 3)
 
-        self.select_paker_combo.currentTextChanged.connect(self.update_select_paker_combo)
 
-        if well_data.date_work != '':
-            self.date_work_line.setText(well_data.date_work)
+        self.descent_layout_line = QLineEdit(self)
+
+        self.grid.addWidget(self.descent_layout_label, 6, 1)
+        self.grid.addWidget(self.descent_layout_line, 8, 1, 2, 3)
+
+        self.select_paker_combo.currentTextChanged.connect(self.update_select_paker_combo)
 
         self.complications_during_tubing_running_label = QLabel('Осложнение при спуске НКТ')
         self.complications_of_failure_label = QLabel('Получен ли прихват, наличие рассхаживания')
@@ -61,15 +58,13 @@ class TabPage_SO_Timplate(TabPage):
         self.depth_paker_text_label = QLabel('Глубины посадки пакера')
         self.pressuar_ek_label = QLabel('Давление опрессовки')
         self.rezult_pressuar_combo_label = QLabel('Результат опрессовки')
-        self.rezult_zumpf_pressuar_combo_label = QLabel('Результат опрессовки')
+
         self.determination_of_pickup_combo_label = QLabel('Было ли определение Q?')
-        self.determination_of_pickup_combo_zumpf_label = QLabel('Было ли определение Q?')
+
         self.saturation_volume_label = QLabel('Насыщение')
         self.determination_of_pickup_text_label = QLabel('Текст определение Q')
         self.saturation_volume_zumpf_label = QLabel('Насыщение')
         self.determination_of_pickup_zumpf_text_label = QLabel('Текст определение Q')
-
-
 
 
 class TabWidget(QTabWidget):
@@ -80,7 +75,7 @@ class TabWidget(QTabWidget):
 
 class SpoPakerAction(TemplateWork):
     def __init__(self, ins_ind, table_widget, parent=None):
-        super(QMainWindow, self).__init__(parent)
+        super(QMainWindow, self).__init__()
         self.centralWidget = QWidget()
         self.setCentralWidget(self.centralWidget)
         self.table_widget = table_widget
@@ -94,23 +89,7 @@ class SpoPakerAction(TemplateWork):
         for i in range(1):
             self.tableWidget.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
 
-        # Заполнение QTableWidget данными из списка
-        for datа in well_data.work_list_in_ois:
-            row_position = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(row_position)
-            self.tableWidget.setItem(row_position, 0, QTableWidgetItem(datа[0]))
-
-            # Создание QTextEdit для переноса текста в ячейке
-            text_edit = QTextEdit()
-            text_edit.setText(datа[1])
-            text_edit.setReadOnly(True)  # Сделаем текст редактируемым только для чтения
-
-            self.tableWidget.setCellWidget(row_position, 1, text_edit)
-
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, text_edit.toPlainText())
-            # Устанавливаем высоту строки в зависимости от текста
-            self.adjustRowHeight(row_position, datа[1])
+        self.update_data_in_ois()
 
         self.tableWidget.resizeColumnsToContents()
 
@@ -128,7 +107,6 @@ class SpoPakerAction(TemplateWork):
         vbox.addWidget(self.tableWidget, 1, 0, 1, 2)
         vbox.addWidget(self.buttonAdd, 2, 0)
 
-
         self.complications_of_failure_text_line = 0
 
         self.dict_nkt = {}
@@ -142,6 +120,13 @@ class SpoPakerAction(TemplateWork):
         self.date_work_line = current_widget.date_work_line.text()
         self.select_paker_combo = current_widget.select_paker_combo.currentText()
 
+        self.equipment_audit_combo = current_widget.equipment_audit_combo.currentText()
+        if self.equipment_audit_combo == 'Да':
+            self.equipment_audit_text_line = current_widget.equipment_audit_text_line.text()
+            if self.equipment_audit_text_line == '':
+                QMessageBox.warning(self, 'Ошибка', 'Нужно внести текст ревизии')
+                return
+
         if self.select_paker_combo == '':
             QMessageBox.warning(self, 'Ошибка', 'Не выбрана компоновка')
             return
@@ -150,18 +135,17 @@ class SpoPakerAction(TemplateWork):
             self.type_equipment = 'пакер'
             self.coefficient_lifting = 1.2
 
-        self.read_nkt_up(current_widget)
+        read_data = self.read_nkt_up(current_widget)
+        if read_data is None:
+            return
 
-
-
-        self.read_pressuar_combo(current_widget)
 
         self.nkt_is_same_combo = current_widget.nkt_is_same_combo.currentText()
 
-
-
         if self.nkt_is_same_combo == 'Нет':
-            self.read_nkt_down(current_widget)
+            read_data = self.read_nkt_down(current_widget)
+            if read_data is None:
+                return
 
         self.complications_of_failure_combo = current_widget.complications_of_failure_combo.currentText()
         self.complications_during_tubing_running_combo = current_widget.complications_during_tubing_running_combo.currentText()
@@ -169,175 +153,58 @@ class SpoPakerAction(TemplateWork):
         # self.solvent_injection_combo = current_widget.solvent_injection_combo.currentText()
         self.extra_work_question_combo = current_widget.extra_work_question_combo.currentText()
         self.complications_when_lifting_combo = current_widget.complications_when_lifting_combo.currentText()
+        self.depth_zumpf_paker_combo = current_widget.depth_zumpf_paker_combo.currentText()
+        self.determination_of_pickup_combo = current_widget.determination_of_pickup_combo.currentText()
 
         # self.pressuar_gno_combo = current_widget.pressuar_gno_combo.currentText()
+
+        self.pressuar_ek_combo = current_widget.pressuar_ek_combo.currentText()
+        if self.pressuar_ek_combo == 'Да':
+            read_data = self.read_pressuar_combo(current_widget)
+            if read_data is None:
+                return
+
+        self.descent_layout_line = current_widget.descent_layout_line.text()
+
+        if self.depth_zumpf_paker_combo == 'Да':
+            read_data = self.read_pressuar_zumpf(current_widget)
+            if read_data is None:
+                return
 
         if self.pressuar_tnkt_combo == 'Да':
             self.pressuar_tnkt_text_line = current_widget.pressuar_tnkt_text_line.text()
 
-            if current_widget.pressuar_tnkt_text_line.text() == self.pressuar_tnkt_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
 
             if self.pressuar_tnkt_text_line == '':
                 QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
                 return
 
-            self.pressuar_tnkt_time_line = current_widget.pressuar_tnkt_time_line.text()
-            if self.pressuar_tnkt_time_line != '':
-                self.pressuar_tnkt_time_line = round(float(self.pressuar_tnkt_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
-                return
-
-            if self.pressuar_tnkt_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
-                return
-
-
-
-
 
 
         if self.extra_work_question_combo == 'Да':
-            self.type_combo_work = current_widget.type_combo_work.currentText()
-            if self.type_combo_work in ['Крезол']:
-                self.responce_rename(current_widget)
+            self.read_extra_work_question(current_widget)
+            if self.type_combo_work == 'Крезол':
+                self.determination_of_pickup_sko_combo =current_widget.determination_of_pickup_sko_combo.currentText()
+                if self.determination_of_pickup_sko_combo == 'Да':
+                    read_data = self.read_determination_of_pickup_sko_combo(current_widget)
+                    if read_data is None:
+                        return
 
-            self.extra_work_text_line = current_widget.extra_work_text_line.text()
-            self.extra_work_time_begin_date = \
-                current_widget.extra_work_time_begin_date.dateTime().toPyDateTime()
-            self.extra_work_time_begin_date = \
-                self.change_string_in_date(self.extra_work_time_begin_date)
 
-            self.extra_work_time_end_date = \
-                current_widget.extra_work_time_end_date.dateTime().toPyDateTime()
-            self.extra_work_time_end_date = \
-                self.change_string_in_date(self.extra_work_time_end_date)
-
-            if current_widget.extra_work_text_line.text() == self.extra_work_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.extra_work_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст работы подрядчика')
-                return
-
-            self.extra_work_time_line = current_widget.extra_work_time_line.text()
-            if self.extra_work_time_line != '':
-                self.extra_work_time_line = round(float(self.extra_work_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время работы подрядчика')
-                return
-
-            if self.extra_work_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка',
-                                    f'Затраченное время при работы подрядчика не может быть отрицательным')
-                return
 
         if self.complications_of_failure_combo == 'Да':
-            self.complications_of_failure_text_line = current_widget.complications_of_failure_text_line.text()
-            self.complications_of_failure_time_begin_date = \
-                current_widget.complications_of_failure_time_begin_date.dateTime().toPyDateTime()
-            self.complications_of_failure_time_begin_date = \
-                self.change_string_in_date(self.complications_of_failure_time_begin_date)
-
-            self.complications_of_failure_time_end_date = \
-                current_widget.complications_of_failure_time_end_date.dateTime().toPyDateTime()
-            self.complications_of_failure_time_end_date = \
-                self.change_string_in_date(self.complications_of_failure_time_end_date)
-
-            if current_widget.complications_of_failure_text_line.text() == self.complications_of_failure_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.complications_of_failure_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при срыве ПШ')
-                return
-
-            self.complications_of_failure_time_line = current_widget.complications_of_failure_time_line.text()
-            if self.complications_of_failure_time_line != '':
-                self.complications_of_failure_time_line = round(float(self.complications_of_failure_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при срыве ПШ')
-                return
-
-            if self.complications_of_failure_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка', f'Затраченное время при срыве ПШ не может быть отрицательным')
+            read_data = self.read_complications_of_failure(current_widget)
+            if read_data is None:
                 return
 
         if self.complications_during_tubing_running_combo == 'Да':
-            self.complications_during_tubing_running_text_line = current_widget.complications_during_tubing_running_text_line.text()
-            self.complications_during_tubing_running_time_begin_date = \
-                current_widget.complications_during_tubing_running_time_begin_date.dateTime().toPyDateTime()
-            self.complications_during_tubing_running_time_begin_date = \
-                self.change_string_in_date(self.complications_during_tubing_running_time_begin_date)
-
-            self.complications_during_tubing_running_time_end_date = \
-                current_widget.complications_during_tubing_running_time_end_date.dateTime().toPyDateTime()
-            self.complications_during_tubing_running_time_end_date = \
-                self.change_string_in_date(self.complications_during_tubing_running_time_end_date)
-
-            if current_widget.complications_during_tubing_running_text_line.text() == self.complications_during_tubing_running_time_begin_date:
-                QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                return
-
-            if self.complications_during_tubing_running_text_line == '':
-                QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения демонтаже арматуры')
-                return
-
-            self.complications_during_tubing_running_time_line = current_widget.complications_during_tubing_running_time_line.text()
-            if self.complications_during_tubing_running_time_line != '':
-                self.complications_during_tubing_running_time_line = round(
-                    float(self.complications_during_tubing_running_time_line), 1)
-
-            else:
-                QMessageBox.warning(self, 'Ошибка', f'Не введены время осложнения при демонтаже арматуры')
-                return
-
-            if self.complications_during_tubing_running_time_line <= 0:
-                QMessageBox.warning(self, 'Ошибка',
-                                    f'Затраченное время при срыве демонтаже арматуры не может быть отрицательным')
+            read_data = self.read_complications_during_tubing_running_combo(current_widget)
+            if read_data is None:
                 return
 
         if self.complications_when_lifting_combo == 'Да':
-            try:
-                self.complications_when_lifting_text_line = current_widget.complications_when_lifting_text_line.text()
-
-                self.complications_when_lifting_time_begin_date = \
-                    current_widget.complications_when_lifting_time_begin_date.dateTime().toPyDateTime()
-                self.complications_when_lifting_time_begin_date = \
-                    self.change_string_in_date(self.complications_when_lifting_time_begin_date)
-
-                self.complications_when_lifting_time_end_date = \
-                    current_widget.complications_when_lifting_time_end_date.dateTime().toPyDateTime()
-                self.complications_when_lifting_time_end_date = \
-                    self.change_string_in_date(self.complications_when_lifting_time_end_date)
-
-                self.complications_when_lifting_time_line = current_widget.complications_when_lifting_time_line.text()
-
-                if self.complications_when_lifting_time_end_date == self.complications_when_lifting_time_begin_date:
-                    QMessageBox.warning(self, 'Даты совпадают', 'Даты совпадают')
-                    return
-
-                if self.complications_when_lifting_text_line == '':
-                    QMessageBox.warning(self, 'Ошибка', f'Не введены текст осложнения при подьеме НКТ')
-                    return
-                else:
-                    aaaaa = self.complications_when_lifting_time_line
-                    self.complications_when_lifting_time_line = round(float(self.complications_when_lifting_time_line),
-                                                                      1)
-
-                if self.complications_when_lifting_time_line <= 0:
-                    QMessageBox.warning(self, 'Ошибка',
-                                        f'Затраченное время при подьеме штанг не может быть отрицательным')
-                    return
-
-            except Exception as e:
-                QMessageBox.warning(self, 'Ошибка', f'ВВедены не все значения {e}')
+            read_data = self.read_complications_when_lifting(current_widget)
+            if read_data is None:
                 return
 
         if len(self.dict_nkt) == 0:
@@ -353,16 +220,13 @@ class SpoPakerAction(TemplateWork):
 
         well_data.date_work = self.date_work_line
 
-        MyWindow.populate_row(self, self.ins_ind, work_list, self.table_widget)
+        self.populate_row(self.ins_ind, work_list, self.table_widget)
         well_data.pause = False
         self.close()
 
-
-
-
     def krezol_work(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
              f'{self.extra_work_text_line} {self.extra_work_time_begin_date}-{self.extra_work_time_end_date}',
              None, None,
              None, 'Крезол-НС', None, None, 'перед началом работ на скважине', None, 'АКТ№', None, None, None, 'факт',
@@ -375,34 +239,6 @@ class SpoPakerAction(TemplateWork):
         return work_list
 
 
-    def volume_after_sko_work(self):
-
-        work_list = []
-        if self.count_nkt_line:
-            work_list.extend(self.descent_nkt_work(self))
-
-            for index in range(len(work_list)):
-                if index == 0:
-                    work_list[index][12] = self.count_nkt_line * 10
-                work_list[index][21] = self.count_nkt_line
-
-
-        volume_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', 'ПЗР при промывке скважины ', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§156,160р.1', None, 'шт', 1, 1, 1,
-             '=V557*W557*X557', '=Y557-AA557-AB557-AC557-AD557', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', 'Переход на обратную промывку', None, None,
-             None, None, None, None, None, None, None, None, None, None, '§162разд.1', None, 'раз', 1, 0.15, 1,
-             '=V558*W558*X558', '=Y558-AA558-AB558-AC558-AD558', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка',
-             f'Промывка в объеме {self.volume_flush_line_sko_line}м3', None, None, None, None, None,
-             None, None, None, None, None, None, None, '§300разд.1', None, 'м3',
-             self.volume_flush_line_sko_line, 0.033, 1, '=V559*W559*X559',
-             '=Y559-AA559-AB559-AC559-AD559', None, None, None, None, None]]
-
-        work_list.extend(volume_list)
-
-        return work_list
 
     @staticmethod
     def change_string_in_date(date_str):
@@ -417,24 +253,12 @@ class SpoPakerAction(TemplateWork):
         complications_during_disassembly_list = []
         if self.select_paker_combo in ['пакер']:
             work_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None, None, None,
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None, None, None,
                  None,
                  None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V529*W529*X529',
-                 '=Y529-AA529-AB529-AC529-AD529', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'спо', self.type_equipment, 'ПЗР СПО ПЕРО, ВОРОНКА', None, None, None, None, None,
-                 None, None, None, None, None, None, None, '§177разд.1', None, 'шт', 1, 0.17, 1, '=V530*W530*X530',
-                 '=Y530-AA530-AB530-AC530-AD530', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Д/ж спайдера', None, None, None, None, None,
-                 None,
-                 None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V531*W531*X531',
-                 '=Y531-AA531-AB531-AC531-AD531', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'спо', 'Пакер', 'ПЗР СПО пакера', None, None, None, None, None, None,
-                 None, None, None, None, None, None, '§136,142разд.1', None, 'шт', 1, 0.48, 1, '=V532*W532*X532',
-                 '=Y532-AA532-AB532-AC532-AD532', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'М/ж спайдера', None, None, None, None, None,
-                 None,
-                 None, None, None, None, None, None, '§185разд.1', None, 'час', 1, 0.07, 1, '=V533*W533*X533',
-                 '=Y533-AA533-AB533-AC533-AD533', None, None, None, None, None]]
+                 '=Y529-AA529-AB529-AC529-AD529', None, None, None, None, None]]
+
+            work_list.extend(self.work_pzr(self.descent_layout_line))
 
         if len(self.dict_nkt) != 0:
             work_list.extend(self.descent_nkt_work())
@@ -463,7 +287,7 @@ class SpoPakerAction(TemplateWork):
             work_list.append(complications_of_failure_list)
             self.date_work_line = self.complications_of_failure_time_end_date.split(' ')[0]
 
-        if self.depth_paker_text_edit != '':
+        if self.pressuar_ek_combo == 'Да':
             work_list.extend(self.pressuar_work())
         if self.depth_zumpf_paker_combo == 'Да':
             if self.depth_zumpf_paker_line != '':
@@ -471,27 +295,55 @@ class SpoPakerAction(TemplateWork):
 
         if self.pressuar_tnkt_combo == 'Да':
             pressuar_tnkt_list = self.pressuar_tnkt_combo_def()
-            work_list.append(pressuar_tnkt_list)
+            work_list.extend(pressuar_tnkt_list)
 
         # if self.solvent_injection_combo == 'Да':
         #     work_list.extend(TemplateWithoutSKM.solvent_injection_work(self))
 
         if self.extra_work_question_combo == 'Да':
-            if self.type_combo_work in ['Крезол', 'Кислота силами подрядчика']:
-                if self.type_combo_work == 'Крезол':
-                    work_list.extend(self.krezol_work())
-                work_list.extend(self.volume_after_sko_work())
-                if self.determination_of_pickup_sko_text_line != '':
+            if self.type_combo_work in ['Крезол']:
+                work_list.extend(self.krezol_work())
+                if self.response_combo == 'Да':
+                    work_list.extend([[
+                        '=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
+                        f'{self.response_text_line} ({self.response_time_begin_date}-{self.response_time_end_date})',
+                        None,
+                        None, None,
+                        None, None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
+                        self.response_time_line, 1, 1,
+                        '=V556*W556*X556', '=Y556-AA556-AB556-AC556-AD556', None, None, None, None, None]])
+                if self.volume_flush_line_combo == 'Да':
+                    work_list.extend(self.volume_after_sko_work_2())
+                aaa = self.determination_of_pickup_sko_combo
+                if self.determination_of_pickup_sko_combo == 'Да':
                     work_list.extend(self.determination_of_pickup_work(
                         self.saturation_volume_sko_line, self.determination_of_pickup_sko_text_line))
-
+            elif self.type_combo_work in ['РИР 2С']:
+                work_list.extend(self.rir_work())
+                # if self.combo_nkt_true == 'Да':
+                if self.count_nkt_combo == 'Да':
+                    work_list.extend(self.dopusk())
+                    aaaa = self.dict_nkt
+                    if '73мм' in list(self.dict_nkt.keys()):
+                        self.dict_nkt['73мм'] = (
+                            int(self.roof_definition_depth_line), self.dict_nkt['73мм'][1] + self.count_nkt_line)
+                    elif '60мм' in list(self.dict_nkt.keys()):
+                        self.dict_nkt['60мм'] = (
+                            int(self.roof_definition_depth_line), self.dict_nkt['60мм'][1] + self.count_nkt_line)
+                    aaa = self.dict_nkt
+                    work_list.extend(self.pressuar_ek_rir())
 
             self.date_work_line = self.extra_work_time_end_date.split(' ')[0]
 
-        work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
-
+        work_list.extend(self.lifting_nkt())
+        if self.equipment_audit_combo == 'Да':
+            work_list.extend([
+                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None,
+                 f'Ревизия:{self.equipment_audit_text_line}',
+                 None, None, None, None, None, None, None, None, None, None, None,
+                 None, 'факт', None, 'час', 0.5, 1, 1, '=V480*W480*X480', '=Y480-AA480-AB480-AC480-AD480', None,
+                 None, None, None, None]])
         return work_list
-
 
     def pressuar_work(self):
         work_list = []
@@ -515,11 +367,11 @@ class SpoPakerAction(TemplateWork):
         work_list.extend(pressuar_work_list)
         if self.determination_of_pickup_combo == 'Да':
             determination_of_pickup_list = self.determination_of_pickup_work(
-                        self.saturation_volume_line, self.determination_of_pickup_text)
+                self.saturation_volume_line, self.determination_of_pickup_text)
             work_list.extend(determination_of_pickup_list)
 
         work_list.extend([
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Срыв пакера в эксплуатационной колонне', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Срыв пакера в эксплуатационной колонне', None,
              None,
              None, None, None, None, None, None, None, None, None, None, '§146разд.1', None, 'шт', 1, 0.15, 1,
              '=V554*W554*X554', '=Y554-AA554-AB554-AC554-AD554', None, None, None, None, None]])
@@ -548,74 +400,27 @@ class SpoPakerAction(TemplateWork):
         work_list.extend(pressuar_work_list)
         if self.determination_of_pickup_combo == 'Да':
             determination_of_pickup_list = self.determination_of_pickup_work(
-                        self.saturation_volume_zumpf_line, self.determination_of_pickup_zumpf_combo)
+                self.saturation_volume_zumpf_line, self.determination_of_pickup_zumpf_combo)
             work_list.extend(determination_of_pickup_list)
 
         work_list.extend([
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Срыв пакера в эксплуатационной колонне', None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Срыв пакера в эксплуатационной колонне', None,
              None,
              None, None, None, None, None, None, None, None, None, None, '§146разд.1', None, 'шт', 1, 0.15, 1,
              '=V554*W554*X554', '=Y554-AA554-AB554-AC554-AD554', None, None, None, None, None]])
 
         return work_list
 
-    def solvent_injection_work(self):
-        work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', 'Подготовительные работы, выполняемые ', None,
-             None, None, 'ПО ТКРС', None, None, 'перед началом работ на скважине', None, None, 'РАСТВОРИТЕЛЬ',
-             'Растворитель АСПО Реком 7125 серия 4, КР-4Р', None, '§227,229разд.1', None, 'шт', 1, 0.96, 1,
-             '=V589*W589*X589', '=Y589-AA589-AB589-AC589-AD589', None, None, None, None, None]]
-        if self.solvent_volume_text_line > 1:
-            solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ', f'Закачка растворителя первого 1м3',
-                 None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1,
-                 0.2,
-                 1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
-                 f'Закачка растворителя следующего {self.solvent_volume_text_line - 1}м3', None, None,
-                 None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.1,
-                 1, '=V591*W591*X591', '=Y591-AA591-AB591-AC591-AD591', None, None, None, None, None]]
-        else:
-            solvent_volume_list = [
-                ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
-                 f'Закачка растворителя первого {self.solvent_volume_text_line}м3', None,
-                 None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§228разд.1', None, 'м3', 1, 0.2,
-                 1, '=V590*W590*X590', '=Y590-AA590-AB590-AC590-AD590', None, None, None, None, None],
-            ]
-        work_list.extend(solvent_volume_list)
-        volume_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
-             f'Доводка растворителя в объеме {self.volume_of_finishing_line}', None, None, None, None,
-             None, None, None, None, None, None, None, None, '§228разд.1', None, 'м3', self.volume_of_finishing_line,
-             0.033, 1, '=V592*W592*X592',
-             '=Y592-AA592-AB592-AC592-AD592', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'ОПЗ',
-             f'Реагирование {self.solvent_volume_time_begin_date}-{self.solvent_volume_time_end_date}', None, None,
-             None,
-             None,
-             None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
-             self.solvent_volume_time_line, 1, 1,
-             '=V593*W593*X593', '=Y593-AA593-AB593-AC593-AD593', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', 'Переход на труб.простр.', None, None,
-             None,
-             None, None, None, None, None, None, None, None, None, '§162разд.1', None, 'раз', 1, 0.15, 1,
-             '=V594*W594*X594', '=Y594-AA594-AB594-AC594-AD594', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', 'Промывка', f'Промывка в объеме {self.volume_flush_line}',
-             None, None, None, None, None, None, None, None, 'АКТ№', None, None, None, '§301разд.1', None, 'м3',
-             {self.volume_flush_line}, 0.033, 1, '=V595*W595*X595',
-             '=Y595-AA595-AB595-AC595-AD595', None, None, None, None, None]]
-        work_list.extend(volume_list)
-        return work_list
 
     def pressuar_tnkt_combo_def(self):
         work_list = [
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'Сброс шара', None, None, None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Сброс шара', None, None, None, None, None, None,
              None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V540*W540*X540',
              '=Y540-AA540-AB540-AC540-AD540', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'ПЗР перед опрессовкой ', None, None, None, None,
              None, None, None, None, None, None, None, None, '§150/152 разд.1 ', None, 'шт', 1, 0.43, 1,
              '=V541*W541*X541', '=Y541-AA541-AB541-AC541-AD541', None, None, None, None, None],
-            ['=ROW()-ROW($A$46)', None, None, 'Тех.операции', None, f'{self.pressuar_tnkt_text_line}', None, None, None,
+            ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, f'{self.pressuar_tnkt_text_line}', None, None, None,
              None, None, None, None, None, 'АКТ№', None, None, None, '§151 разд.1', None, 'шт', 1, 0.25, 1,
              '=V542*W542*X542', '=Y542-AA542-AB542-AC542-AD542', None, None, None, None, None]]
 
