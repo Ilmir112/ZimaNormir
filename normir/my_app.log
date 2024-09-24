@@ -589,3 +589,64 @@
 2024-09-16 14:53:37,304 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002400C787380>
 2024-09-16 15:00:09,580 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000015112DC1100>
 2024-09-16 15:09:05,202 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000026979512FC0>
+2024-09-20 16:53:32,149 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x000002C1503971C0>
+2024-09-23 08:05:12,731 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'self' is not defined, <traceback object at 0x000002A2EF7B1180>
+2024-09-23 08:05:43,055 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'self' is not defined, <traceback object at 0x000001C346F011C0>
+2024-09-23 08:19:39,836 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_of_finishing_line', <traceback object at 0x0000026BBAE750C0>
+2024-09-23 09:03:08,566 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'clear', <traceback object at 0x0000027CEE98D900>
+2024-09-23 09:03:22,127 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_sand_two_label', <traceback object at 0x0000022DE8B65080>
+2024-09-23 09:03:26,862 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'sand_filling_two_time_label', <traceback object at 0x0000022DE8B64A00>
+2024-09-23 09:04:12,639 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_sand_two_label', <traceback object at 0x0000019B3696CF00>
+2024-09-23 09:11:30,449 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_of_finishing_line', <traceback object at 0x000002315BEDDC40>
+2024-09-23 09:20:36,627 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'deinstallation_perforation_combo', <traceback object at 0x000002D870CFC980>
+2024-09-23 09:21:07,917 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'deinstallation_perforation_combo', <traceback object at 0x000001EA5A01AE00>
+2024-09-23 09:26:29,876 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_line', <traceback object at 0x0000022363B834C0>
+2024-09-23 09:37:53,087 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'complications_of_failure_combo', <traceback object at 0x0000023A5DBA5240>
+2024-09-23 09:38:03,740 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_two_label', <traceback object at 0x0000023A5AA1CC80>
+2024-09-23 09:38:07,498 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'sand_filling_two_time_label', <traceback object at 0x0000023A5DBA4D40>
+2024-09-23 09:44:00,389 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_two_label', <traceback object at 0x000001CFA9676540>
+2024-09-23 09:44:01,843 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'sand_filling_two_time_label', <traceback object at 0x000001CFA64F1240>
+2024-09-23 09:45:25,400 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_two_label', <traceback object at 0x00000187D5AB6540>
+2024-09-23 09:46:58,052 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_of_finishing_line', <traceback object at 0x00000252E491BA80>
+2024-09-23 09:55:08,093 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'volume_flush_line', <traceback object at 0x000001ED730BDD80>
+2024-09-23 11:23:06,922 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x0000025E90FA57C0>
+2024-09-23 11:24:40,757 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Timplate' object has no attribute 'count_of_nkt_extensions_two_label', <traceback object at 0x0000020A73BC5600>
+2024-09-23 11:26:08,755 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, PipePerforator.sand_work() takes 7 positional arguments but 9 were given, <traceback object at 0x0000024A75EC5E00>
+2024-09-23 11:28:46,026 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x00000204C3823A40>
+2024-09-23 11:33:13,516 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000001E2080C6BC0>
+2024-09-23 11:56:59,858 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, native Qt signal is not callable, <traceback object at 0x0000028F02008F80>
+2024-09-23 12:54:05,868 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, native Qt signal is not callable, <traceback object at 0x00000247B2931E80>
+2024-09-23 12:57:39,341 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, native Qt signal is not callable, <traceback object at 0x0000018E4D3E9A40>
+2024-09-23 13:42:56,526 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002CA1B91DDC0>
+2024-09-23 13:43:47,884 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'str' and 'str', <traceback object at 0x000002A66055EA00>
+2024-09-23 13:43:48,563 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'str' and 'str', <traceback object at 0x000002A65E18AF00>
+2024-09-23 13:43:48,662 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'str' and 'str', <traceback object at 0x000002A65D3F0280>
+2024-09-23 13:43:48,869 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'str' and 'str', <traceback object at 0x000002A65E18AF00>
+2024-09-23 13:43:48,983 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, unsupported operand type(s) for -: 'str' and 'str', <traceback object at 0x000002A65D3F0280>
+2024-09-23 13:45:16,842 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: '', <traceback object at 0x000002CA223CA200>
+2024-09-23 13:45:17,239 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, '<' not supported between instances of 'list' and 'type', <traceback object at 0x000002CA2321C680>
+2024-09-23 13:45:17,383 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, '<' not supported between instances of 'list' and 'type', <traceback object at 0x000002CA221F20C0>
+2024-09-23 13:45:17,578 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, '<' not supported between instances of 'list' and 'type', <traceback object at 0x000002CA223EE340>
+2024-09-23 13:45:17,701 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, '<' not supported between instances of 'list' and 'type', <traceback object at 0x000002CA2321C680>
+2024-09-23 13:47:52,501 - log_files.log - CRITICAL - Критическая ошибка: <class 'ValueError'>, could not convert string to float: '', <traceback object at 0x000001D02331EB40>
+2024-09-23 13:47:53,058 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'int', <traceback object at 0x000001D0200A2380>
+2024-09-23 13:47:53,187 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'int', <traceback object at 0x000001D02331E680>
+2024-09-23 13:47:53,423 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'int', <traceback object at 0x000001D020FE8140>
+2024-09-23 13:47:53,535 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'int', <traceback object at 0x000001D02331EC80>
+2024-09-23 13:49:53,656 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, TabPage_SO_Sand.update_sand_filling_text() missing 1 required positional argument: 'index', None
+2024-09-23 13:51:36,890 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'float', <traceback object at 0x000002B896D80140>
+2024-09-23 13:51:58,016 - log_files.log - CRITICAL - Критическая ошибка: <class 'TypeError'>, setText(self, a0: Optional[str]): argument 1 has unexpected type 'float', <traceback object at 0x000002B898315880>
+2024-09-23 13:52:15,895 - log_files.log - CRITICAL - Критическая ошибка: <class 'KeyboardInterrupt'>, , <traceback object at 0x000002B896D75340>
+2024-09-24 16:30:10,583 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_gno' object has no attribute 'depth_paker_text_combo', <traceback object at 0x0000019E93863A80>
+2024-09-24 16:41:55,088 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingWindow' object has no attribute 'depth_paker_text_combo', <traceback object at 0x000001D5BA6CEF40>
+2024-09-24 16:42:50,307 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingWindow' object has no attribute 'depth_paker_text_combo', <traceback object at 0x000001D5BA713C00>
+2024-09-24 16:43:52,864 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'LiftingWindow' object has no attribute 'equipment_audit_text_line', <traceback object at 0x00000232FAEFBF00>
+2024-09-24 16:52:20,319 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'count_nkt_loading_line', <traceback object at 0x000001CCAB646E80>
+2024-09-24 16:52:24,201 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'TabPage_SO_Lifting_Shgn' object has no attribute 'count_nkt_loading_line', <traceback object at 0x000001CCAB653780>
+2024-09-24 16:55:39,156 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x0000020E7FB83440>
+2024-09-24 16:55:39,263 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x0000020E7FB83740>
+2024-09-24 16:55:39,466 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x0000020E7FB83E00>
+2024-09-24 16:56:01,394 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x000001F6284571C0>
+2024-09-24 16:56:01,535 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x000001F6284579C0>
+2024-09-24 16:56:01,736 - log_files.log - CRITICAL - Критическая ошибка: <class 'NameError'>, name 'index' is not defined, <traceback object at 0x000001F628457600>
+2024-09-24 16:56:25,429 - log_files.log - CRITICAL - Критическая ошибка: <class 'AttributeError'>, 'int' object has no attribute 'insertRow', <traceback object at 0x0000019134057800>

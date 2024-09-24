@@ -66,9 +66,6 @@ class OpenTemplateNorm(QThread):
         self.wait()  # Ждем завершения потока
         print("Поток успешно завершен")
 
-
-
-
 class UncaughtExceptions(QObject):
     _exception_caught = pyqtSignal(object)
 
@@ -81,7 +78,6 @@ class UncaughtExceptions(QObject):
             logger.critical(f"{well_data.well_number._value} {well_data.well_area._value} Критическая ошибка: {ex}")
         except:
             logger.critical(f"{well_data.well_number} {well_data.well_area} Критическая ошибка: {ex}")
-
 
 class MyWindow(QMainWindow):
 
@@ -353,8 +349,9 @@ class MyWindow(QMainWindow):
                     row_lst[24] = f'AС{row + 1}'
                     row_lst[25] = f'=Y{row + 1}-AA{row + 1}-AB{row + 1}-AC{row + 1}-AD{row + 1}'
                 elif row >= 46 and 'ПЗР+Отсыпка' in row_lst[7]:
-                    row_lst[24] = '=((1*W1167)+5+(((2.6/400)*0.75)*V1167)+2+1+(1.6*W1167)+(((2.6/400)*0.75)*V1167)+1+39+27)/60'
+                    row_lst[24] = f'=((1*W{row+1})+5+(((2.6/400)*0.75)*V{row+1})+2+1+(1.6*{row+1})+(((2.6/400)*0.75)*V{row+1})+1+39+27)/60'
                     row_lst[25] = f'=Y{row + 1}-AA{row + 1}-AB{row + 1}-AC{row + 1}-AD{row + 1}'
+
                 elif row >= 46 and 'Заполнить колонны труб водой для проверки работы' in row_lst[7]:
                     row_lst[24] = '=ROUNDUP(SUM((V984*0.00058)+0.06),2)'
                     row_lst[25] = '=ROUNDUP(Y984-AA984-AB984-AC984-AD984,2)'
@@ -684,6 +681,14 @@ class MyWindow(QMainWindow):
         action_menu.addAction(pipe_perforation_action)
         pipe_perforation_action.triggered.connect(self.pipe_perforation_action)
 
+        sand_action = QAction('Отсыпка песком')
+        action_menu.addAction(sand_action)
+        sand_action.triggered.connect(self.sand_action_work)
+
+        lar_action = QAction('ловильные работ')
+        action_menu.addAction(lar_action)
+        lar_action.triggered.connect(self.lar_action_work)
+
         rir_with_action = QAction('РИР на пере')
         action_menu.addAction(rir_with_action)
         rir_with_action.triggered.connect(self.rir_with_action)
@@ -729,12 +734,11 @@ class MyWindow(QMainWindow):
         emptyString_action.triggered.connect(self.emptyString)
 
         context_menu.exec_(self.mapToGlobal(position))
-    def earthwork_work(self):
-        from normir.earthworks import Earthwor_Window
-        if self.raid_window is None:
-            self.raid_window = Earthwor_Window(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
 
+    def add_window(self, window):
+        if self.raid_window is None:
+            self.raid_window = window(well_data.ins_ind, self.table_widget)
+            # self.raid_window.setGeometry(200, 400, 300, 400)
             self.set_modal_window(self.raid_window)
 
             self.pause_app()
@@ -743,82 +747,37 @@ class MyWindow(QMainWindow):
         else:
             self.raid_window.close()  # Close window.
             self.raid_window = None
+    def earthwork_work(self):
+        from normir.earthworks import Earthwor_Window
+        self.add_window(Earthwor_Window)
 
     def loading_work(self):
         from normir.loading_tubing import LoadingWork
-        if self.raid_window is None:
-            self.raid_window = LoadingWork(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(LoadingWork)
 
     def rir_with_action(self):
         from normir.rir_with_pero import RirWithPero
-        if self.raid_window is None:
-            self.raid_window = RirWithPero(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
+        self.add_window(RirWithPero)
 
-            self.set_modal_window(self.raid_window)
+    def sand_action_work(self):
+        from normir.sand_work import SandWork
+        self.add_window(SandWork)
 
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+    def lar_action_work(self):
+        from normir.emergency_work import EmergencyWork
+        self.add_window(EmergencyWork)
 
     def pipe_perforation_action(self):
         from normir.perforation_tubing import PipePerforator
-        if self.raid_window is None:
-            self.raid_window = PipePerforator(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(PipePerforator)
 
     def lifting_paker_menu(self):
         from normir.lifting_gno import LiftingWindow
-        if self.raid_window is None:
-            self.raid_window = LiftingWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
-
+        self.add_window(LiftingWindow)
 
     def descent_paker_menu(self):
         from normir.descent_gno import DescentGnoWindow
-        if self.raid_window is None:
-            self.raid_window = DescentGnoWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(DescentGnoWindow)
 
 
     def close_raid_window(self, event):
@@ -829,211 +788,56 @@ class MyWindow(QMainWindow):
         self.raid_window = None
     def template_without_skm_action(self):
         from normir.template_without_skm import TemplateWithoutSKM
-
-        if self.raid_window is None:
-            self.raid_window = TemplateWithoutSKM(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(TemplateWithoutSKM)
     def lifting_shgn_menu(self):
         from normir.lifting_shgn import LiftingShgnWindow
-        if self.raid_window is None:
-            self.raid_window = LiftingShgnWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(LiftingShgnWindow)
     def descent_shgn_menu(self):
 
         from normir.descent_gno import DescentGnoWindow
-        if self.raid_window is None:
-            self.raid_window = DescentGnoWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(DescentGnoWindow)
     def rod_head_action_def(self):
         from normir.rod_head_work import LiftingRodHeadWindow
-        if self.raid_window is None:
-            self.raid_window = LiftingRodHeadWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(LiftingRodHeadWindow)
     def spo_paker_action(self):
         from normir.spo_pakera import SpoPakerAction
-        if self.raid_window is None:
-            self.raid_window = SpoPakerAction(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(SpoPakerAction)
     def raid_action_def(self):
         from normir.raider_work import RaidWork
-        if self.raid_window is None:
-            self.raid_window = RaidWork(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(RaidWork)
 
     def drilling_action_def(self):
         from normir.drilling_work import DrillingWork
-        if self.raid_window is None:
-            self.raid_window = DrillingWork(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(DrillingWork)
 
     def work_of_third_parties_action(self):
         from normir.work_of_third_parties import WorkOfThirdPaties
-        if self.raid_window is None:
-            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(WorkOfThirdPaties)
     def work_of_third_parties_without_action(self):
         from normir.work_of_third_parties_without_nkt import WorkOfThirdPaties
-        if self.raid_window is None:
-            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(WorkOfThirdPaties)
 
 
     def injection_reagents_action(self):
         from normir.work_of_third_parties_without_nkt import WorkOfThirdPaties
-        if self.raid_window is None:
-            self.raid_window = WorkOfThirdPaties(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(WorkOfThirdPaties)
 
 
     def jamming_menu_work(self):
         from normir.jamming_well import JammingWindow
-        if self.raid_window is None:
-            self.raid_window = JammingWindow(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(JammingWindow)
 
     def simple_technological_work(self):
         from normir.simple_technological import SimpleWork
-        if self.raid_window is None:
-            self.raid_window = SimpleWork(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(SimpleWork)
 
     def actual_work(self):
         from normir.relocation_brigade import Relocation_Window
-        if self.raid_window is None:
-            self.raid_window = Relocation_Window(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(Relocation_Window)
 
     def relocation_menu(self):
         from normir.relocation_brigade import Relocation_Window
-        if self.raid_window is None:
-            self.raid_window = Relocation_Window(well_data.ins_ind, self.table_widget)
-            # self.raid_window.setGeometry(200, 400, 300, 400)
-
-            self.set_modal_window(self.raid_window)
-            well_data.pause = True
-            self.pause_app()
-            well_data.pause = True
-            self.raid_window = None
-        else:
-            self.raid_window.close()  # Close window.
-            self.raid_window = None
+        self.add_window(Relocation_Window)
 
     @staticmethod
     def set_modal_window(window):
@@ -1046,34 +850,10 @@ class MyWindow(QMainWindow):
         self.ins_ind = r + 1
         well_data.ins_ind = r + 1
         # print(r, well_data.count_row_well)
-        if r > well_data.count_row_well and 'gnkt' not in self.work_plan:
-            data = self.read_clicked_mouse_data(r)
+        # if r > well_data.count_row_well and 'gnkt' not in self.work_plan:
+        #     data = self.read_clicked_mouse_data(r)
 
-    def read_clicked_mouse_data(self, row):
-        pass
 
-        # row = row - well_data.count_row_well
-        # # print(well_data.column_diametr._value)
-        # data = well_data.data_list
-        #
-        # well_data.current_bottom = data[row][1]
-        # well_data.dict_perforation = json.loads(data[row][2])
-        # # print(f' строка {well_data.dict_perforation}')
-        #
-        # well_data.plast_all = json.loads(data[row][3])
-        # well_data.plast_work = json.loads(data[row][4])
-        # well_data.dict_leakiness = json.loads(data[row][5])
-        # well_data.column_additional = data[row][6]
-        #
-        # well_data.fluid_work = data[row][7]
-        # well_data.template_depth, well_data.template_lenght, well_data.template_depth_addition, well_data.template_lenght_addition = json.loads(
-        #     data[row][11])
-        # well_data.skm_interval = json.loads(data[row][12])
-        #
-        # well_data.problemWithEk_depth = data[row][13]
-        # well_data.problemWithEk_diametr = data[row][14]
-
-        # print(well_data.skm_interval)
 
     @staticmethod
     def pause_app():
@@ -1141,11 +921,12 @@ class MyWindow(QMainWindow):
                     table_widget.setSpan(i + ins_ind, 11, 1, 2)
 
                 elif any(['Крезол' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
-                    table_widget.setSpan(i + ins_ind, 5, 1, 3)
-                    table_widget.setSpan(i + ins_ind, 9, 1, 2)
-                    table_widget.setSpan(i + ins_ind, 11, 1, 2)
+                    table_widget.setSpan(i + ins_ind, 5, 1, 4)
+                    table_widget.setSpan(i + ins_ind, 9, 1, 3)
+                    table_widget.setSpan(i + ins_ind, 12, 1, 2)
 
-                elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
+                elif any(['Спуск НКТ' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]) or \
+                    any(['ПЗР+Отсыпка' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                     table_widget.setSpan(i + ins_ind, 5, 1, 6)
                 elif any(['что бурили' in row_str for row_index, row_str in enumerate(row_data) if type(row_str) == str]):
                     table_widget.setSpan(i + ins_ind, 5, 1, 5)
@@ -1208,6 +989,7 @@ class MyWindow(QMainWindow):
             for col in range(1, count_col + 1):
 
                 cell = sheet.cell(row=row, column=col)
+
                 item = QTableWidgetItem(str(cell.value))
                 row_data.append(cell.value)
                 if cell.fill and cell.fill.fill_type == 'solid':
@@ -1237,11 +1019,11 @@ class MyWindow(QMainWindow):
             data.append(row_data)
             colors.append(row_colors)
 
-        table_widget.setSpan(46, 1, 1, 31)
-
 
         for column in range(table_widget.columnCount()):
             table_widget.setColumnWidth(column, int(colWidth[column]))
+
+        table_widget.setSpan(46, 1, 31, 1)
 
 
 

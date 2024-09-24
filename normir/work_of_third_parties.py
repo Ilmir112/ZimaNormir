@@ -607,7 +607,7 @@ class WorkOfThirdPaties(TemplateWork):
         work_list = []
         if self.combo_nkt_true == 'Да':
             if self.count_nkt_combo == 'Да':
-                work_list.extend(self.dopusk())
+                work_list.extend(self.dopusk(self.count_nkt_line))
         if self.volume_flush_line_sko_line != '' and self.type_combo_work == 'Крезол':
             volume_list = [
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'Промывка', 'ПЗР при промывке скважины ', None, None,
@@ -664,7 +664,7 @@ class WorkOfThirdPaties(TemplateWork):
             work_list.extend(self.rir_work())
             if self.combo_nkt_true == 'Да':
                 if self.count_nkt_combo == 'Да':
-                    work_list.extend(self.dopusk())
+                    work_list.extend(self.dopusk(self.count_nkt_line))
                     aaaa = self.dict_nkt
                     if '73мм' in list(self.dict_nkt.keys()):
                         self.dict_nkt['73мм'] = (

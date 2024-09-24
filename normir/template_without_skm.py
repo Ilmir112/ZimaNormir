@@ -128,13 +128,15 @@ class TabPage_SO_Timplate(TabPage):
         self.count_of_nkt_extensions_line = QLineEdit(self)
         self.count_of_nkt_extensions_line.setValidator(self.validator_float)
 
-        if index in ['ПСШ', 'печать', 'магнит', 'КОТ', 'Гидрожелонка']:
+        if index in ['ПСШ', 'шаблон', 'перо', 'воронка', 'печать', 'магнит',
+                                         'КОТ', 'Заглушка', 'Гидрожелонка']:
+            if index in ['ПСШ', 'печать', 'магнит', 'КОТ']:
 
-            self.grid.addWidget(self.interval_skm_text_label, 30, 1)
-            self.grid.addWidget(self.interval_skm_text_edit, 31, 1)
+                self.grid.addWidget(self.interval_skm_text_label, 30, 1)
+                self.grid.addWidget(self.interval_skm_text_edit, 31, 1)
 
-            self.grid.addWidget(self.count_of_nkt_extensions_label, 30, 2)
-            self.grid.addWidget(self.count_of_nkt_extensions_line, 31, 2)
+                self.grid.addWidget(self.count_of_nkt_extensions_label, 30, 2)
+                self.grid.addWidget(self.count_of_nkt_extensions_line, 31, 2)
 
             self.volume_well_flush_line = QLineEdit(self)
             self.volume_well_flush_line.setValidator(self.validator_float)
@@ -152,9 +154,6 @@ class TabPage_SO_Timplate(TabPage):
                 self.interval_skm_text_label.setText('текст работы КОТ или ГВЖ')
                 self.count_of_nkt_extensions_label.setText('Кол-во раз работы')
                 self.count_of_nkt_extensions_line.setText('1')
-
-
-
         else:
             try:
                 self.interval_skm_text_label.setParent(None)

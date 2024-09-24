@@ -530,7 +530,7 @@ class RirWithPero(TemplateWork):
         if self.ovtr_work_combo == 'Да':
             work_list.extend(self.ozc_work())
         if self.technological_crap_question_combo == 'Да':
-            work_list.extend(self.dopusk())
+            work_list.extend(self.dopusk(self.count_nkt_line))
             work_list.extend(self.technological_crap_question_work()[1:])
         if self.pressuar_ek_combo == 'Да':
             work_list.extend(self.pressuar_work())

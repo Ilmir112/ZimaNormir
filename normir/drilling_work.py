@@ -913,7 +913,7 @@ class DrillingWork(TemplateWork):
 
         work_list.extend(TemplateWithoutSKM.deinstallation_of_washing_equipment(self))
         if self.select_type_combo == 'НКТ':
-            work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
+            work_list.extend(self.lifting_nkt())
         else:
             work_list.extend(self.lifting_SBT())
             well_data.count_SBT += 1

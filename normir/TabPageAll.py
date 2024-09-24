@@ -941,7 +941,8 @@ class TabPage(QWidget):
             self.rezult_pressuar_combo.setParent(None)
         else:
             self.depth_paker_text_edit = QLineEdit(self)
-            self.depth_paker_text_edit.setValidator(self.validator_int)
+            if self.gno_combo.currentText() not in ['ЭЦН', 'ЗО']:
+                self.depth_paker_text_edit.setValidator(self.validator_int)
 
             self.pressuar_ek_line = QLineEdit(self)
             self.pressuar_ek_line.setValidator(self.validator_float)
@@ -3062,13 +3063,13 @@ class TemplateWork(MyWindow):
             count_lift += 1
         return work_list[:-1]
 
-    def dopusk(self):
+    def dopusk(self, count_nkt_line):
 
         work_list = self.descent_nkt_work()
         for index in range(len(work_list)):
             if index == 0:
-                work_list[index][12] = self.count_nkt_line * 10
-            work_list[index][21] = self.count_nkt_line
+                work_list[index][12] = count_nkt_line * 10
+            work_list[index][21] = count_nkt_line
         return work_list
 
     def determination_of_pickup_work(self, saturation_volume, determination_of_pickup_text):

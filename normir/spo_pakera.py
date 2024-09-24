@@ -233,7 +233,7 @@ class SpoPakerAction(TemplateWork):
              None, 'час', self.extra_work_time_line, 1, 1, '=V555*W555*X555', '=Y555-AA555-AB555-AC555-AD555', None,
              None, None, None, None]]
         if self.response_text_line != '':
-            work_list.append(self.response_sko())
+            work_list.extend((self.response_sko()))
         self.date_work_line = self.extra_work_time_end_date.split(' ')[0]
 
         return work_list
@@ -303,15 +303,7 @@ class SpoPakerAction(TemplateWork):
         if self.extra_work_question_combo == 'Да':
             if self.type_combo_work in ['Крезол']:
                 work_list.extend(self.krezol_work())
-                if self.response_combo == 'Да':
-                    work_list.extend([[
-                        '=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', 'ОПЗ',
-                        f'{self.response_text_line} ({self.response_time_begin_date}-{self.response_time_end_date})',
-                        None,
-                        None, None,
-                        None, None, None, None, None, 'АКТ№', None, None, None, 'простои', 'Тех. ожидание', 'час',
-                        self.response_time_line, 1, 1,
-                        '=V556*W556*X556', '=Y556-AA556-AB556-AC556-AD556', None, None, None, None, None]])
+
                 if self.volume_flush_line_combo == 'Да':
                     work_list.extend(self.volume_after_sko_work_2())
                 aaa = self.determination_of_pickup_sko_combo
@@ -322,7 +314,7 @@ class SpoPakerAction(TemplateWork):
                 work_list.extend(self.rir_work())
                 # if self.combo_nkt_true == 'Да':
                 if self.count_nkt_combo == 'Да':
-                    work_list.extend(self.dopusk())
+                    work_list.extend(self.dopusk(self.count_nkt_line))
                     aaaa = self.dict_nkt
                     if '73мм' in list(self.dict_nkt.keys()):
                         self.dict_nkt['73мм'] = (

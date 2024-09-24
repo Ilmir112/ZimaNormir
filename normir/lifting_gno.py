@@ -115,7 +115,7 @@ class TabPage_SO_Lifting_gno(TabPage):
         self.count_sections_ped_combo = QComboBox(self)
         self.count_sections_ped_combo.addItems(['1', '2', '3', '4', '5', '6', '7', '8'])
 
-        self.esp_dismantling_text_line = QLabel('Демонтаж ЭЦН')
+        self.esp_dismantling_text_line_label = QLabel('Демонтаж ЭЦН')
         self.esp_dismantling_text_line = QLineEdit(self)
 
         self.esp_dismantling_time_begin_label = QLabel('начало демонтажа')
@@ -147,6 +147,8 @@ class TabPage_SO_Lifting_gno(TabPage):
         self.equipment_audit_combo.currentTextChanged.connect(self.update_equipment_audit_combo)
 
         if index in 'ЭЦН':
+            self.grid.addWidget(self.esp_dismantling_text_line_label, 38, 1, 1, 3)
+            self.grid.addWidget(self.esp_dismantling_text_line, 39, 1, 1, 3)
 
             self.grid.addWidget(self.count_sections_esp_label, 40, 1)
             self.grid.addWidget(self.count_sections_esp_combo, 41, 1)
@@ -175,13 +177,16 @@ class TabPage_SO_Lifting_gno(TabPage):
             self.esp_dismantling_time_label.setParent(None)
             self.esp_dismantling_time_line.setParent(None)
 
-        if index in ['Фондовый пакер', 'пакер ГРП']:
+        if index in ['Фондовый пакер', 'пакер ГРП', 'ЗО', 'ЭЦН']:
             self.depth_paker_text_combo_label = QLabel('Была ли опрессовка перед срывом')
             self.depth_paker_text_combo = QComboBox(self)
             self.depth_paker_text_combo.addItems(['Нет', 'Да'])
 
             self.grid.addWidget(self.depth_paker_text_combo_label, 30, 0)
             self.grid.addWidget(self.depth_paker_text_combo, 31, 0)
+
+            if index in ['ЗО', 'ЭЦН']:
+                self.depth_paker_text_combo_label.setText('Была ли опрессовка ГНО')
 
             self.depth_paker_text_combo.currentTextChanged.connect(self.update_pressuar_combo)
 
@@ -432,6 +437,10 @@ class LiftingWindow(TemplateWork):
 
 
         elif self.gno_combo in ['ЭЦН']:
+            self.depth_paker_text_combo = current_widget.depth_paker_text_combo.currentText()
+            if self.depth_paker_text_combo == 'Да':
+                self.read_pressuar_combo(current_widget)
+
             self.coefficient_lifting = 1
             self.count_sections_esp_combo = int(current_widget.count_sections_esp_combo.currentText())
             self.count_sections_ped_combo = int(current_widget.count_sections_ped_combo.currentText())
@@ -684,11 +693,9 @@ class LiftingWindow(TemplateWork):
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, 'Очистка от замазученности',
                  None, None, None, None,
                  None, None, None, None, 'АКТ№', None, None, None, 'факт', None, 'шт', 1, 0.67, 1, '=V209*W209*X209',
-                 '=Y209-AA209-AB209-AC209-AD209', None, None, None, None, None],
-                ['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, self.equipment_audit_text_line,
-                 None, None, None, None, None, None,
-                 None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V210*W210*X210',
-                 '=Y210-AA210-AB210-AC210-AD210', None, None, None, None, None]])
+                 '=Y209-AA209-AB209-AC209-AD209', None, None, None, None, None]
+                ])
+
 
             if self.complications_when_lifting_combo == 'Да':
                 work_list.insert(-4, ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', type_equipment,
@@ -706,6 +713,12 @@ class LiftingWindow(TemplateWork):
                                       None, None, None, None, None, None, None, None, None, '§40разд.1', None, 'шт',
                                       sum(self.dict_nkt.values()) - 201, 0.008, 1,
                                       '=V208*W208*X208', '=Y208-AA208-AB208-AC208-AD208', None, None, None, None, None])
+
+            if self.equipment_audit_combo == 'Да':
+                work_list.extend(['=ROW()-ROW($A$46)', self.date_work_line, None, 'Тех.операции', None, self.equipment_audit_text_line,
+                 None, None, None, None, None, None,
+                 None, None, 'АКТ№', None, None, None, 'факт', None, 'час', 0.5, 1, 1, '=V210*W210*X210',
+                 '=Y210-AA210-AB210-AC210-AD210', None, None, None, None, None])
 
         return work_list
 
@@ -960,7 +973,6 @@ class LiftingWindow(TemplateWork):
         time_differnce = round(
             (((74 + ((self.count_sections_esp_combo - 1) * 13)) + ((self.count_sections_ped_combo - 1) * 20)) / 60), 2)
         work_list = [
-
             ['=ROW()-ROW($A$46)', self.date_work_line, None, 'спо', 'ЭЦН',
              'Определить отклонение талевого блока, расслабить оттяжки, отцентрировать вышку и '
              'подтянуть оттяжки во время ремонта',

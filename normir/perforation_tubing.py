@@ -674,7 +674,7 @@ class PipePerforator(TemplateWork):
 
 
 
-        work_list.extend(TemplateWithoutSKM.lifting_nkt(self))
+        work_list.extend(self.lifting_nkt())
         if self.deinstallation_perforation_combo == 'Да':
             work_list.extend(self.deinstallation_perforation_work())
 

@@ -479,7 +479,7 @@ class NormirWindow(QMainWindow):
         well_data.lifting_unit_combo = self.lifting_unit_combo
 
 
-        if well_number not in self.repair_summary_line:
+        if well_number.lower() not in self.repair_summary_line.lower():
             QMessageBox.warning(self, 'Ошибка', 'Номер скважины не совпадает с названием сводки')
             return
         well_data.date_work = self.date_begin_datetime.split(' ')[0]

@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
 from openpyxl.styles import Font, Alignment
 from openpyxl.utils import get_column_letter
+from openpyxl.workbook import Workbook
 from openpyxl.worksheet.datavalidation import DataValidation
 
 import well_data
@@ -44,49 +45,59 @@ def definition_plast_work(self):
 
 
 def count_row_height(ws2, work_list,  merged_cells_dict):
-
-
+    # wb2 = Workbook()
+    # ws2 = wb2.get_sheet_by_name('Sheet')
+    # ws2.title = "План работ"
+    oper_list = '"{}"'.format(','.join(operation_list))
     ind_ins = 46
+    for key, row in merged_cells_dict.items():
+        ws2.merge_cells(start_row=row[1], start_column=row[0], end_row=row[3], end_column=row[2])
 
     stop_str = len(work_list)
     for i in range(1, stop_str + 1):  # Добавлением работ
         for j in range(1, 31):
             cell = ws2.cell(row=i, column=j)
-            if cell and str(cell) != str(work_list[i - 1][j - 1]):
-                if work_list[i - 1][j - 1]:
-                    # if work_list[i - 1][j - 1] in operation_list:
-                    #     oper_list = '"' + ','.join(operation_list) + '"'
-                    #     rule = DataValidation(type="list", formula1=oper_list, allow_blank=True)
-                    #
-                    #     ws2.add_data_validation(rule)
-                    #     ind = f'{get_column_letter(j)}{i}'
-                    #     rule.ranges = ind
 
-                    cell.value = is_num(work_list[i - 1][j - 1])
-                    if i >= ind_ins:
+            if work_list[i - 1][j - 1] not in ['', None, str(None)]:
+                # print(work_list[i - 1][j - 1])
+                cell.value = is_num(work_list[i - 1][j - 1])
+                if cell.value in operation_list:
+                    # Добавляем валидацию данных к ячейке
+                    rule = DataValidation(type="list", formula1=oper_list, allow_blank=True)
+                    ws2.add_data_validation(rule)
+                    rule.ranges = cell.coordinate
+                if i >= ind_ins:
 
-                        if j == 11:
-                            cell.font = Font(name='Times New Roman', size=11, bold=False)
-                        else:
-                            cell.font = Font(name='Times New Roman', size=16, bold=False)
-                        ws2.cell(row=i, column=2).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                        vertical='center')
-                        ws2.cell(row=i, column=11).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                         vertical='center')
-                        ws2.cell(row=i, column=12).alignment = Alignment(wrap_text=True, horizontal='center',
-                                                                         vertical='center')
-                        ws2.cell(row=i, column=3).alignment = Alignment(wrap_text=True, horizontal='left',
-                                                                        vertical='center')
-
-
+                    if j == 11:
+                        cell.font = Font(name='Times New Roman', size=11, bold=False)
+                    else:
+                        cell.font = Font(name='Times New Roman', size=16, bold=False)
+                    ws2.cell(row=i, column=2).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                    vertical='center')
+                    ws2.cell(row=i, column=11).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                     vertical='center')
+                    ws2.cell(row=i, column=12).alignment = Alignment(wrap_text=True, horizontal='center',
+                                                                     vertical='center')
+                    ws2.cell(row=i, column=3).alignment = Alignment(wrap_text=True, horizontal='left',
+                                                                    vertical='center')
+                    ws2.cell(row=i, column=6).alignment = Alignment(wrap_text=True, horizontal='left',
+                                                                    vertical='center')
 
 
 
+    oper_list = '"' + ','.join(operation_list) + '"'
+    rule = DataValidation(type="list", formula1=oper_list, allow_blank=True)
+    ws2.add_data_validation(rule)
 
-    ws2.merge_cells(start_row=77, start_column=2, end_row=77, end_column=3)
-    ws2.merge_cells(start_row=77, start_column=6, end_row=77, end_column=14)
-    for key, row in merged_cells_dict.items():
-        ws2.merge_cells(start_row=row[1], start_column=row[0], end_row=row[3], end_column=row[2])
+    for i in range(1, stop_str + 1):  # Добавлением работ
+        for j in range(1, 31):
+            if str(work_list[i - 1][j - 1]) in operation_list:
+                print(i, j)
+                # rule.ranges = f'{get_column_letter(j)}{i}:{get_column_letter(j+1)}{i}'
+
+
+
+    # well_data.sheet.save('12345w6.xlsx')
 
     return 'Высота изменена'
 

@@ -469,6 +469,7 @@ class Relocation_Window(TemplateWork):
         return relocation_list
 
     def select_lifting(self):
+
         if 'А5-40' in self.lift_installation_combo:
             lift_installation_list = [
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None, 'Монтаж А5-40', None, None,
@@ -507,7 +508,7 @@ class Relocation_Window(TemplateWork):
                  None, None, None, None, None, None, None, None, None, '§70разд.1', None, 'раз', 1, 1.67, 1,
                  '=V100*W100*X100',
                  '=Y100-AA100-AB100-AC100-AD100', None, None, None, None, None]]
-        elif 'АПР-60/80' in self.lift_installation_combo:
+        elif 'АПР60/80' in self.lift_installation_combo:
             lift_installation_list = [
                 ['=ROW()-ROW($A$46)', self.date_work_line, None, 'ПР.перед.ремонтом', None,
                  'Монтаж подъемника АПР-60/80', None, None,
